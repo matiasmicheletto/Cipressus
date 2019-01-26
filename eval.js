@@ -1,13 +1,355 @@
-var evalTree = function(nodoNotas, nodoFactores){ // Evaluar arbol de calificaciones de un alumno (nodoNotas y nodoFactores deben tener el mismo nivel)
-	if(nodoNotas.children.length == undefined) // Es hoja y contiene solo valor de la nota
-		return nodoNotas.children; // Retornar solo el valor de la nota
-	else{
+var database = {
+	"actividades": {
+	  "nombre": "Nota final",
+	  "factor": 1,
+	  "children": [{
+		  "nombre": "Asistencia a clase",
+		  "factor": 0.15,
+		  "id":"asistencia"
+		},
+		{
+		  "nombre": "Parciales",
+		  "factor": 0.5,
+		  "children": [{
+			"nombre": "Primer parcial",
+			"factor": 0.5,
+			"children": [{
+			  "nombre": "Ej 1 - Primer parcial",
+			  "factor": 0.25,
+			  "id":"p1_ej1"       
+			}, {
+			  "nombre": "Ej 2 - Primer parcial",
+			  "factor": 0.25,
+			  "id":"p1_ej2"
+			}, {
+			  "nombre": "Ej 3 - Primer parcial",
+			  "factor": 0.25,
+			  "id":"p1_ej3"
+			}, {
+			  "nombre": "Ej 4 - Primer parcial",
+			  "factor": 0.25,
+			  "id":"p1_ej4"
+			}]
+		  }, {
+			"nombre": "Segundo parcial",
+			"factor": 0.5,
+			"children": [{
+			  "nombre": "Ej 1 - Segundo parcial",
+			  "factor": 0.25,
+			  "id":"p2_ej1"
+			}, {
+			  "nombre": "Ej 2 - Segundo parcial",
+			  "factor": 0.25,
+			  "id":"p2_ej2"
+			}, {
+			  "nombre": "Ej 3 - Segundo parcial",
+			  "factor": 0.25,
+			  "id":"p2_ej3"
+			}, {
+			  "nombre": "Ej 4 - Segundo parcial",
+			  "factor": 0.25,
+			  "id":"p2_ej4"
+			}]
+		  }]
+		},
+		{
+		  "nombre": "Laboratorios",
+		  "factor": 0.35,
+		  "children": [{
+			  "nombre": "Probador",
+			  "factor": 0.2,
+			  "vencimiento": {
+				"fecha":2000,        
+				"desgaste": 1,           
+				"id": "lab0"
+			  },
+			  "children": [{
+				  "nombre": "Estética probador",
+				  "factor": 0.5,
+				  "id":"l0_estetica"
+				},
+				{
+				  "nombre": "Funcionamiento probador",
+				  "factor": 0.5,
+				  "id":"l0_funcionamiento"
+				}
+			  ]
+			},
+			{
+			  "nombre": "Laboratorio 1",
+			  "factor": 0.16,
+			  "vencimiento": {
+				"fecha":2000,        
+				"desgaste": 10,           
+				"id": "lab1"
+			  },
+			  "children": [{
+				  "nombre": "Implementación laboratorio 1",
+				  "factor": 0.4,
+				  "children": [{
+					  "nombre": "Presentación prototipo laboratorio 1",
+					  "factor": 0.5,
+					  "id":"l1_impl_presentacion"
+					},
+					{
+					  "nombre": "Funcionamiento prototipo laboratorio 1",
+					  "factor": 0.5,
+					  "id":"l1_impl_funcionamiento"
+					}
+				  ]
+				},
+				{
+				  "nombre": "Informe laboratorio 1",
+				  "factor": 0.6,
+				  "children": [{
+					"nombre": "Presentación informe laboratorio 1",
+					"factor": 0.5,
+					"id":"l1_informe_presentacion"
+				  }, {
+					"nombre": "Contenido informe laboratorio 1",
+					"factor": 0.5,
+					"id":"l1_informe_contenido"
+				  }]
+				}
+			  ]
+			},
+			{
+			  "nombre": "Laboratorio 2",
+			  "factor": 0.16,
+			  "vencimiento": {
+				"fecha":2000,        
+				"desgaste": 10,           
+				"id": "lab2"
+			  },
+			  "children": [{
+				  "nombre": "Implementación laboratorio 2",
+				  "factor": 0.4,
+				  "children": [{
+					  "nombre": "Presentación prototipo laboratorio 2",
+					  "factor": 0.5,
+					  "id":"l2_impl_presentacion"
+					},
+					{
+					  "nombre": "Funcionamiento prototipo laboratorio 2",
+					  "factor": 0.5,
+					  "id":"l2_impl_funcionamiento"
+					}
+				  ]
+				},
+				{
+				  "nombre": "Informe laboratorio 2",
+				  "factor": 0.6,
+				  "children": [{
+					"nombre": "Presentación informe laboratorio 2",
+					"factor": 0.5,
+					"id":"l2_informe_presentacion"
+				  }, {
+					"nombre": "Contenido informe laboratorio 2",
+					"factor": 0.5,
+					"id":"l2_informe_contenido"
+				  }]
+				}
+			  ]
+			},
+			{
+			  "nombre": "Laboratorio 3",
+			  "factor": 0.16,
+			  "vencimiento": {
+				"fecha":2000,        
+				"desgaste": 10,           
+				"id": "lab3"
+			  },
+			  "children": [{
+				"nombre": "Implementación laboratorio 3",
+				"factor": 0.4,
+				"children": [{
+					"nombre": "Presentación prototipo laboratorio 3",
+					"factor": 0.5,
+					"id":"l3_impl_presentacion"
+				  },
+				  {
+					"nombre": "Funcionamiento prototipo laboratorio 3",
+					"factor": 0.5,
+					"id":"l3_impl_funcionamiento"
+				  }
+				]
+			  },
+			  {
+				"nombre": "Informe laboratorio 3",
+				"factor": 0.6,
+				"children": [{
+				  "nombre": "Presentación informe laboratorio 3",
+				  "factor": 0.5,
+				  "id":"l3_informe_presentacion"
+				}, {
+				  "nombre": "Contenido informe laboratorio 3",
+				  "factor": 0.5,
+				  "id":"l3_informe_contenido"
+				}]
+				}
+			  ]
+			},
+			{
+			  "nombre": "Laboratorio 4",
+			  "factor": 0.16,
+			  "vencimiento": {
+				"fecha":2000,        
+				"desgaste": 10,           
+				"id": "lab4"
+			  },
+			  "children": [{
+				"nombre": "Implementación laboratorio 4",
+				"factor": 0.4,
+				"children": [{
+					"nombre": "Presentación prototipo laboratorio 4",
+					"factor": 0.5,
+					"id":"l4_impl_presentacion"
+				  },
+				  {
+					"nombre": "Funcionamiento prototipo laboratorio 4",
+					"factor": 0.5,
+					"id":"l4_impl_funcionamiento"
+				  }
+				]
+			  },
+			  {
+				"nombre": "Informe laboratorio 4",
+				"factor": 0.6,
+				"children": [{
+				  "nombre": "Presentación informe laboratorio 4",
+				  "factor": 0.5,
+				  "id":"l4_informe_presentacion"
+				}, {
+				  "nombre": "Contenido informe laboratorio 4",
+				  "factor": 0.5,
+				  "id":"l4_informe_contenido"
+				}]
+				}
+			  ]
+			},
+			{
+			  "nombre": "Laboratorio 5",
+			  "factor": 0.16,
+			  "vencimiento": {
+				"fecha":1556593200000,        
+				"desgaste": 10,           
+				"id": "lab5"
+			  },
+			  "children": [{
+				"nombre": "Implementación laboratorio 5",
+				"factor": 0.4,
+				"children": [{
+					"nombre": "Presentación prototipo laboratorio 5",
+					"factor": 0.5,
+					"id":"l5_impl_presentacion"
+				  },
+				  {
+					"nombre": "Funcionamiento prototipo laboratorio 5",
+					"factor": 0.5,
+					"id":"l5_impl_funcionamiento"
+				  }
+				]
+			  },
+			  {
+				"nombre": "Informe laboratorio 5",
+				"factor": 0.6,
+				"children": [{
+				  "nombre": "Presentación informe laboratorio 5",
+				  "factor": 0.5,
+				  "id":"l5_informe_presentacion"
+				}, {
+				  "nombre": "Contenido informe laboratorio 5",
+				  "factor": 0.5,
+				  "id":"l5_informe_contenido"
+				}]
+				}
+			  ]
+			}
+		  ]
+		},
+		{
+		  "nombre": "Examen suplementario",
+		  "factor": 0.2,
+		  "id": "suplementario"
+		}
+	  ]
+	},
+	"alumnos": [{
+	  "datos": {
+		"nombre": "Matías",
+		"apellido": "Micheletto",
+		"carrera": "101",
+		"email": "matiasmicheletto@gmail.com"
+	  },
+	  "ultimoLogin": 12314234,
+	  "calificaciones": {
+		"p1_ej1":
+		{
+		  "nota": 90
+		},
+		"p1_ej2":
+		{
+		  "nota": 100
+		},
+		"p1_ej3":
+		{
+		  "nota": 100
+		},
+		"asistencia":{
+		  "nota":78
+		},
+		"l5_impl_presentacion":{
+		  "nota":80
+		},
+		"l5_impl_funcionamiento":{
+		  "nota":80
+		},
+		"l5_informe_presentacion":{
+		  "nota":60
+		},
+		"l5_informe_contenido":{
+		  "nota":80
+		}
+	  },
+	  "entregas":{
+		"lab5":1557111600000
+	  }
+	}]
+  }
+
+var evalTree = function(alumno,nodo){ // Computar nota de un alumno
+	// Calificacion es un arreglo que contiene las notas obtenidas de cada actividad
+	// Factor es el arbol que contiene los factores de ponderacion de las notas
+	if(nodo.children){ // Seguir iterando recursivamente por los nodos hijos
 		var sum = 0;
-		for(var k in nodoNotas.children) // Para cada hijo
-			sum += evalTree(nodoNotas.children[k],nodoFactores.children[k])*nodoFactores.children[k].factor;
-		if(nodoFactores.vencimiento) // Si la actividad tenia fecha de vencimiento
-			if(nodoNotas.entrega > nodoFactores.vencimiento) // Hay que descontar puntos
-				sum -= Math.ceil((nodoNotas.entrega-nodoFactores.vencimiento)/86400000)*nodoFactores.desgaste; // Descontar puntos por dia
+		for(var k in nodo.children) // Para cada hijo
+			sum += evalTree(alumno,nodo.children[k])*nodo.children[k].factor; // Sumar nota ponderada de los hijos
+		if(nodo.vencimiento) // Si la actividad tenia fecha de vencimiento
+			if(alumno.entregas[nodo.vencimiento.id]) // Si esta actividad fue entregada
+				if(alumno.entregas[nodo.vencimiento.id] > nodo.vencimiento.fecha) // Hay que descontar puntos
+					sum -= Math.ceil((alumno.entregas[nodo.vencimiento.id] - nodo.vencimiento.fecha)/86400000)*nodo.vencimiento.desgaste; // Descontar puntos por dia
 		return sum;
+	}else{ // Es hoja
+		if(alumno.calificaciones[nodo.id]) // Si esta evaluado este campo
+			return alumno.calificaciones[nodo.id].nota; // Retornar el valor de la nota
+		else 
+			return 0; // Si no tiene nota, devolver 0
 	}
 }
+
+
+// Ejemplo de evaluacion de un alumno
+console.log(database.actividades.nombre)
+console.log(evalTree(database.alumnos[0],database.actividades));
+
+// Evaluacion de los laboratorios de un alumno
+console.log(database.actividades.children[2].nombre)
+console.log(evalTree(database.alumnos[0],database.actividades.children[2]));
+
+// Evaluacion del laboratorio 5 de un alumno
+console.log(database.actividades.children[2].children[5].nombre)
+console.log(evalTree(database.alumnos[0],database.actividades.children[2].children[5]));
+
+// Evaluacion de primer parcial
+console.log(database.actividades.children[1].children[0].nombre)
+console.log(evalTree(database.alumnos[0],database.actividades.children[1].children[0]));
