@@ -39,9 +39,8 @@ window.Cipressus = (function(){
             .then(function(snapshot){
                 return fulfill(snapshot.val());
             })
-            .catch(function(res){
-                console.log(res);
-                return reject();                
+            .catch(function(err){
+                return reject(err);                
             });
         });
     };
@@ -122,7 +121,7 @@ window.Cipressus = (function(){
         if(node.children){ // Si el nodo tiene hijos, calcular suma ponderada de los hijos
             var sum = 0; // Contador de puntajes
             for(var k in node.children) // Para cada hijo del nodo
-                sum += evalTree(student,node.children[k])*node.children[k].factor; // Sumar nota ponderada de los hijos
+                sum += core.utils.eval(student,node.children[k])*node.children[k].factor; // Sumar nota ponderada de los hijos
             if(node.deadline) // Si la actividad tiene fecha de vencimiento
                 if(student.submits[node.deadline.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
                     if(student.submits[node.deadline.id] > node.deadline.date) // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste

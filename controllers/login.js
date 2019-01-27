@@ -8,8 +8,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
     $scope.loginAttempt = function () { // Intentar logear usuario
         if (typeof $scope.userForm !== 'undefined') { // Verificar si se ingreso algo en los campos
             Cipressus.users.signIn($scope.userForm.email, $scope.userForm.password).then(function (res) {
-                console.log("Autenticación correcta.");
-                $rootScope.loading = true; // Mostrar preloader que se va a desactivar en index
+                console.log(res);                
                 M.toast({
                     html: "Bienvenido!",
                     classes: 'rounded green',
@@ -31,7 +30,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
             M.toast({
                 html: "Debe completar el formulario!",
                 classes: 'rounded red',
-                displayLength: 5000
+                displayLength: 2500
             });
         }
     };
@@ -58,7 +57,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
             M.toast({
                 html: "Debe completar el formulario!",
                 classes: 'rounded red',
-                displayLength: 5000
+                displayLength: 2500
             });
         }
     };
@@ -85,12 +84,12 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
             M.toast({
                 html: "Debe completar el formulario!",
                 classes: 'rounded red',
-                displayLength: 5000
+                displayLength: 2500
             });
         }
     };
 
-    $scope.update_buttons = function () { // De acuerdo al modo, cambia el texto de los botones y los callbacks
+    $scope.updateButtons = function () { // De acuerdo al modo, cambia el texto de los botones y los callbacks
         switch ($scope.login_mode) {
             case 0: // login
                 $scope.btn_text = "Iniciar sesión";
@@ -121,5 +120,5 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
 
     // Valores por defecto de los botones (modo inicio de sesión)
     $scope.login_mode = 0; // 0->login; 1->registro; 2->recuperacion de clave
-    $scope.update_buttons();
+    $scope.updateButtons();
 }]);
