@@ -18,22 +18,45 @@
     <link rel="icon" href="img/favicon.ico" sizes="16x16"/>
     <link type="text/css" rel="stylesheet" href="style/icons.css"/>
     <link type="text/css" rel="stylesheet" href="style/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="style/custom.css"/>
 
     <!-- ##################### JS ##################### -->
     <script type="text/javascript" src="assets/materialize.min.js"></script>
     <script type="text/javascript" src="assets/angular.min.js"></script>
     <script type="text/javascript" src="assets/angular-route.min.js"></script>
     <script type="text/javascript" src="assets/firebase.js"></script>
+    <script type="text/javascript" src="assets/cipressus.js"></script>
+    
 
 </head>	
 
 <body style="overflow: hidden;" ng-app="cipressus">
 
+    <!-- ##################### PRELOADER ##################### -->
+    <div class="preloader-wrapper-pre valign-wrapper" ng-if="loading">
+        <h5 id="preloader_progress" class="white-text preloader-progress-text"></h5>
+        <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue-only">
+            <div class="circle-clipper left">
+            <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+            </div><div class="circle-clipper right">
+            <div class="circle"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+
     <ng-view></ng-view>
 
     <!-- ##################### JS ##################### -->
     <script type="text/javascript" src="controllers/index.js"></script>
+    <script type="text/javascript" src="controllers/login.js"></script>
     <script type="text/javascript" src="controllers/home.js"></script>
+    
 </body>
  
 </html>

@@ -4,29 +4,42 @@ var app = angular.module('cipressus', ['ngRoute'])
         .when("/", {
             templateUrl: "views/home.html",
             controller: "home"
+        })
+        .when("/login", {
+            templateUrl: "views/login.html",
+            controller: "login"
         });
 })
 .run(function ($rootScope, $location) {
 
-    firebase.initializeApp({ // Inicializar DB
-        apiKey: "AIzaSyAHpgtsZeQbcoCbKNE1dNjd7gUbSIFWz6M",
-        authDomain: "cipressus-0000.firebaseapp.com",
-        databaseURL: "https://cipressus-0000.firebaseio.com",
-        projectId: "cipressus-0000",
-        storageBucket: "cipressus-0000.appspot.com",
-        messagingSenderId: "927588929794"
-    }); 
+    $rootScope.loading = true; // Preloader
+    $location.path("/login"); // Ir a vista de logeo
 
-    // Descarga de prueba (sin reglas de seguridad)
-    firebase.database() .ref('/').once('value') 
-        .then(function(snapshot){
-            console.log(snapshot.val());
-            M.toast({html: 'DB Descargada', classes: 'rounded green', displayLength: 1500}); // Mensaje para el usuario
-        })
-        .catch(function(res){
-            console.log(res);
-            M.toast({html: 'Error al leer la base de datos', classes: 'rounded red', displayLength: 1500}); // Mensaje para el usuario
-        });
+    Cipressus.users.onUserSignedIn = function(uid){ // Cuando el usuario se logea
+        console.log(uid);
+        
+        // TODO: Descargar datos de usuario
 
-    console.log("App lista");
+        $location.path("/"); // Ir a vista de home
+        $rootScope.loading = false; // Preloader
+        $rootScope.$apply();
+    };
+
+    Cipressus.users.onUserSignedOut = function(){ // Cuando cierra sesion
+        $location.path("/login"); // Ir a vista de logeo
+        $rootScope.loading = false; // Preloader
+        $rootScope.$apply();
+    };
+
+    Cipressus.initialize() // Inicializar libreria principal de la app
+    .then(function(){ // Inicializacion exitosa
+        console.log("Cipressus inicializado.");
+        $rootScope.loading = false;
+        $rootScope.$apply();
+    })
+    .catch(function(){ // Error en inicializacion
+        console.log("Error de incialización de Cipressus");
+        $rootScope.loading = false;
+        $rootScope.$apply();
+    });     
 });

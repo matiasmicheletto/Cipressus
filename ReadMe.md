@@ -10,6 +10,7 @@ Ejemplo de jerarquía de actividades:
 
 ```json
 {
+	"activities":{
 	  "name": "Nota final",  // Nombre legible del nodo
 	  "factor": 1,
 	  "children": [{			// Cada nodo tiene una lista de hijos
@@ -111,6 +112,7 @@ Ejemplo de jerarquía de actividades:
 		}
 	  ]
 	}
+}
 ```
 
 Ejemplo de datos de alumnos:

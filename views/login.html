@@ -1,0 +1,51 @@
+<center>
+    <div class="container black-text" style="margin-top: 100px;" style="z-index:-2">
+        <div class="z-depth-1 row hoverable login-box" style="z-index:1">
+            <div>
+                <a href="#/"><img src="images/mainlogo.png" width="150px" /></a>
+            </div>
+            <p class="center">Iniciar sesión en <span><img src="images/secondarylogo.png" width="100" align="top"/></span></p>
+            <form class="col s12" method="post">
+
+                <div class="row" ng-hide="hide_name_input">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input class="validate black-text" name="name" id="name" ng-model="userForm.name" type="text" />
+                        <label for="name">Nombre</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">email</i>
+                        <input class="validate black-text" name="email" id="email" type="email" ng-model="userForm.email" />
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+
+                <div class="row" ng-hide="hide_pass_input">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input class="validate black-text" name="password" id="password" type="password" ng-model="userForm.password" />
+                        <label for="password">Contraseña</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button type="submit" name="btn_login" class="col s12 btn btn-large waves-effect green darken-2"
+                        ng-click="btn_click();">{{btn_text}}</button>
+                </div>
+
+                <div class="row">
+                    <label style="float:right;">
+                        <a href="" class="green-text" ng-click="login_mode = login_mode == 0 ? 2 : login_mode - 1; update_buttons();"><b>{{menu_right}}</b></a>
+                    </label>
+                    <label style="float:left;">
+                        <a href="" class="green-text" ng-click="login_mode = login_mode == 2 ? 0 : login_mode + 1; update_buttons();"><b>{{menu_left}}</b></a>
+                    </label>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</center>
