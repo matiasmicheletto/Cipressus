@@ -6,20 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="msapplication-tap-highlight" content="no"/>
-    <meta name="description" content="Webapp Fepsa"/>
-    <meta name="keywords" content="FEPSA, educación, trenes, ferroviario"/>
+    <meta name="description" content="Webapp Cupressus"/>
+    <meta name="keywords" content="Cupressys, educación, diseño, circuitos lógicos"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!-- Deshabilitar cache -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
     <meta http-equiv="Pragma" content="no-cache"/>
     <meta http-equiv="Expires" content="0"/>
 
+    <!-- ##################### CSS ##################### -->
+    <link rel="icon" href="img/favicon.ico" sizes="16x16"/>
+    <link type="text/css" rel="stylesheet" href="style/icons.css"/>
+    <link type="text/css" rel="stylesheet" href="style/materialize.min.css" media="screen,projection"/>
+
+    <!-- ##################### JS ##################### -->
+    <script type="text/javascript" src="assets/materialize.min.js"></script>
+    <script type="text/javascript" src="assets/angular.min.js"></script>
+    <script type="text/javascript" src="assets/angular-route.min.js"></script>
+
 </head>	
 
-<body>
-    
-    <script type="text/javascript" src="eval.js"></script>
+<body style="overflow: hidden;" ng-app="cupressus">
 
+    <ng-view></ng-view>
+
+    <!-- ##################### JS ##################### -->
+    <script type="text/javascript" src="controllers/index.js"></script>
+    <script type="text/javascript" src="controllers/home.js"></script>
 </body>
  
 </html>

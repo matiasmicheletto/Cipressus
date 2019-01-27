@@ -79,7 +79,7 @@ var database = {
 			  "nombre": "Laboratorio 1",
 			  "factor": 0.16,
 			  "vencimiento": {
-				"fecha":2000,        
+				"fecha":1556593200000,        
 				"desgaste": 10,           
 				"id": "lab1"
 			  },
@@ -231,7 +231,7 @@ var database = {
 			  "nombre": "Laboratorio 5",
 			  "factor": 0.16,
 			  "vencimiento": {
-				"fecha":1556593200000,        
+				"fecha":0,        
 				"desgaste": 10,           
 				"id": "lab5"
 			  },
@@ -283,36 +283,20 @@ var database = {
 	  },
 	  "ultimoLogin": 12314234,
 	  "calificaciones": {
-		"p1_ej1":
-		{
-		  "nota": 90
-		},
-		"p1_ej2":
-		{
-		  "nota": 100
-		},
-		"p1_ej3":
-		{
-		  "nota": 100
-		},
-		"asistencia":{
-		  "nota":78
-		},
-		"l5_impl_presentacion":{
-		  "nota":80
-		},
-		"l5_impl_funcionamiento":{
-		  "nota":80
-		},
-		"l5_informe_presentacion":{
-		  "nota":60
-		},
-		"l5_informe_contenido":{
-		  "nota":80
-		}
+		"p1_ej1":90,
+		"p1_ej2":100,
+		"p1_ej3":100,
+		"asistencia":75,
+		"p2_ej1":90,
+		"p2_ej2":100,
+		"p2_ej3":100,
+		"l1_impl_presentacion":80,
+		"l1_impl_funcionamiento":80,
+		"l1_informe_presentacion":60,
+		"l1_informe_contenido":80
 	  },
 	  "entregas":{
-		"lab5":1557111600000
+		"lab1":1557111600000
 	  }
 	}]
   }
@@ -331,25 +315,30 @@ var evalTree = function(alumno,nodo){ // Computar nota de un alumno
 		return sum;
 	}else{ // Es hoja
 		if(alumno.calificaciones[nodo.id]) // Si esta evaluado este campo
-			return alumno.calificaciones[nodo.id].nota; // Retornar el valor de la nota
+			return alumno.calificaciones[nodo.id]; // Retornar el valor de la nota
 		else 
 			return 0; // Si no tiene nota, devolver 0
 	}
 }
 
 
-// Ejemplo de evaluacion de un alumno
-console.log(database.actividades.nombre)
-console.log(evalTree(database.alumnos[0],database.actividades));
+// Ejemplo de evaluacion de la nota final de un alumno
+var alumno = database.alumnos[0];
+var nodo = database.actividades;
+console.log(nodo.nombre)
+console.log(evalTree(alumno,nodo));
 
-// Evaluacion de los laboratorios de un alumno
-console.log(database.actividades.children[2].nombre)
-console.log(evalTree(database.alumnos[0],database.actividades.children[2]));
+// Evaluacion de los laboratorios
+nodo = database.actividades.children[2];
+console.log(nodo.nombre)
+console.log(evalTree(alumno,nodo));
 
-// Evaluacion del laboratorio 5 de un alumno
-console.log(database.actividades.children[2].children[5].nombre)
-console.log(evalTree(database.alumnos[0],database.actividades.children[2].children[5]));
+// Evaluacion de un laboratorio particular
+nodo = database.actividades.children[2].children[1];
+console.log(nodo.nombre)
+console.log(evalTree(alumno,nodo));
 
 // Evaluacion de primer parcial
-console.log(database.actividades.children[1].children[0].nombre)
-console.log(evalTree(database.alumnos[0],database.actividades.children[1].children[0]));
+nodo = database.actividades.children[1].children[0];
+console.log(nodo.nombre)
+console.log(evalTree(alumno,nodo));
