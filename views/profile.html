@@ -4,14 +4,14 @@
 		<div class="row">
 
 			<div class="col s3">
-				<img class="responsive-img" src="images/avatar_0.png"></a>
+				<img class="responsive-img" src="{{user.avatar}}"></a>
 			</div>
 
 			<div class="col s6">
-				<h4>{{user.data.name}} {{user.data.secondName}}</h4>
-				<h5 class="truncate"><i>{{user.data.email}}</i></h5>		
-				<h5>LU: <i>{{user.data.lu}}</i></h5>		
-				<h5 class="truncate"><i>{{user.data.degree}}</i></h5>				
+				<h4>{{user.name}} {{user.secondName}}</h4>
+				<h5 class="truncate"><i>{{user.email}}</i></h5>		
+				<h5>LU: <i>{{user.lu}}</i></h5>		
+				<h5 class="truncate"><i>{{user.degree}}</i></h5>				
 				<p><b>Usuario desde:</b> {{created}}</p>
 			</div>	
 
@@ -24,37 +24,38 @@
 		</div>
 	</div>
 
+	<input type="file" id="imgInput" accept="image/*" style="display:none;">
 
 	<div class="card-panel grey lighten-3 z-depth-3" ng-show="edit">
 		<div class="row">
 		
 			<div class="col s3">
-				<img class="responsive-img" src="images/avatar_0.png"></a>
+				<img class="responsive-img" src="{{newAvatar}}" style="cursor: pointer;" ng-click="uploadPic()">
 			</div>
 		
 
 			<div class="col s9">
 				<div class="input-field">
 					<i class="material-icons prefix">person</i>
-					<input placeholder="{{user.data.name}}" class="validate" id="inputName" type="text">
+					<input placeholder="{{user.name}}" class="validate" id="inputName" type="text">
 					<label for="inputName">Nombre</label>
 				</div>	
 
 				<div class="input-field">
 					<i class="material-icons prefix">people</i>
-					<input placeholder="{{user.data.secondName}}" class="validate" id="inputSecondName" type="text">
+					<input placeholder="{{user.secondName}}" class="validate" id="inputSecondName" type="text">
 					<label for="inputSecondName">Apellido</label>
 				</div>
 
 				<div class="input-field">
 					<i class="material-icons prefix">credit_card</i>
-					<input placeholder="{{user.data.lu}}" class="validate" id="inputLU" type="number">
+					<input placeholder="{{user.lu}}" class="validate" id="inputLU" type="number">
 					<label for="inputLU">LU</label>
 				</div>	
 
 				<div class="input-field">
 					<i class="material-icons prefix">school</i>
-					<input placeholder="{{user.data.degree}}" class="validate" id="inputDegree" type="text">
+					<input placeholder="{{user.degree}}" class="validate" id="inputDegree" type="text">
 					<label for="inputDegree">Carrera</label>
 				</div>	
 			

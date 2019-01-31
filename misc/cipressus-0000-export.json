@@ -1,64 +1,89 @@
 {
   "activities" : {
     "children" : [ {
+      "color" : "rgb(219,224,162)",
       "factor" : 0.15,
       "id" : "asistencia",
-      "name" : "Asistencia a clase"
+      "name" : "Asistencia a clase",
+      "size" : 15
     }, {
       "children" : [ {
         "children" : [ {
+          "color" : "rgb(1,58,67)",
           "factor" : 0.25,
           "id" : "p1_ej1",
-          "name" : "Ej 1 - Primer parcial"
+          "name" : "Ej 1 - Primer parcial",
+          "size" : 6.25
         }, {
+          "color" : "rgb(112,0,126)",
           "factor" : 0.25,
           "id" : "p1_ej2",
-          "name" : "Ej 2 - Primer parcial"
+          "name" : "Ej 2 - Primer parcial",
+          "size" : 6.25
         }, {
+          "color" : "rgb(156,47,51)",
           "factor" : 0.25,
           "id" : "p1_ej3",
-          "name" : "Ej 3 - Primer parcial"
+          "name" : "Ej 3 - Primer parcial",
+          "size" : 6.25
         }, {
+          "color" : "rgb(135,199,98)",
           "factor" : 0.25,
           "id" : "p1_ej4",
-          "name" : "Ej 4 - Primer parcial"
+          "name" : "Ej 4 - Primer parcial",
+          "size" : 6.25
         } ],
         "factor" : 0.5,
         "name" : "Primer parcial"
       }, {
         "children" : [ {
+          "color" : "rgb(47,200,11)",
           "factor" : 0.25,
           "id" : "p2_ej1",
-          "name" : "Ej 1 - Segundo parcial"
+          "name" : "Ej 1 - Segundo parcial",
+          "size" : 6.25
         }, {
+          "color" : "rgb(149,49,46 )",
           "factor" : 0.25,
           "id" : "p2_ej2",
-          "name" : "Ej 2 - Segundo parcial"
+          "name" : "Ej 2 - Segundo parcial",
+          "size" : 6.25
         }, {
+          "color" : "rgb(185,3,203)",
           "factor" : 0.25,
           "id" : "p2_ej3",
-          "name" : "Ej 3 - Segundo parcial"
+          "name" : "Ej 3 - Segundo parcial",
+          "size" : 6.25
         }, {
+          "color" : "rgb(155,62,226 )",
           "factor" : 0.25,
           "id" : "p2_ej4",
-          "name" : "Ej 4 - Segundo parcial"
+          "name" : "Ej 4 - Segundo parcial",
+          "size" : 6.25
         } ],
+        "color" : "rgb(58,225,116)",
         "factor" : 0.5,
         "name" : "Segundo parcial"
       } ],
+      "color" : "rgb(152,238,127)",
       "factor" : 0.5,
       "name" : "Parciales"
     }, {
       "children" : [ {
         "children" : [ {
+          "color" : "rgb(179,99,5)",
           "factor" : 0.5,
           "id" : "l0_estetica",
-          "name" : "Estética probador"
+          "name" : "Estética probador",
+          "size" : 3.5
         }, {
+          "color" : "rgb(107,245,194)",
           "factor" : 0.5,
           "id" : "l0_funcionamiento",
-          "name" : "Funcionamiento probador"
+          "name" : "Funcionamiento probador",
+          "size" : 3.5
         } ],
+        "color" : "rgb(2,60,60)",
         "deadline" : {
           "date" : 2000,
           "id" : "lab0",
@@ -69,29 +94,40 @@
       }, {
         "children" : [ {
           "children" : [ {
+            "color" : "rgb(198,42,8)",
             "factor" : 0.5,
             "id" : "l1_impl_presentacion",
-            "name" : "Presentación prototipo laboratorio 1"
+            "name" : "Presentación prototipo laboratorio 1",
+            "size" : 1.12
           }, {
+            "color" : "rgb(158,224,236)",
             "factor" : 0.5,
             "id" : "l1_impl_funcionamiento",
-            "name" : "Funcionamiento prototipo laboratorio 1"
+            "name" : "Funcionamiento prototipo laboratorio 1",
+            "size" : 1.12
           } ],
+          "color" : "rgb(85,74,141)",
           "factor" : 0.4,
           "name" : "Implementación laboratorio 1"
         }, {
           "children" : [ {
+            "color" : "rgb(201,28,168)",
             "factor" : 0.5,
             "id" : "l1_informe_presentacion",
-            "name" : "Presentación informe laboratorio 1"
+            "name" : "Presentación informe laboratorio 1",
+            "size" : 1.68
           }, {
+            "color" : "rgb(219,12,250)",
             "factor" : 0.5,
             "id" : "l1_informe_contenido",
-            "name" : "Contenido informe laboratorio 1"
+            "name" : "Contenido informe laboratorio 1",
+            "size" : 1.68
           } ],
+          "color" : "rgb(203,176,9)",
           "factor" : 0.6,
           "name" : "Informe laboratorio 1"
         } ],
+        "color" : "rgb(88,113,80)",
         "deadline" : {
           "date" : 1556593200000,
           "id" : "lab1",
@@ -102,29 +138,40 @@
       }, {
         "children" : [ {
           "children" : [ {
+            "color" : "rgb(205,122,142)",
             "factor" : 0.5,
             "id" : "l2_impl_presentacion",
-            "name" : "Presentación prototipo laboratorio 2"
+            "name" : "Presentación prototipo laboratorio 2",
+            "size" : 1.12
           }, {
+            "color" : "rgb(196,231,83)",
             "factor" : 0.5,
             "id" : "l2_impl_funcionamiento",
-            "name" : "Funcionamiento prototipo laboratorio 2"
+            "name" : "Funcionamiento prototipo laboratorio 2",
+            "size" : 1.12
           } ],
+          "color" : "rgb(181,193,133)",
           "factor" : 0.4,
           "name" : "Implementación laboratorio 2"
         }, {
           "children" : [ {
+            "color" : "rgb(205,122,142)",
             "factor" : 0.5,
             "id" : "l2_informe_presentacion",
-            "name" : "Presentación informe laboratorio 2"
+            "name" : "Presentación informe laboratorio 2",
+            "size" : 1.68
           }, {
+            "color" : "rgb(57,37,180)",
             "factor" : 0.5,
             "id" : "l2_informe_contenido",
-            "name" : "Contenido informe laboratorio 2"
+            "name" : "Contenido informe laboratorio 2",
+            "size" : 1.68
           } ],
+          "color" : "rgb(124,242,93)",
           "factor" : 0.6,
           "name" : "Informe laboratorio 2"
         } ],
+        "color" : "rgb(157,115,195)",
         "deadline" : {
           "date" : 2000,
           "id" : "lab2",
@@ -135,29 +182,39 @@
       }, {
         "children" : [ {
           "children" : [ {
+            "color" : "rgb(91,18,96)",
             "factor" : 0.5,
             "id" : "l3_impl_presentacion",
-            "name" : "Presentación prototipo laboratorio 3"
+            "name" : "Presentación prototipo laboratorio 3",
+            "size" : 1.12
           }, {
+            "color" : "rgb(215,25,119)",
             "factor" : 0.5,
             "id" : "l3_impl_funcionamiento",
-            "name" : "Funcionamiento prototipo laboratorio 3"
+            "name" : "Funcionamiento prototipo laboratorio 3",
+            "size" : 1.12
           } ],
           "factor" : 0.4,
           "name" : "Implementación laboratorio 3"
         }, {
           "children" : [ {
+            "color" : "rgb(50,212,75)",
             "factor" : 0.5,
             "id" : "l3_informe_presentacion",
-            "name" : "Presentación informe laboratorio 3"
+            "name" : "Presentación informe laboratorio 3",
+            "size" : 1.68
           }, {
+            "color" : "rgb(41,173,86)",
             "factor" : 0.5,
             "id" : "l3_informe_contenido",
-            "name" : "Contenido informe laboratorio 3"
+            "name" : "Contenido informe laboratorio 3",
+            "size" : 1.68
           } ],
+          "color" : "rgb(223,238,220)",
           "factor" : 0.6,
           "name" : "Informe laboratorio 3"
         } ],
+        "color" : "rgb(115,228,30)",
         "deadline" : {
           "date" : 2000,
           "id" : "lab3",
@@ -168,29 +225,40 @@
       }, {
         "children" : [ {
           "children" : [ {
+            "color" : "rgb(164,247,152)",
             "factor" : 0.5,
             "id" : "l4_impl_presentacion",
-            "name" : "Presentación prototipo laboratorio 4"
+            "name" : "Presentación prototipo laboratorio 4",
+            "size" : 1.12
           }, {
+            "color" : "rgb(147,115,139)",
             "factor" : 0.5,
             "id" : "l4_impl_funcionamiento",
-            "name" : "Funcionamiento prototipo laboratorio 4"
+            "name" : "Funcionamiento prototipo laboratorio 4",
+            "size" : 1.12
           } ],
+          "color" : "rgb(244,166,133)",
           "factor" : 0.4,
           "name" : "Implementación laboratorio 4"
         }, {
           "children" : [ {
+            "color" : "rgb(127,76,183)",
             "factor" : 0.5,
             "id" : "l4_informe_presentacion",
-            "name" : "Presentación informe laboratorio 4"
+            "name" : "Presentación informe laboratorio 4",
+            "size" : 1.68
           }, {
+            "color" : "rgb(219,197,97)",
             "factor" : 0.5,
             "id" : "l4_informe_contenido",
-            "name" : "Contenido informe laboratorio 4"
+            "name" : "Contenido informe laboratorio 4",
+            "size" : 1.68
           } ],
+          "color" : "rgb(225,61,136)",
           "factor" : 0.6,
           "name" : "Informe laboratorio 4"
         } ],
+        "color" : "rgb(1,150,210)",
         "deadline" : {
           "date" : 2000,
           "id" : "lab4",
@@ -201,29 +269,40 @@
       }, {
         "children" : [ {
           "children" : [ {
+            "color" : "rgb(223,87,150)",
             "factor" : 0.5,
             "id" : "l5_impl_presentacion",
-            "name" : "Presentación prototipo laboratorio 5"
+            "name" : "Presentación prototipo laboratorio 5",
+            "size" : 1.12
           }, {
+            "color" : "rgb(123,130,212)",
             "factor" : 0.5,
             "id" : "l5_impl_funcionamiento",
-            "name" : "Funcionamiento prototipo laboratorio 5"
+            "name" : "Funcionamiento prototipo laboratorio 5",
+            "size" : 1.12
           } ],
+          "color" : "rgb(212,21,141)",
           "factor" : 0.4,
           "name" : "Implementación laboratorio 5"
         }, {
           "children" : [ {
+            "color" : "rgb(235,17,191)",
             "factor" : 0.5,
             "id" : "l5_informe_presentacion",
-            "name" : "Presentación informe laboratorio 5"
+            "name" : "Presentación informe laboratorio 5",
+            "size" : 1.68
           }, {
+            "color" : "rgb(193,118,108)",
             "factor" : 0.5,
             "id" : "l5_informe_contenido",
-            "name" : "Contenido informe laboratorio 5"
+            "name" : "Contenido informe laboratorio 5",
+            "size" : 1.68
           } ],
+          "color" : "rgb(84,67,147)",
           "factor" : 0.6,
           "name" : "Informe laboratorio 5"
         } ],
+        "color" : "rgb(165,121,51)",
         "deadline" : {
           "date" : 0,
           "id" : "lab5",
@@ -232,50 +311,58 @@
         "factor" : 0.16,
         "name" : "Laboratorio 5"
       } ],
+      "color" : "rgb(179,24,78)",
       "factor" : 0.35,
       "name" : "Laboratorios"
     }, {
+      "color" : "rgb(128,32,227 )",
       "factor" : 0.2,
       "id" : "suplementario",
-      "name" : "Examen suplementario"
+      "name" : "Examen suplementario",
+      "size" : 20
     } ],
+    "color" : "rgb(83,106,123)",
     "factor" : 1,
     "name" : "Nota final"
   },
-  "students" : [ {
-    "data" : {
-      "degree" : "101",
+  "news" : {
+    "rpuq9wfjdoweirj" : {
+      "author" : "FlX1c7HXkzUrrKBmuaqK9mLp1EI2",
+      "content" : "<h4>Diseño de Circuitos Lógicos - Primer cuatrimestre 2019</h4>  <h5>Plantel Docente Asignado</h5> <ul>     <li><b>Profesor:</b> Dr. Javier Orozco, <a href=\"mailto:jadorozco@gmail.com?Subject=Ref.%20[DCL]\">jadorozco@gmail.com</a></li>     <li><b>Ayudante A:</b> Ing. Matías Micheletto,  <a href=\"mailto:matiasmicheletto@gmail.com?Subject=Ref.%20[DCL]\">matiasmicheletto@gmail.com</a></li>     <li><b>Ayudante B:</b> Matías Repetto, <a href=\"mailto:matiasjrepetto@gmail.com?Subject=Ref.%20[DCL]\">matiasjrepetto@gmail.com</a></li> </ul>  <h5>Horarios:</h5> <p><b>Teoría:</b></p> <p>Viernes de 8:00 a 10:00, Aula 2, subsuelo edificio IIIE-DIEC, Palihue. <a href=\"https://www.google.com.ar/maps/place/UNS+-+Departamento+de+Ingenieria+Electrica+y+de+Computadoras/@-38.6948775,-62.2484207,106m/data=!3m1!1e3!4m5!3m4!1s0x95eda4a520178473:0xe9510e796c96c207!8m2!3d-38.6948287!4d-62.2485399\">[mapa]</a></p> <p><b>Laboratorios:</b></p> <p>Viernes de 10:00 a 12:00, Laboratorio de Sistemas Digitales, planta baja edificio IIIE-DIEC, Palihue. <a href=\"https://www.google.com.ar/maps/place/UNS+-+Departamento+de+Ingenieria+Electrica+y+de+Computadoras/@-38.6948775,-62.2484207,106m/data=!3m1!1e3!4m5!3m4!1s0x95eda4a520178473:0xe9510e796c96c207!8m2!3d-38.6948287!4d-62.2485399\">[mapa]</a></p></p> <p><b>Consultas:</b></p> <p>Coordinar por email.</p>  <h5>Parciales:</h5> <p><b>1° Parcial:</b> viernes 12 de octubre</p> <p><b>2° Parcial:</b> viernes 23 de noviembre</p> <p><b>Suplementario: </b>martes 4 de diciembre</p>  <h5>Ubicación de aulas y oficinas:</h5> <img class=\"responsive-img\" src=\"https://firebasestorage.googleapis.com/v0/b/cipressus-0000.appspot.com/o/images%2FUbicacionAulas.png?alt=media&token=bd491517-0093-46df-aa7c-398a89013192\"/>",
+      "timestamp" : 98746293874,
+      "title" : "Condiciones de cursado"
+    }
+  },
+  "users_public" : {
+    "FlX1c7HXkzUrrKBmuaqK9mLp1EI2" : {
+      "avatar" : "images/avatar_0.png",
+      "degree" : "Ingeniería Electrónica",
       "email" : "matiasmicheletto@gmail.com",
-      "lu" : 86282,
+      "lu" : 86262,
       "name" : "Matías",
       "secondName" : "Micheletto"
-    },
-    "scores" : {
-      "asistencia" : 75,
-      "l1_impl_funcionamiento" : 80,
-      "l1_impl_presentacion" : 80,
-      "l1_informe_contenido" : 80,
-      "l1_informe_presentacion" : 60,
-      "p1_ej1" : 90,
-      "p1_ej2" : 100,
-      "p1_ej3" : 100,
-      "p2_ej1" : 90,
-      "p2_ej2" : 100,
-      "p2_ej3" : 100
-    },
-    "submits" : {
-      "lab1" : 1557111600000
     }
-  } ],
-  "users" : {
+  },
+  "users_private" : {
     "FlX1c7HXkzUrrKBmuaqK9mLp1EI2" : {
       "admin" : true,
-      "data" : {
-        "email" : "matiasmicheletto@gmail.com",
-        "name" : "Matias",
-        "secondName" : "Micheletto"
+      "created" : 1548589579109,
+      "enrolled" : true,
+      "lastLogin" : 1548589579109,
+      "scores" : {
+        "asistencia" : 75,
+        "l1_impl_funcionamiento" : 80,
+        "l1_impl_presentacion" : 80,
+        "l1_informe_contenido" : 60,
+        "l1_informe_presentacion" : 100,
+        "p1_ej1" : 90,
+        "p1_ej3" : 100,
+        "p1_ej4" : 85,
+        "p2_ej1" : 100
       },
-      "lastLogin" : 1548589579109
+      "submits" : {
+        "lab1" : 1557111600000
+      }
     }
   }
 }

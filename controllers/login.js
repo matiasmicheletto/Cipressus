@@ -7,7 +7,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
 
     $scope.loginAttempt = function () { // Intentar logear usuario
         if (typeof $scope.userForm !== 'undefined') { // Verificar si se ingreso algo en los campos
-            Cipressus.users.signIn($scope.userForm.email, $scope.userForm.password).then(function (res) {
+            Cipressus.users.signIn($scope.userForm).then(function (res) {
                 console.log(res);                
                 M.toast({
                     html: "Bienvenido!",
@@ -64,12 +64,12 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
 
     $scope.registerNewUser = function () {
         if (typeof $scope.userForm !== 'undefined') {
-            Cipressus.users.signUp($scope.userForm.email, $scope.userForm.password, $scope.userForm.name).then(function (res) {
+            Cipressus.users.signUp($scope.userForm).then(function (res) {
                 console.log(res);
                 M.toast({
                     html: "Bienvenido!",
                     classes: 'rounded green',
-                    displayLength: 5000
+                    displayLength: 2500
                 });
             }).catch(function (err) {
                 console.log(err[0]);
@@ -95,24 +95,18 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 $scope.btn_text = "Iniciar sesión";
                 $scope.menu_left = "Registrarse";
                 $scope.menu_right = "¿Olvidó su contraseña?";
-                $scope.hide_pass_input = false;
-                $scope.hide_name_input = true;
                 $scope.btn_click = $scope.loginAttempt;
                 break;
             case 1: // registro
                 $scope.btn_text = "Registrarse";
                 $scope.menu_left = "¿Olvidó su contraseña?";
                 $scope.menu_right = "Iniciar sesión";
-                $scope.hide_pass_input = false;
-                $scope.hide_name_input = false;
                 $scope.btn_click = $scope.registerNewUser;
                 break;
             case 2: // recuperacion
                 $scope.btn_text = "Recuperar contraseña";
                 $scope.menu_left = "Iniciar sesión";
                 $scope.menu_right = "Registrarse";
-                $scope.hide_pass_input = true;
-                $scope.hide_name_input = true;
                 $scope.btn_click = $scope.retrievePassword;
                 break;
         }

@@ -71,14 +71,30 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
 
     Cipressus.users.onUserSignedIn = function(uid){ // Cuando el usuario se logea o si estaba logeado al actualizar pagina
         $rootScope.loading = true;
-        Cipressus.db.get('/users/'+uid) // Descargar datos de usuario
-        .then(function(data){
-            $rootScope.user = data;
+        Cipressus.db.get('users_public/'+uid) // Descargar datos publicos de usuario
+        .then(function(public_data){
+            $rootScope.user = public_data;
             $rootScope.user.uid = uid;
-            $location.path("/"); // Ir a vista de home
-            $rootScope.userLogged = true;
-            $rootScope.loading = false;
-            $rootScope.$apply(); 
+            Cipressus.db.get('users_private/'+uid) // Descargar datos privados de usuario
+            .then(function(private_data){
+                if(private_data){ // Usuario no aceptado aun
+                    $rootScope.user.admin = private_data.admin;
+                    $rootScope.user.enrolled = private_data.enrolled;
+                }else{
+                    $rootScope.user.admin = false;
+                    $rootScope.user.enrolled = -1;
+                }
+                Cipressus.db.update({last_login:Date.now()},'users_public/'+uid); // Actualizar fecha y hora
+                if($location.path() == "/login") // Si se acaba de logear en la vista de login
+                    $location.path("/"); // Ir a vista de home
+                $rootScope.userLogged = true;
+                $rootScope.loading = false;
+                $rootScope.$apply(); 
+            })
+            .catch(function(err){
+                console.log(err);
+                M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+            });
         })
         .catch(function(err){
             console.log(err);

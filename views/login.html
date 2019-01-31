@@ -1,30 +1,46 @@
 <center>
-    <div class="container black-text" style="margin-top: 100px;" style="z-index:-2">
-        <div class="z-depth-1 row hoverable login-box" style="z-index:1">
+    <div class="container black-text" style="margin-top: 80px;" style="z-index:-2">
+        <div class="z-depth-1 row hoverable login-box" style="z-index:1; width:{{login_mode==1 ? '600px':'400px'}}">
             <div>
-                <a href="#/"><img src="images/mainlogo.png" width="150px" /></a>
+                <a><img src="images/mainlogo.png" width="150px" /></a>
             </div>
             <p class="center">Iniciar sesión en <span><img src="images/secondarylogo.png" width="100" align="top"/></span></p>
             <form class="col s12" method="post">
 
-                <div class="row" ng-hide="hide_name_input">
-                    <div class="input-field col s12">
-                        <i class="material-icons prefix">account_circle</i>
+                <div class="row" ng-show="login_mode==1">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">person</i>
                         <input class="validate black-text" name="name" id="name" ng-model="userForm.name" type="text" />
                         <label for="name">Nombre</label>
                     </div>
+                
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">people</i>
+                        <input class="validate black-text" name="secondName" id="secondName" ng-model="userForm.secondName" type="text" />
+                        <label for="secondName">Apellido</label>
+                    </div>
+     
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">credit_card</i>
+                        <input class="validate black-text" name="lu" id="lu" ng-model="userForm.lu" type="number" />
+                        <label for="lu">LU</label>
+                    </div>
+          
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">school</i>
+                        <input class="black-text" name="degree" id="degree" ng-model="userForm.degree" type="text" />
+                        <label for="degree">Carrera</label>
+                    </div>
                 </div>
-
+            
                 <div class="row">
-                    <div class="input-field col s12">
+                    <div class="input-field col {{login_mode==1 ? 's6':'s12'}}">
                         <i class="material-icons prefix">email</i>
                         <input class="validate black-text" name="email" id="email" type="email" ng-model="userForm.email" />
                         <label for="email">Email</label>
                     </div>
-                </div>
-
-                <div class="row" ng-hide="hide_pass_input">
-                    <div class="input-field col s12">
+         
+                    <div ng-hide="login_mode==2" class="input-field col {{login_mode==1 ? 's6':'s12'}}">
                         <i class="material-icons prefix">vpn_key</i>
                         <input class="validate black-text" name="password" id="password" type="password" ng-model="userForm.password" />
                         <label for="password">Contraseña</label>

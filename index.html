@@ -31,7 +31,7 @@
     <script type="text/javascript" src="assets/moment.min.js"></script>
     <script type="text/javascript" src="assets/jsCalendar.min.js"></script>
     <script type="text/javascript" src="assets/jsCalendar.lang.es.js"></script>
-    <script type="text/javascript" src="assets/canvasjs.min.js"></script>
+    <script src="//unpkg.com/sunburst-chart"></script>
     <script type="text/javascript" src="assets/cipressus.js"></script>
 
 
@@ -101,16 +101,16 @@
                 <div class="background">
                     <img src="images/background.png">
                 </div>
-                <a href="#profile"><img class="circle" src="images/avatar_0.png"></a>
-                <a href="#profile"><span class="white-text name">{{user.data.name}}</span></a>
-                <a href="#profile"><span class="white-text email">{{user.data.email}}</span></a>
+                <a href="#profile"><img class="circle" src="{{user.avatar}}"></a>
+                <a href="#profile"><span class="white-text name">{{user.name}}</span></a>
+                <a href="#profile"><span class="white-text email">{{user.email}}</span></a>
             </div>
         </li>
         <li class="no-padding">
             <a href="#/" class="collapsible-header">Inicio<i class="material-icons">home</i></a>
         </li>
         <li class="no-padding">
-            <a href="#/scores" class="collapsible-header">Calificaciones<i class="material-icons">school</i></a>
+            <a href="#/scores" class="collapsible-header">Mis calificaciones<i class="material-icons">school</i></a>
         </li>
         <li class="no-padding">
             <a href="#/calendar" class="collapsible-header">Cronograma<i class="material-icons">calendar_today</i></a>
@@ -123,7 +123,7 @@
                         <ul>
                             <li><a href="#/students">Alumnos<i class="material-icons">group</i></a></li>
                             <li><a href="#/activities">Actividades<i class="material-icons">build</i></a></li>
-                            <li><a href="#/newseditor">Editor de noticias<i class="material-icons">fiber_new</i></a></li>
+                            <li><a href="#/newseditor">Noticias<i class="material-icons">fiber_new</i></a></li>
                         </ul>
                     </div>
                 </li>
