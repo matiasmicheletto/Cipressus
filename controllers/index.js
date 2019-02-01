@@ -39,7 +39,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
     // Configuracion de moment.js
     moment.locale('es', {
         relativeTime : {
-            future: "en %s",past: "hace %s",s: "pocos segundos",ss: "%d segundos",m: "un minuto",mm: "%d minutos",
+            future: "dentro de %s",past: "hace %s",s: "pocos segundos",ss: "%d segundos",m: "un minuto",mm: "%d minutos",
             h: "una hora",hh: "%d horas",d: "un día",dd: "%d días",M: "un mes",MM: "%d meses",y: "un año",yy: "%d años"
         }
     });
@@ -54,7 +54,12 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
     M.Modal.init(document.getElementById("about_modal"),{});
     M.Modal.init(document.getElementById("help_modal"),{});
 
-    $rootScope.signOut = function(){
+    window.addEventListener("resize", function(){
+        if($rootScope.resizeEvent)
+            $rootScope.resizeEvent()
+    });
+
+    $rootScope.signOut = function(){ // Callback para el boton de salir
         Cipressus.users.signOut()
         .then(function(res){
             M.toast({html: res,classes: 'rounded green',displayLength: 1500});

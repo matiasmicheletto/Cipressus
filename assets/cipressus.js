@@ -225,6 +225,27 @@ window.Cipressus = (function () {
         }
     };
 
+    core.utils.getArray = function(node,arr,parent){ // Convertir el arbol en arreglo referenciado
+        if (node.children) { 
+            for (var k in node.children) // Para cada hijo del nodo
+                arr.concat(core.utils.getArray(node.children[k],arr,node.id)); // Obtener arreglo de los hijos
+            arr.push({ // Agregar el nodo actual 
+                id: node.id,
+                parent: parent, // Referencias hacia atras
+                name: node.name
+            });
+            return arr;
+        } else { // Es hoja, agregar hoja y retornar
+            arr.push({
+                id: node.id,
+                parent: parent,
+                name: node.name,
+                value: node.size
+            });
+            return arr;
+        }
+    };
+
 
     ///// PRINCIPAL /////
 
