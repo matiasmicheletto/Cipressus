@@ -1,4 +1,10 @@
 app.controller("activities", ['$scope', '$rootScope', '$location', function ($scope, $rootScope) {
+
+    if(!$rootScope.userLogged){
+        $location.path("/login");
+        return;
+    }
+
     $rootScope.sidenav.close();
 
     $rootScope.loading = true;
@@ -11,10 +17,9 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
             arr = Cipressus.utils.getArray($scope.activities, arr, '');
 
             // Graficar sunburst
-            
             Highcharts.chart('container', {
                 chart: {
-                    height: '100%'
+                    height: '80%'
                 },
                 title: {
                     text: 'Proporción de calificaciones'
@@ -35,7 +40,8 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
                             value: 16
                         }
                     },
-                    levels: [{
+                    levels: [
+                        {
                             level: 1,
                             levelIsConstant: false,
                             dataLabels: {
@@ -45,18 +51,22 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
                                     value: 64
                                 }
                             }
-                        }, {
+                        },
+                        {
                             level: 2,
-                            colorByPoint: true
+                            colorIndex: 1
                         },
                         {
                             level: 3,
+                            colorByPoint: true
+                        }, {
+                            level: 4,
                             colorVariation: {
                                 key: 'brightness',
                                 to: -0.5
                             }
                         }, {
-                            level: 4,
+                            level: 5,
                             colorVariation: {
                                 key: 'brightness',
                                 to: 0.5

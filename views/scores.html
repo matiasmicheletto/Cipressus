@@ -1,6 +1,20 @@
-<div class="container">
-   
-    <h1>Calificaciones</h1> 
-
-
+<div class="row">
+    <div class="col s12 m6 l6">
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">
+                <div id="sunburst_container"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m6 l6">    
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">
+                <div ng-hide="student">
+                    <h5>Aguarde a ser habilitado por los administradores para poder consultar sus calificaciones</h5>
+                </div>
+                <div ng-show="student" id="variable_pie_container"></div>
+            </div>
+        </div>
+    </div>
 </div>
+

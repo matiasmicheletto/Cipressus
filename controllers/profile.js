@@ -1,7 +1,9 @@
 app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$rootScope,$location) {
   
-  if(!$rootScope.userLogged)
+  if(!$rootScope.userLogged){
     $location.path("/login");
+    return;
+}
 
   $rootScope.sidenav.close();
   

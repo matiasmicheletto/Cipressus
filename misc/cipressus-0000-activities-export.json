@@ -1,347 +1,266 @@
 {
   "children" : [ {
-    "color" : "rgb(219,224,162)",
-    "factor" : 0.15,
     "id" : "asistencia",
     "name" : "Asistencia a clase",
-    "size" : 15
+    "score" : 15
   }, {
     "children" : [ {
       "children" : [ {
-        "color" : "rgb(1,58,67)",
-        "factor" : 0.25,
         "id" : "p1_ej1",
         "name" : "Ej 1 - Primer parcial",
-        "size" : 6.25
+        "score" : 6.25
       }, {
-        "color" : "rgb(112,0,126)",
-        "factor" : 0.25,
         "id" : "p1_ej2",
         "name" : "Ej 2 - Primer parcial",
-        "size" : 6.25
+        "score" : 6.25
       }, {
-        "color" : "rgb(156,47,51)",
-        "factor" : 0.25,
         "id" : "p1_ej3",
         "name" : "Ej 3 - Primer parcial",
-        "size" : 6.25
+        "score" : 6.25
       }, {
-        "color" : "rgb(135,199,98)",
-        "factor" : 0.25,
         "id" : "p1_ej4",
         "name" : "Ej 4 - Primer parcial",
-        "size" : 6.25
+        "score" : 6.25
       } ],
-      "factor" : 0.5,
+      "score" : 25,
       "id" : "parcial_1",
       "name" : "Primer parcial"
     }, {
       "children" : [ {
-        "color" : "rgb(47,200,11)",
-        "factor" : 0.25,
         "id" : "p2_ej1",
         "name" : "Ej 1 - Segundo parcial",
-        "size" : 6.25
+        "score" : 6.25
       }, {
-        "color" : "rgb(149,49,46 )",
-        "factor" : 0.25,
         "id" : "p2_ej2",
         "name" : "Ej 2 - Segundo parcial",
-        "size" : 6.25
+        "score" : 6.25
       }, {
-        "color" : "rgb(185,3,203)",
-        "factor" : 0.25,
         "id" : "p2_ej3",
         "name" : "Ej 3 - Segundo parcial",
-        "size" : 6.25
+        "score" : 6.25
       }, {
-        "color" : "rgb(155,62,226 )",
-        "factor" : 0.25,
         "id" : "p2_ej4",
         "name" : "Ej 4 - Segundo parcial",
-        "size" : 6.25
+        "score" : 6.25
       } ],
-      "color" : "rgb(58,225,116)",
-      "factor" : 0.5,
+      "score" : 25,
       "id" : "parcial_2",
       "name" : "Segundo parcial"
     } ],
-    "color" : "rgb(152,238,127)",
-    "factor" : 0.5,
+    "score" : 50,
     "id" : "parciales",
     "name" : "Parciales"
   }, {
     "children" : [ {
       "children" : [ {
-        "color" : "rgb(179,99,5)",
-        "factor" : 0.5,
         "id" : "l0_estetica",
         "name" : "Estética probador",
-        "size" : 3.5
+        "score" : 3.5
       }, {
-        "color" : "rgb(107,245,194)",
-        "factor" : 0.5,
         "id" : "l0_funcionamiento",
         "name" : "Funcionamiento probador",
-        "size" : 3.5
+        "score" : 3.5
       } ],
-      "color" : "rgb(2,60,60)",
       "deadline" : {
         "date" : 2000,
         "id" : "lab0",
         "param" : 1
       },
-      "factor" : 0.2,
       "id" : "lab0",
+      "score" : 7,
       "name" : "Probador"
     }, {
       "children" : [ {
         "children" : [ {
-          "color" : "rgb(198,42,8)",
-          "factor" : 0.5,
           "id" : "l1_impl_presentacion",
           "name" : "Presentación prototipo laboratorio 1",
-          "size" : 1.12
+          "score" : 1.12
         }, {
-          "color" : "rgb(158,224,236)",
-          "factor" : 0.5,
           "id" : "l1_impl_funcionamiento",
           "name" : "Funcionamiento prototipo laboratorio 1",
-          "size" : 1.12
+          "score" : 1.12
         } ],
-        "color" : "rgb(85,74,141)",
-        "factor" : 0.4,
         "id" : "lab1_impl",
+        "score" : 2.24,
         "name" : "Implementación laboratorio 1"
       }, {
         "children" : [ {
-          "color" : "rgb(201,28,168)",
-          "factor" : 0.5,
           "id" : "l1_informe_presentacion",
           "name" : "Presentación informe laboratorio 1",
-          "size" : 1.68
+          "score" : 1.68
         }, {
-          "color" : "rgb(219,12,250)",
-          "factor" : 0.5,
           "id" : "l1_informe_contenido",
           "name" : "Contenido informe laboratorio 1",
-          "size" : 1.68
+          "score" : 1.68
         } ],
-        "color" : "rgb(203,176,9)",
-        "factor" : 0.6,
         "id" : "lab1_inf",
+        "score" : 3.36,
         "name" : "Informe laboratorio 1"
       } ],
-      "color" : "rgb(88,113,80)",
       "deadline" : {
         "date" : 1556593200000,
         "id" : "lab1",
         "param" : 10
       },
-      "factor" : 0.16,
+      "score" : 5.6,
       "id" : "lab1",
       "name" : "Laboratorio 1"
     }, {
       "children" : [ {
         "children" : [ {
-          "color" : "rgb(205,122,142)",
-          "factor" : 0.5,
           "id" : "l2_impl_presentacion",
           "name" : "Presentación prototipo laboratorio 2",
-          "size" : 1.12
+          "score" : 1.12
         }, {
-          "color" : "rgb(196,231,83)",
-          "factor" : 0.5,
           "id" : "l2_impl_funcionamiento",
           "name" : "Funcionamiento prototipo laboratorio 2",
-          "size" : 1.12
+          "score" : 1.12
         } ],
-        "color" : "rgb(181,193,133)",
-        "factor" : 0.4,
         "id" : "lab2_impl",
+        "score" : 2.24,
         "name" : "Implementación laboratorio 2"
       }, {
         "children" : [ {
-          "color" : "rgb(205,122,142)",
-          "factor" : 0.5,
           "id" : "l2_informe_presentacion",
           "name" : "Presentación informe laboratorio 2",
-          "size" : 1.68
+          "score" : 1.68
         }, {
-          "color" : "rgb(57,37,180)",
-          "factor" : 0.5,
           "id" : "l2_informe_contenido",
           "name" : "Contenido informe laboratorio 2",
-          "size" : 1.68
+          "score" : 1.68
         } ],
-        "color" : "rgb(124,242,93)",
-        "factor" : 0.6,
+        "score" : 3.36,
         "id" : "lab2_inf",
         "name" : "Informe laboratorio 2"
       } ],
-      "color" : "rgb(157,115,195)",
       "deadline" : {
         "date" : 2000,
         "id" : "lab2",
         "param" : 10
       },
-      "factor" : 0.16,
+      "score" : 5.6,
       "id" : "lab2",
       "name" : "Laboratorio 2"
     }, {
       "children" : [ {
         "children" : [ {
-          "color" : "rgb(91,18,96)",
-          "factor" : 0.5,
           "id" : "l3_impl_presentacion",
           "name" : "Presentación prototipo laboratorio 3",
-          "size" : 1.12
+          "score" : 1.12
         }, {
-          "color" : "rgb(215,25,119)",
-          "factor" : 0.5,
           "id" : "l3_impl_funcionamiento",
           "name" : "Funcionamiento prototipo laboratorio 3",
-          "size" : 1.12
+          "score" : 1.12
         } ],
-        "factor" : 0.4,
+        "score" : 2.24,
         "id" : "lab3_impl",
         "name" : "Implementación laboratorio 3"
       }, {
         "children" : [ {
-          "color" : "rgb(50,212,75)",
-          "factor" : 0.5,
           "id" : "l3_informe_presentacion",
           "name" : "Presentación informe laboratorio 3",
-          "size" : 1.68
+          "score" : 1.68
         }, {
-          "color" : "rgb(41,173,86)",
-          "factor" : 0.5,
           "id" : "l3_informe_contenido",
           "name" : "Contenido informe laboratorio 3",
-          "size" : 1.68
+          "score" : 1.68
         } ],
-        "color" : "rgb(223,238,220)",
-        "factor" : 0.6,
+        "score" : 3.36,
         "id" : "lab3_inf",
         "name" : "Informe laboratorio 3"
       } ],
-      "color" : "rgb(115,228,30)",
       "deadline" : {
         "date" : 2000,
         "id" : "lab3",
         "param" : 10
       },
-      "factor" : 0.16,
+      "score" : 5.6,
       "id" : "lab3",
       "name" : "Laboratorio 3"
     }, {
       "children" : [ {
         "children" : [ {
-          "color" : "rgb(164,247,152)",
-          "factor" : 0.5,
           "id" : "l4_impl_presentacion",
           "name" : "Presentación prototipo laboratorio 4",
-          "size" : 1.12
+          "score" : 1.12
         }, {
-          "color" : "rgb(147,115,139)",
-          "factor" : 0.5,
           "id" : "l4_impl_funcionamiento",
           "name" : "Funcionamiento prototipo laboratorio 4",
-          "size" : 1.12
+          "score" : 1.12
         } ],
-        "color" : "rgb(244,166,133)",
-        "factor" : 0.4,
+        "score" : 2.24,
         "id" : "lab4_impl",
         "name" : "Implementación laboratorio 4"
       }, {
         "children" : [ {
-          "color" : "rgb(127,76,183)",
-          "factor" : 0.5,
           "id" : "l4_informe_presentacion",
           "name" : "Presentación informe laboratorio 4",
-          "size" : 1.68
+          "score" : 1.68
         }, {
-          "color" : "rgb(219,197,97)",
-          "factor" : 0.5,
           "id" : "l4_informe_contenido",
           "name" : "Contenido informe laboratorio 4",
-          "size" : 1.68
+          "score" : 1.68
         } ],
-        "color" : "rgb(225,61,136)",
-        "factor" : 0.6,
+        "score" : 3.36,
         "id" : "lab4_inf",
         "name" : "Informe laboratorio 4"
       } ],
-      "color" : "rgb(1,150,210)",
+      
       "deadline" : {
         "date" : 2000,
         "id" : "lab4",
         "param" : 10
       },
-      "factor" : 0.16,
+      "score" : 5.6,
       "id" : "lab4",
       "name" : "Laboratorio 4"
     }, {
       "children" : [ {
         "children" : [ {
-          "color" : "rgb(223,87,150)",
-          "factor" : 0.5,
           "id" : "l5_impl_presentacion",
           "name" : "Presentación prototipo laboratorio 5",
-          "size" : 1.12
+          "score" : 1.12
         }, {
-          "color" : "rgb(123,130,212)",
-          "factor" : 0.5,
           "id" : "l5_impl_funcionamiento",
           "name" : "Funcionamiento prototipo laboratorio 5",
-          "size" : 1.12
+          "score" : 1.12
         } ],
-        "color" : "rgb(212,21,141)",
-        "factor" : 0.4,
+        "score" : 2.24,
         "id" : "lab5_impl",
         "name" : "Implementación laboratorio 5"
       }, {
         "children" : [ {
-          "color" : "rgb(235,17,191)",
-          "factor" : 0.5,
           "id" : "l5_informe_presentacion",
           "name" : "Presentación informe laboratorio 5",
-          "size" : 1.68
+          "score" : 1.68
         }, {
-          "color" : "rgb(193,118,108)",
-          "factor" : 0.5,
           "id" : "l5_informe_contenido",
           "name" : "Contenido informe laboratorio 5",
-          "size" : 1.68
+          "score" : 1.68
         } ],
-        "color" : "rgb(84,67,147)",
-        "factor" : 0.6,
+        "score" : 3.36,
         "id" : "lab5_inf",
         "name" : "Informe laboratorio 5"
       } ],
-      "color" : "rgb(165,121,51)",
       "deadline" : {
         "date" : 0,
         "id" : "lab5",
         "param" : 10
       },
-      "factor" : 0.16,
+      "score" : 5.6,
       "id" : "lab5",
       "name" : "Laboratorio 5"
     } ],
-    "color" : "rgb(179,24,78)",
-    "factor" : 0.35,
+    "score" : 35,
     "id" : "labs",
     "name" : "Laboratorios"
   }, {
-    "color" : "rgb(128,32,227 )",
-    "factor" : 0.2,
     "id" : "suplementario",
     "name" : "Examen suplementario",
-    "size" : 20
+    "score" : 20
   } ],
-  "color" : "rgb(83,106,123)",
-  "factor" : 1,
+  "course" : "Diseño de Circuitos Lógicos",
+  "score" : 120,
   "id" : "final",
   "name" : "Nota final"
 }

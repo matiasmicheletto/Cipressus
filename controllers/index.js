@@ -60,9 +60,12 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
     });
 
     $rootScope.signOut = function(){ // Callback para el boton de salir
+        $location.path("/login");
+        $rootScope.userLogged = false;
         Cipressus.users.signOut()
         .then(function(res){
-            M.toast({html: res,classes: 'rounded green',displayLength: 1500});
+            console.log(res);
+            M.toast({html: "Hasta pronto!",classes: 'rounded green',displayLength: 1500});
         })
         .catch(function(err){
             console.log(err[0]);
@@ -107,7 +110,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
         });
     };
 
-    Cipressus.users.onUserSignedOut = function(){ // Cuando cierra sesion
+    Cipressus.users.onUserSignedOut = function(){ // Cuando cierra la sesion (puede ser desde otro lugar)
         $rootScope.sidenav.close();
         $rootScope.userLogged = false;
         $location.path("/login"); // Ir a vista de logeo

@@ -120,7 +120,7 @@ window.Cipressus = (function () {
                 return reject([errorCode, errorMessage]);
             })
             .then(function (result) {
-                return fulfill("Logeado correctamente...");
+                return fulfill("Logeado correctamente.");
             });
         });
     };
@@ -129,7 +129,7 @@ window.Cipressus = (function () {
         return new Promise(function (fulfill, reject) {
             firebase.auth().signOut()
             .then(function () {
-                return fulfill("Hasta pronto!");
+                return fulfill("Ha salido de Cipressus.");
             })
             .catch(function (error) {
                 return reject([error, "Algo pasó.. intentálo nuevamente."]);
@@ -198,8 +198,25 @@ window.Cipressus = (function () {
 
 
     //// UTILIDADES ////
+    core.utils.searchNode = function(node, id){ // Obtener el objeto de un nodo
+        // Entradas:
+        //		- node: es el nodo del arbol a partir del cual se inicia la busqueda
+        //      - id: es el identificador de la actividad que se desea buscar    
+        var result = null;
+        if(node.id == id) // Coincidencia
+            return node;
+        else
+            if(node.children) // Si el nodo tiene hijos, recorrer buscando
+                for (var k in node.children){ // Para cada hijo del nodo
+                    result = core.utils.searchNode(node.children[k],id); // Buscar
+                    if(result)
+                        return result;
+                } 
+        return result;
+    };
 
-    core.utils.eval = function (student, node, costFunction) { // Computar nota de un alumno
+
+    core.utils.eval = function (student, node, costFunction) { // Computar nota de un alumno en puntaje absoluto
         // Entradas:
         //		- student: contiene la informacion de entregas y notas asignadas por los profesores
         //		- node: es el nodo del arbol de actividades al que se le quiere calcular el puntaje total 
@@ -208,24 +225,29 @@ window.Cipressus = (function () {
         if (node.children) { // Si el nodo tiene hijos, calcular suma ponderada de los hijos
             var sum = 0; // Contador de puntajes
             for (var k in node.children) // Para cada hijo del nodo
-                sum += core.utils.eval(student, node.children[k]) * node.children[k].factor; // Sumar nota ponderada de los hijos
+                sum += core.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
             if (node.deadline) // Si la actividad tiene fecha de vencimiento
-                if (student.submits[node.deadline.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
-                    if (student.submits[node.deadline.id] > node.deadline.date) // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
+                if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
+                    if (student.submits[node.id] > node.deadline.date) // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
                         if (costFunction) // Si se indico una funcion de costo, usar esa
-                            sum = costFunction(sum, student.submits[node.deadline.id], node.deadline.date, node.deadline.param); // Aplicar costo y calcular nuevo puntaje
+                            sum = costFunction(sum, student.submits[node.id], node.deadline.date, node.deadline.param); // Aplicar costo y calcular nuevo puntaje
                         else // Sino usar la funcion por defecto de la libreria
-                            sum = defaultCostFunction(sum, student.submits[node.deadline.id], node.deadline.date, node.deadline.param);
+                            sum = defaultCostFunction(sum, student.submits[node.id], node.deadline.date, node.deadline.param);
             return sum;
         } else { // Es hoja
             if (student.scores[node.id]) // Si ya esta evaluado este campo
-                return student.scores[node.id]; // Retornar el valor de la nota
+                return student.scores[node.id].score*node.score/100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
             else
                 return 0; // Si no tiene nota, devolver 0
         }
     };
 
     core.utils.getArray = function(node,arr,parent){ // Convertir el arbol en arreglo referenciado
+        // Sirve para exportar a formato de highcharts
+        // Entradas:
+        //		- node: contiene el arbol de notas
+        //		- arr: se pasa recursivamente para ir completando con informacion de los nodos y hojas
+        //      - parent: es el identificador del padre para ir pasando las referencias
         if (node.children) { 
             for (var k in node.children) // Para cada hijo del nodo
                 arr.concat(core.utils.getArray(node.children[k],arr,node.id)); // Obtener arreglo de los hijos
@@ -240,7 +262,7 @@ window.Cipressus = (function () {
                 id: node.id,
                 parent: parent,
                 name: node.name,
-                value: node.size
+                value: node.score
             });
             return arr;
         }
