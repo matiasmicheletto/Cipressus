@@ -1,0 +1,36 @@
+<div class="container">
+    
+    <!-- Lista de usuarios -->
+    <div class = "section"> 
+      <h5 class="row" ng-if="users">Usuarios</h5>
+      <table class="highlight responsive-table" ng-if="users">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>Nombre</th>
+            <th>LU</th>
+            <th>E-Mail</th>
+            <th>Último acceso</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <tr ng-repeat="(key,row) in users">
+            <td><img class="circle" src="{{row.avatar}}" height="50px" width="50px"></td>
+            <td>{{row.name}} {{row.secondName}}</td>
+            <td>{{row.lu}}</td>
+            <td>{{row.email}}</td>
+            <td>{{relativeTime(row.last_login)}}</td>
+            <td width="1%" style="white-space:nowrap;">
+              <a title="Enviar mensaje" class="waves-effect waves-light teal btn-small btn-floating z-depth=3"><i class="material-icons">mail_outline</i></a>
+              <a title="Calificar" class="waves-effect waves-light purple btn-floating btn-small z-depth=3"><i class="material-icons">done_all</i></a>
+              <a title="Permisos" class="waves-effect waves-light red btn-floating btn-small z-depth=3"><i class="material-icons">security</i></a>
+            </td>
+          </tr>      
+        </tbody>
+      </table>
+    </div>
+  
+
+  </div>
