@@ -25,6 +25,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             templateUrl: "views/users.html",
             controller: "users"
         })
+        .when("/editor", {
+            templateUrl: "views/editor.html",
+            controller: "editor"
+        })
         .when("/calendar", {
             templateUrl: "views/calendar.html",
             controller: "calendar"

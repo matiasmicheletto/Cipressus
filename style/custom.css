@@ -33,3 +33,24 @@
 .highcharts-drillup-button {
   display: none
 }
+
+
+
+/* Modals de tamanio personalizado */
+.wide-modal {
+  width: 85% !important;
+  min-width: 85% !important;
+  height: 85% !important; 
+  min-height: 85% !important; 
+  top: 7.5% !important;
+  border-radius: 10px;
+}
+
+.full-modal {
+  width: 98% !important;
+  min-width: 98% !important;
+  height: 98% !important; 
+  min-height: 98% !important;  
+  top: 1% !important;
+  border-radius: 10px;
+}

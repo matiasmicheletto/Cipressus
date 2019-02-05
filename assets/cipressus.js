@@ -33,6 +33,18 @@ window.Cipressus = (function () {
         messagingSenderId: "927588929794"
     };
 
+    core.db.listen = function(path){ // Escuchar cambios
+        return new Promise(function (fulfill, reject) {
+            firebase.database().ref(path).on('value')
+                .then(function (snapshot) {
+                    return fulfill(snapshot.val());
+                })
+                .catch(function (error) {
+                    return reject(error);
+                });
+        });
+    };
+
     core.db.get = function (path) { // Descargar informacion de la db
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).once('value')
@@ -43,6 +55,18 @@ window.Cipressus = (function () {
                     return reject(error);
                 });
         });
+    };
+
+    core.db.getSorted = function(path,key){ // Obtener lista ordenada por key
+        return new Promise(function(fulfill,reject){
+            firebase.database().ref(path).orderByChild(key).once('value')
+            .then(function (snapshot) {
+                return fulfill(snapshot);
+            })
+            .catch(function (error) {
+                return reject(error);
+            });
+        })
     };
 
     core.db.set = function (data, path) { // Actualizar entrada de la db

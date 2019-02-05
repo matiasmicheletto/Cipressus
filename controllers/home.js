@@ -7,6 +7,8 @@ app.controller("home", ['$scope','$rootScope','$location', function ($scope,$roo
 
     $rootScope.loading = true;
     $rootScope.sidenav.close();
+
+    $scope.now = Date.now();
     
     $scope.readableTime = function(timestamp){ // Fecha y hora formal
         return moment(timestamp).format("DD/MM/YYYY HH:mm");
@@ -16,9 +18,12 @@ app.controller("home", ['$scope','$rootScope','$location', function ($scope,$roo
         return moment(timestamp).fromNow();
     };
 
-    Cipressus.db.get('news') // Descargar lista de novedades
-    .then(function(news_data){
-        $scope.news = news_data;   
+    $scope.news = [];
+    Cipressus.db.getSorted('news','order') // Descargar lista de novedades
+    .then(function(snapshot){
+        snapshot.forEach(function(childSnapshot){ // Lista ordenada
+            $scope.news.push(childSnapshot.val());
+        });  
         Cipressus.db.get('users_public') // Descargar lista de usuarios
         .then(function(users_data){
            $scope.users = users_data; 

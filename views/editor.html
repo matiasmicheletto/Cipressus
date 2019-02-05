@@ -1,0 +1,120 @@
+<div class="container">
+  <!-- Lista de noticias -->
+  <div class = "section"> 
+    <h5 class="row" ng-if="users">Usuarios</h5>
+    <table class="highlight responsive-table" ng-if="users">
+      <thead>
+        <tr>
+          <th>Titulo</th>
+          <th>Autor</th>
+          <th>Publicado</th>
+          <th>Menu</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="(key,row) in news track by $index">
+          <td>{{row.title}}</td>
+          <td>{{users[row.author].secondName}}</td>
+          <td>{{readableTime(row.timestamp)}}</td>
+          <td width="1%" style="white-space:nowrap;">
+            <a title="Editar" class="waves-effect waves-light blue btn-small btn-floating z-depth=3 modal-trigger" data-target="edit_modal" ng-click="select(key)"><i class="material-icons">edit</i></a>
+            <a title="Ver" class="waves-effect waves-light green btn-floating btn-small z-depth=3 modal-trigger" data-target="view_modal" ng-click="select(key)"><i class="material-icons">visibility</i></a>
+            <a title="Eliminar" class="waves-effect waves-light red btn-floating btn-small z-depth=3 modal-trigger" data-target="confirm_modal" ng-click="select(key)"><i class="material-icons">delete</i></a>
+            <a title="Subir" class="waves-effect waves-light teal btn-floating btn-small z-depth=3" ng-click="moveSelected(true,key);"><i class="material-icons">vertical_align_top</i></a>
+            <a title="Bajar" class="waves-effect waves-light teal btn-floating btn-small z-depth=3" ng-click="moveSelected(false,key);"><i class="material-icons">vertical_align_bottom</i></a>
+          </td>
+        </tr>      
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="fixed-action-btn">
+    <a title="Nueva" class="btn-floating btn-large green darken-3 pulse modal-trigger" data-target="edit_modal" ng-click="select()"><i class="large material-icons">add</i></a>
+  </div>
+</div>
+
+
+<div id="edit_modal" class="modal full-modal">
+  <div class="modal-content">
+    
+    <h5>Editor de noticias</h5>
+
+    <div class="row">
+      <div class="card hoverable z-depth-1 col s12 m6 l6">
+        <div class="card-content"> 
+          
+          <div class="row">
+            <input id="title" type="text" ng-model="selected.title">
+            <label for="title">Título</label>
+              
+            <div class="input-field">
+              <textarea id="textarea" class="materialize-textarea" ng-model="selected.content"></textarea>
+              <label for="textarea">Contenido</label>
+            </div>
+          </div>
+        
+        </div>
+      </div>   
+  
+      <div class="card hoverable z-depth-1 col s12 m6 l6">
+        <div class="card-content"> 
+            <h3>{{selected.title}}</h3>
+            <div ng-bind-html=selected.content></div>
+        </div>
+      </div>   
+      
+      <div class="row">
+          <div class="col s4">
+            <label>
+              <input type="checkbox" ng-model="scheduledNew"/>
+              <span>Programar</span>
+            </label>
+          </div>
+          <div class="col s4">
+            <input id="schedule_date" type="date" ng-show="scheduledNew">
+          </div>
+          <div class="col s4">
+            <input id="schedule_time" type="time" ng-show="scheduledNew">
+          </div>
+        </div>
+    </div>
+    
+  </div>
+
+  <div class="modal-footer">      
+    <a class="modal-close waves-effect waves-white btn red">Cancelar</a>
+    <a class="waves-effect waves-white btn green" ng-click="saveSelected()">Publicar</a>
+  </div>
+</div>
+
+
+
+<div id="view_modal" class="modal wide-modal">
+  <div class="modal-content">
+    <h2>Novedades</h2> 
+    <div class="card hoverable z-depth-1">
+        <div class="card-content"> 
+            <p class="right">Publicado {{relativeTime(selected.timestamp)}} por {{users[selected.author].name}} {{users[selected.author].secondName}} </p>
+            <h3>{{selected.title}}</h3>
+            <div ng-bind-html=selected.content></div>
+        </div>
+    </div>   
+  </div>
+</div>
+
+<div id="confirm_modal" class="modal">
+  <div class="modal-content">
+    
+    <h5>Confirme la operación</h5>
+    <p>¿Está seguro que desea eliminar la noticia seleccionada?</p>
+    <p>Esta operación no se puede deshacer.</p>
+  
+  </div>
+
+  <div class="modal-footer">      
+    <a class="modal-close waves-effect waves-white btn red">Cancelar</a>
+    <a class="waves-effect waves-white btn green" ng-click="deleteSelected()">Eliminar</a>
+  </div>
+</div>
