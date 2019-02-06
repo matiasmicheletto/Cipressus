@@ -9,3 +9,95 @@
     </div>
 
 </div>
+
+<div class="fixed-action-btn" ng-show="user.admin">
+    <a title="Nuevo" class="btn-floating btn-large green darken-3 pulse modal-trigger" data-target="edit_modal" ng-click="editEvent(true)"><i class="large material-icons">add</i></a>
+</div>
+
+<div id="view_modal" class="modal">
+    <div class="modal-content">
+        <h4>{{selectedEvent.title}}</h4>
+        <p ng-bind-html="selectedEvent.info" class="flow-text"></p>
+        <div class="divider"></div>
+        <p><b>Día </b>{{selectedEventExtras.startDay}}, de {{selectedEventExtras.startTime}} a {{selectedEventExtras.endTime}} ({{selectedEventExtras.fromNow}})</p>
+    </div>
+
+    <div class="modal-footer" ng-show="user.admin">      
+        <a class="modal-close waves-effect waves-white btn red modal-trigger" data-target="confirm_delete_modal">Eliminar</a>
+        <a class="modal-close waves-effect waves-white btn green modal-trigger" data-target="edit_modal" ng-click="editEvent(false)">Editar</a>
+    </div>
+</div>
+
+<div id="confirm_delete_modal" class="modal">
+    <div class="modal-content">
+        <h5>Confirme la operación</h5>
+        <p>¿Está seguro que desea eliminar el evento seleccionado?</p>
+        <p>Esta operación no se puede deshacer.</p>
+    </div>
+    
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn green">Cancelar</a>
+        <a class="waves-effect waves-white btn red" ng-click="deleteEvent()">Eliminar</a>
+    </div>
+</div>
+
+<div id="confirm_move_modal" class="modal">
+    <div class="modal-content">
+        <h5>Confirme la operación</h5>
+        <p>¿Está seguro que desea cambiar el horario del evento desplazado?</p>
+    </div>
+    
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn green" ng-click="refreshCalendar()">Cancelar</a>
+        <a class="waves-effect waves-white btn teal" ng-click="moveEvent()">Confirmar</a>
+    </div>
+</div>
+
+<div id="edit_modal" class="modal wide-modal" ng-show="user.admin">
+    <div class="modal-content">
+        <h4>Edición de eventos</h4>
+        <div class="row">
+            <div class="input-field col s12 m6 l6">
+                <input id="title" type="text" ng-model="selectedEvent.title">
+                <label for="title">Título</label>      
+            </div>
+            <div class="input-field col s12 m6 l6">
+                <select id="tag_select">
+                    <option value="#aaaaaa" disabled selected>Elija una opción</option>
+                    <option value="#04b486">Teoría</option>
+                    <option value="#8904b1">Práctica</option>
+                    <option value="#fc7301">Laboratorio</option>
+                    <option value="#ff0000">Examen</option>
+                    <option value="#2315bc">Consulta</option>
+                    <option value="#848484">Misceláneo</option>
+                </select>
+                <label for="tag_select">Etiqueta</label>
+            </div>
+        </div>
+        
+        <div class="input-field">
+            <textarea id="textarea" class="materialize-textarea" ng-model="selectedEvent.info"></textarea>
+            <label for="textarea">Detalles</label>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <p>Fecha</p>
+                <input id="event_date" type="date">
+            </div>
+            <div class="col s4">
+                <p>Inicio</p>
+                <input id="event_start_time" type="time">
+            </div>
+            <div class="col s4">
+                <p>Finalización</p>
+                <input id="event_end_time" type="time">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn red">Cancelar</a>
+        <a class="waves-effect waves-white btn green" ng-click="saveEvent()">Guardar</a>
+    </div>
+</div>
+

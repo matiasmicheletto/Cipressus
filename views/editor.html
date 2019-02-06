@@ -1,7 +1,7 @@
 <div class="container">
   <!-- Lista de noticias -->
   <div class = "section"> 
-    <h5 class="row" ng-if="users">Usuarios</h5>
+    <h5 class="row" ng-if="news">Comunicados</h5>
     <table class="highlight responsive-table" ng-if="users">
       <thead>
         <tr>
@@ -46,8 +46,10 @@
         <div class="card-content"> 
           
           <div class="row">
-            <input id="title" type="text" ng-model="selected.title">
-            <label for="title">Título</label>
+            <div class="input-field">
+              <input id="title" type="text" ng-model="selected.title">
+              <label for="title">Título</label>
+            </div>
               
             <div class="input-field">
               <textarea id="textarea" class="materialize-textarea" ng-model="selected.content"></textarea>
@@ -114,7 +116,7 @@
   </div>
 
   <div class="modal-footer">      
-    <a class="modal-close waves-effect waves-white btn red">Cancelar</a>
-    <a class="waves-effect waves-white btn green" ng-click="deleteSelected()">Eliminar</a>
+    <a class="modal-close waves-effect waves-white btn green">Cancelar</a>
+    <a class="waves-effect waves-white btn red" ng-click="deleteSelected()">Eliminar</a>
   </div>
 </div>
