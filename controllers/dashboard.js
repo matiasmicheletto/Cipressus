@@ -1,4 +1,4 @@
-app.controller("scores", ['$scope','$rootScope','$location', function ($scope,$rootScope,$location) {    
+app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope,$rootScope,$location) {    
     
     if(!$rootScope.userLogged) $location.path("/login");
     
@@ -66,13 +66,16 @@ app.controller("scores", ['$scope','$rootScope','$location', function ($scope,$r
             Cipressus.db.get('users_private/'+$rootScope.user.uid) // Descargar notas del usuario
                 .then(function(user_data){
                     $scope.student = user_data;
-
+                    // Si aun no fue evaluado en nada, dejar arreglos vacios (porque en DB no se guardan)
+                    if(typeof($scope.student.scores) == 'undefined')
+                        $scope.student.scores = [];
+                    if(typeof($scope.student.submits) == 'undefined')
+                        $scope.student.submits = [];
                     // Actualizar graficos al nodo root
                     var arr = [];
                     arr = Cipressus.utils.getArray($scope.activities, arr, '');
                     $scope.updateSunburst(arr);
                     $scope.updatePolarPlot($scope.activities.id);
-
                     $rootScope.loading = false;
                     $rootScope.$apply(); 
                 })

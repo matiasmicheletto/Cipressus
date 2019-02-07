@@ -252,11 +252,11 @@ window.Cipressus = (function () {
                 sum += core.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
             if (node.deadline) // Si la actividad tiene fecha de vencimiento
                 if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
-                    if (student.submits[node.id] > node.deadline.date) // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
+                    if (student.submits[node.id].submitted > node.deadline.date) // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
                         if (costFunction) // Si se indico una funcion de costo, usar esa
-                            sum = costFunction(sum, student.submits[node.id], node.deadline.date, node.deadline.param); // Aplicar costo y calcular nuevo puntaje
+                            sum = costFunction(sum, student.submits[node.id].submitted, node.deadline.date, node.deadline.param); // Aplicar costo y calcular nuevo puntaje
                         else // Sino usar la funcion por defecto de la libreria
-                            sum = defaultCostFunction(sum, student.submits[node.id], node.deadline.date, node.deadline.param);
+                            sum = defaultCostFunction(sum, student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
             return sum;
         } else { // Es hoja
             if (student.scores[node.id]) // Si ya esta evaluado este campo
@@ -267,7 +267,7 @@ window.Cipressus = (function () {
     };
 
     core.utils.getArray = function(node,arr,parent){ // Convertir el arbol en arreglo referenciado
-        // Sirve para exportar a formato de highcharts
+        // Sirve para exportar a formato de highcharts y para listar actividades en vista de alumnos
         // Entradas:
         //		- node: contiene el arbol de notas
         //		- arr: se pasa recursivamente para ir completando con informacion de los nodos y hojas
@@ -275,10 +275,14 @@ window.Cipressus = (function () {
         if (node.children) { 
             for (var k in node.children) // Para cada hijo del nodo
                 arr.concat(core.utils.getArray(node.children[k],arr,node.id)); // Obtener arreglo de los hijos
+            var dl; // Agregar vencimientos, si los tiene
+            if(node.deadline) dl = node.deadline.date; // Ojo si el vencimiento es 0 (fecha absurda)
+            else dl = null;
             arr.push({ // Agregar el nodo actual 
                 id: node.id,
                 parent: parent, // Referencias hacia atras
-                name: node.name
+                name: node.name,
+                dl: dl
             });
             return arr;
         } else { // Es hoja, agregar hoja y retornar

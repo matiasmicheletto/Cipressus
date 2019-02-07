@@ -13,9 +13,9 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             templateUrl: "views/profile.html",
             controller: "profile"
         })
-        .when("/scores", {
-            templateUrl: "views/scores.html",
-            controller: "scores"
+        .when("/dashboard", {
+            templateUrl: "views/dashboard.html",
+            controller: "dashboard"
         })
         .when("/activities", {
             templateUrl: "views/activities.html",
@@ -57,7 +57,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
         side: "left", 
         inDuration:400,  
     });
-    M.Collapsible.init(document.querySelector('.collapsible_1'));
+    M.Collapsible.init(document.querySelector('.collapsible_1')).open();
     M.Collapsible.init(document.querySelector('.collapsible_2')).open();
     M.Modal.init(document.getElementById("about_modal"),{});
     M.Modal.init(document.getElementById("help_modal"),{});
@@ -82,6 +82,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
     }
 
     $rootScope.sendHelp = function(){ // Enviar mensaje de ayuda a los usuarios administradores
+        console.log($scope.helpMessage);
         M.toast({html: "Mensajería aún no implementada!",classes: 'rounded red',displayLength: 2500});
     };
 

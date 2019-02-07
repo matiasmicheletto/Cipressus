@@ -13,8 +13,8 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
     
     // Modals
     M.Modal.init(document.getElementById("view_modal"), {preventScrolling: false});
-    $scope.confirm_modal = M.Modal.init(document.getElementById("confirm_modal"), {preventScrolling: false, dismissible: false});
-    $scope.edit_modal = M.Modal.init(document.getElementById("edit_modal"), {preventScrolling: false, dismissible: false});
+    var confirmModal = M.Modal.init(document.getElementById("confirm_modal"), {preventScrolling: false, dismissible: false});
+    var editModal = M.Modal.init(document.getElementById("edit_modal"), {preventScrolling: false, dismissible: false});
 
     $scope.readableTime = function(timestamp){ // Fecha y hora formal
         return moment(timestamp).format("DD/MM/YYYY HH:mm");
@@ -67,7 +67,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
             console.log(err);
             M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
         });
-        $scope.confirm_modal.close();
+        confirmModal.close();
     };
 
     $scope.moveSelected = function(up,key){ // Mover noticia hacia arriba(true) o abajo(false)
@@ -148,7 +148,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
             Cipressus.db.update($scope.selected,'news/'+key)
             .then(function(snapshot){
                 M.toast({html: "Comunicado actualizado",classes: 'rounded green',displayLength: 1500});
-                $scope.edit_modal.close();
+                editModal.close();
                 $rootScope.loading = false;
                 $scope.$apply();
             })
@@ -164,7 +164,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
             .then(function(snapshot){
                 $scope.selected.key = snapshot.key;
                 $scope.news.push($scope.selected);
-                $scope.edit_modal.close();
+                editModal.close();
                 $rootScope.loading = false;
                 $scope.$apply();
             })
