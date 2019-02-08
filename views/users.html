@@ -12,12 +12,14 @@
       </thead>
 
       <tbody>
-        <tr class="modal-trigger" data-target="view_modal" ng-repeat="(key,row) in users" ng-click="select(key)">
+        <tr ng-repeat="(key,row) in users" ng-click="select(key)">
           <td><img class="circle" src="{{row.avatar}}" height="50px" width="50px"></td>
-          <td class="{{row.enrolled ? '':'red-text'}}">{{row.name}} {{row.secondName}}  <i class="material-icons" style="vertical-align:middle;" ng-if="row.admin">security</i></td>
+          <td data-target="view_modal" class="modal-trigger {{row.enrolled ? '':'red-text'}}" style="cursor: pointer">
+            {{row.name}} {{row.secondName}}  <i class="material-icons" style="vertical-align:middle;" ng-if="row.admin">security</i>
+          </td>
           <td width="1%" style="white-space:nowrap;">
             <a title="Enviar mensaje" class="waves-effect waves-light teal btn-small btn-floating z-depth=3 modal-trigger" data-target="message_modal"><i class="material-icons">mail_outline</i></a>
-            <a title="Calificaciones" class="waves-effect waves-light orange btn-floating btn-small z-depth=3 modal-trigger" data-target="scores_modal" ng-show="row.enrolled" ng-click="startScoresModal(key)"><i class="material-icons">playlist_add_check</i></a>
+            <a title="Calificaciones" class="waves-effect waves-light orange btn-floating btn-small z-depth=3" ng-show="row.enrolled" ng-click="startScoresModal(key)"><i class="material-icons">playlist_add_check</i></a>
             <a title="Aprobar" class="waves-effect waves-light red btn-floating btn-small z-depth=3 modal-trigger" data-target="confirm_enroll_modal" ng-hide="row.enrolled"><i class="material-icons">done_outline</i></a>
           </td>
         </tr>      
@@ -55,25 +57,25 @@
                   <div class="input-field" >
                       <input class="{{auxiliaryScores[row.id].score!=users[selectedKey].scores[row.id].score?'red-text':''}}" 
                       type="number" min="0" max="100" step="1" ng-model="auxiliaryScores[row.id].score"
-                      ng-change="auxiliaryScores[row.id].evaluator=user.uid;auxiliaryScores[row.id].timestamp=readableTime(null,false)">
+                      ng-change="auxiliaryScores[row.id].evaluator=user.uid;auxiliaryScores[row.id].timestamp=getTime(0)">
                   </div>                  
                 </td>
                 <td>{{row.value}}</td>
-                <td>
-                  <div class="chip" ng-if="auxiliaryScores[row.id].evaluator">
+                <td title="Eliminar nota">
+                  <div class="chip" ng-if="auxiliaryScores[row.id].evaluator" ng-click="auxiliaryScores[row.id]=null;">
                     <img src="{{users[auxiliaryScores[row.id].evaluator].avatar}}">
                     {{users[auxiliaryScores[row.id].evaluator].name}}
                   </div>
                 </td>
                 <td>
-                  <p ng-show="auxiliaryScores[row.id]">{{readableTime(auxiliaryScores[row.id].timestamp)}}</p>
+                  <p ng-show="auxiliaryScores[row.id]">{{getTime(4,auxiliaryScores[row.id].timestamp)}}</p>
                 </td>
               </tr>      
             </tbody>
           </table>
         </div>
 
-        <h4>Fechas de entregas</h4>
+        <h4>Entregas</h4>
 
         <div class = "section"> 
           <table class="highlight responsive-table">
@@ -82,6 +84,7 @@
                 <th>Actividad</th>
                 <th>Vencimiento</th>
                 <th>Entrega</th>
+                <th>Costo</th>
                 <th>Evaluó</th>
                 <th>Fecha</th>
               </tr>
@@ -91,18 +94,21 @@
               <tr class="{{auxiliarySubmits[row.id].submitted!=users[selectedKey].submits[row.id].submitted?'red-text':''}}" 
               ng-repeat="(key,row) in activities track by $index" ng-if="row.dl">
                 <td>{{row.name}}</td>
-                <td>{{readableTime(row.dl,false)}}</td>
+                <td>{{getTime(4,row.dl.date)}}</td>
                 <td>    
                   <input type="date" id="{{row.id}}">
                 </td>
                 <td>
-                  <div class="chip" ng-if="auxiliarySubmits[row.id].evaluator">
+                  {{getCost(key)}}
+                </td>
+                <td title="Eliminar nota">
+                  <div class="chip" ng-if="auxiliarySubmits[row.id].evaluator" ng-click="deleteSubmit(row.id)">
                     <img src="{{users[auxiliarySubmits[row.id].evaluator].avatar}}">
                     {{users[auxiliarySubmits[row.id].evaluator].name}}
                   </div>
                 </td>
                 <td>
-                  <p ng-show="auxiliarySubmits[row.id]">{{readableTime(auxiliarySubmits[row.id].timestamp)}}</p>
+                  <p ng-show="auxiliarySubmits[row.id]">{{getTime(4,auxiliarySubmits[row.id].timestamp)}}</p>
                 </td>
               </tr>      
             </tbody>
@@ -114,6 +120,7 @@
       <a class="waves-effect waves-white btn red" ng-click="saveScores()">Guardar</a>
     </div>
   </div>
+</div>
 
 <div id="view_modal" class="modal wide-modal">
   <div class="modal-content">
@@ -126,7 +133,7 @@
         <h5 class="truncate"><i>{{users[selectedKey].email}}</i></h5>		
         <h5><b>LU:</b> <i>{{users[selectedKey].lu}}</i></h5>		
         <h5 class="truncate"><i>{{users[selectedKey].degree}}</i></h5>				
-        <p><b>Usuario desde:</b> <i>{{users[selectedKey].enrolled?readableTime(users[selectedKey].enrolled,true):"(Usuario no aprobado)"}}</i></p>
+        <p><b>Usuario desde:</b> <i>{{users[selectedKey].enrolled?getTime(3,users[selectedKey].enrolled):"(Usuario no aprobado)"}}</i></p>
       </div>	
     </div>
   </div>

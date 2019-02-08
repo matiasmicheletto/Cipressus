@@ -8,6 +8,17 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
     $rootScope.loading = true;
     $rootScope.sidenav.close();
     $scope.selectedKey = null;
+
+    // Los inputs date no funcionan con ng-change entonces la actualizacion
+    // la hago programaticamente. Este es el callback de cambios
+    var onInputDateChange = function(){
+        $scope.auxiliarySubmits[this.id] = {
+            submitted: moment(this.value).unix()*1000,
+            timestamp: Date.now(),
+            evaluator: $rootScope.user.uid
+        };
+        $scope.$apply();
+    };
     
     // Componentes materialize
     M.Modal.init(document.getElementById("view_modal"), {preventScrolling: false});
@@ -15,21 +26,32 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
     var confirmEnrollModal = M.Modal.init(document.getElementById("confirm_enroll_modal"), {preventScrolling: false});
     var scoresModal = M.Modal.init(document.getElementById("scores_modal"), {preventScrolling: false, dismissible: false});
 
-    $scope.readableTime = function(timestamp, withTime){ // Fecha y hora formal
-        var mnt;
-        if(timestamp != null) // Si se pasafecha valida
-            mnt = moment(timestamp);
-        else // Si no usar la actual
-            mnt = moment(Date.now());
-        if(withTime) // Fecha y hora
-            return mnt.format("DD/MM/YYYY HH:mm");
-        else // Solo fecha
-            return mnt.format("DD/MM/YYYY");
-    };
-
-    $scope.relativeTime = function(timestamp){ // Tiempo relativo al actual
-        return moment(timestamp).fromNow();
-    };
+    $scope.getTime = function(code,stamp){ // Para ejecutar moment en view
+        var time;
+        switch(code){
+            case 0:
+                time = Date.now();
+                break;
+            case 1:
+                time = moment(Date.now()).format("DD/MM/YYYY HH:mm");
+                break;
+            case 2:
+                time = moment(Date.now()).format("DD/MM/YYYY");
+                break;
+            case 3:
+                time = moment(stamp).format("DD/MM/YYYY HH:mm");
+                break;
+            case 4:
+                time = moment(stamp).format("DD/MM/YYYY");
+                break;
+            case 5:
+                time = moment(stamp).fromNow();
+                break;
+            default:
+                time = null;
+        }
+        return time;
+    }
 
     $scope.select = function(key){ // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
@@ -90,30 +112,65 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
 
         // Inicializo los listeners de inputs date aca porque no pude usar ni ng-model ni ng-change
         for(var k in $scope.activities) 
-        if($scope.activities[k].dl){
-            if($scope.auxiliarySubmits[$scope.activities[k].id])
-                document.getElementById($scope.activities[k].id).value = moment($scope.auxiliarySubmits[$scope.activities[k].id].submitted).format("YYYY-MM-DD");
-            document.getElementById($scope.activities[k].id).addEventListener("change",function(){
-                if(typeof($scope.auxiliarySubmits[this.id])=="undefined") // Si no tenia fecha de entrega, 
-                    $scope.auxiliarySubmits[this.id] = {}; // Crear objeto
-                // Completar o actualizar los campos restantes
-                $scope.auxiliarySubmits[this.id].submitted = moment(this.value).unix()*1000;
-                $scope.auxiliarySubmits[this.id].timestamp = Date.now();
-                $scope.auxiliarySubmits[this.id].evaluator = $rootScope.user.uid;
-                $scope.$apply();
-            })
+            if($scope.activities[k].dl){ // Si la actividad tiene vencimiento
+                if($scope.auxiliarySubmits[$scope.activities[k].id]) // Si la actividad fue entregada/evaluada
+                    document.getElementById($scope.activities[k].id).value = moment($scope.auxiliarySubmits[$scope.activities[k].id].submitted).format("YYYY-MM-DD");
+                else // Si no borrarla
+                    document.getElementById($scope.activities[k].id).value = '';
+                document.getElementById($scope.activities[k].id).removeEventListener("change",onInputDateChange); // Lo quito para no duplicar
+                document.getElementById($scope.activities[k].id).addEventListener("change",onInputDateChange);
+            }
+        scoresModal.open(); // Lo hago aca porque se hace lio con los trigger de materialize
+    };
+
+    $scope.getCost = function(key){ // Calcular el costo por perdida de vencimiento de una actividad
+        if($scope.activities[key] && $scope.auxiliarySubmits){ // Si ya existen los arreglos, usarlos
+            if($scope.auxiliarySubmits[$scope.activities[key].id]){ // Control de coherencia
+                if($scope.auxiliarySubmits[$scope.activities[key].id].submitted > $scope.activities[key].dl.date){ // Si paso el vencimiento
+                    // Calcular costo
+                    var cost = Cipressus.utils.defaultCostFunction($scope.auxiliarySubmits[$scope.activities[key].id].submitted, $scope.activities[key].dl.date, $scope.activities[key].dl.param);
+                    if(cost > $scope.activities[key].score) // El costo no puede superar el puntaje maximo
+                        return $scope.activities[key].score;
+                    else // Si no supera, retornar el valor
+                        return cost.toFixed(2);
+                }else // Si no paso el vencimiento, el costo es nulo
+                    return 0;
+            }
         }
     };
 
-
+    $scope.deleteSubmit = function(key){ // Esta se llama al eliminar una nota oprimiendo en el logo de usuario
+        // Para el caso de notas puedo quitar con instrucciones dentro del ng-click pero para este no
+        document.getElementById(key).removeEventListener("change",onInputDateChange); // Lo quito para que no dispare al cambiar valor
+        document.getElementById(key).value = ''; // Limpiar input date
+        $scope.auxiliarySubmits[key] = null; // Borrar timestamp, evaluator y submitted
+        document.getElementById(key).addEventListener("change",onInputDateChange); // Vuelvo a habilitar
+    }
 
     $scope.saveScores = function(){ // Guardar el formulario de notas
-        
-        // TODO guardar objetos auxiliary!!!!
-        // Y despues borrarlos
-        // Verificar si hubo cambios?
-
-        scoresModal.close();
+        $rootScope.loading = true;
+        var obj = {}; // Objeto a actualizar en DB
+        obj.scores = $scope.auxiliaryScores;
+        obj.submits = $scope.auxiliarySubmits;
+        Cipressus.db.update(obj,"users_private/"+$scope.selectedKey)
+        .then(function(snapshot){            
+            $scope.users[$scope.selectedKey].scores = $scope.auxiliaryScores;
+            $scope.users[$scope.selectedKey].submits = $scope.auxiliarySubmits;
+            scoresModal.close();
+            // Borrar los datos temporales
+            $scope.selectedKey = null;
+            $scope.auxiliaryScores = null;
+            $scope.auxiliarySubmits = null;
+            M.toast({html: "Calificaciones actualizadas",classes: 'rounded green',displayLength: 2000});
+            $rootScope.loading = false;
+            $scope.$apply();
+        })
+        .catch(function(err){
+            console.log(err);
+            M.toast({html: "No se pudo guardar",classes: 'rounded red',displayLength: 2000});
+            $rootScope.loading = false;
+            $scope.$apply();
+        });
     };
 
     Cipressus.db.get('users_public') // Descargar lista de usuarios

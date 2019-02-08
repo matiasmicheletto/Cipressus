@@ -1,21 +1,6 @@
 window.Cipressus = (function () {
     // Libreria para el control de la base de datos y metodos de evaluacion
 
-
-    /*********  PRIVADO **********/
-
-    var defaultCostFunction = function (score, submitMs, deadlineMs, param) { // Funcion de costo por perdida de vencimiento de una actividad
-        // Entradas:
-        //		- score: es la nota previo a aplicar la funcion de desgaste
-        //		- submitMs: es la fecha de entrega expresada en unix time
-        //		- deadlineMs: es la fecha de vencimiento (debe ser menor que submitMs)
-        //		- param: contiene el o los parametros de la funcion de costo (extender a vector si hace falta)
-        return score - Math.ceil((submitMs - deadlineMs) / 86400000) * param; // Desgaste lineal
-    };
-
-
-    /*********  PUBLICO **********/
-
     var core = { // Instancia de la clase
         db: {}, // Operaciones de base de datos
         users: {}, // Operaciones de autenticacion
@@ -70,7 +55,6 @@ window.Cipressus = (function () {
     };
 
     core.db.set = function (data, path) { // Actualizar entrada de la db
-        // Para actualizar multples, poner solo array en data
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).set(data)
             .then(function (snapshot) {
@@ -83,7 +67,6 @@ window.Cipressus = (function () {
     };
 
     core.db.update = function (data, path) { // Actualizar entrada de la db
-        // Para actualizar multples, poner solo array en data
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).update(data)
             .then(function (snapshot) {
@@ -239,12 +222,18 @@ window.Cipressus = (function () {
         return result;
     };
 
+    core.utils.defaultCostFunction = function (submitMs, deadlineMs, param) { // Funcion de costo por perdida de vencimiento de una actividad
+        // Entradas:
+        //		- submitMs: es la fecha de entrega expresada en unix time
+        //		- deadlineMs: es la fecha de vencimiento (debe ser menor que submitMs)
+        //		- param: contiene el o los parametros de la funcion de costo (extender a vector si hace falta)
+        return Math.ceil((submitMs - deadlineMs) / 86400000) * param; // Desgaste lineal
+    };
 
-    core.utils.eval = function (student, node, costFunction) { // Computar nota de un alumno en puntaje absoluto
+    core.utils.eval = function (student, node) { // Computar nota de un alumno en puntaje absoluto
         // Entradas:
         //		- student: contiene la informacion de entregas y notas asignadas por los profesores
         //		- node: es el nodo del arbol de actividades al que se le quiere calcular el puntaje total 
-        //      - costFuncion: [opcional] es la funcion de costo por perdida de vencimiento
 
         if (node.children) { // Si el nodo tiene hijos, calcular suma ponderada de los hijos
             var sum = 0; // Contador de puntajes
@@ -252,11 +241,11 @@ window.Cipressus = (function () {
                 sum += core.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
             if (node.deadline) // Si la actividad tiene fecha de vencimiento
                 if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
-                    if (student.submits[node.id].submitted > node.deadline.date) // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
-                        if (costFunction) // Si se indico una funcion de costo, usar esa
-                            sum = costFunction(sum, student.submits[node.id].submitted, node.deadline.date, node.deadline.param); // Aplicar costo y calcular nuevo puntaje
-                        else // Sino usar la funcion por defecto de la libreria
-                            sum = defaultCostFunction(sum, student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
+                    if (student.submits[node.id].submitted > node.deadline.date){ // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
+                        var cost = core.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
+                        if(cost > node.score) cost = node.score; // Habria que considerar la nota puesta
+                        sum -= cost; // Restar costo
+                    }
             return sum;
         } else { // Es hoja
             if (student.scores[node.id]) // Si ya esta evaluado este campo
@@ -275,14 +264,12 @@ window.Cipressus = (function () {
         if (node.children) { 
             for (var k in node.children) // Para cada hijo del nodo
                 arr.concat(core.utils.getArray(node.children[k],arr,node.id)); // Obtener arreglo de los hijos
-            var dl; // Agregar vencimientos, si los tiene
-            if(node.deadline) dl = node.deadline.date; // Ojo si el vencimiento es 0 (fecha absurda)
-            else dl = null;
             arr.push({ // Agregar el nodo actual 
                 id: node.id,
                 parent: parent, // Referencias hacia atras
                 name: node.name,
-                dl: dl
+                score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
+                dl: node.deadline // Vencimiento va si existe
             });
             return arr;
         } else { // Es hoja, agregar hoja y retornar
@@ -290,7 +277,7 @@ window.Cipressus = (function () {
                 id: node.id,
                 parent: parent,
                 name: node.name,
-                value: node.score
+                value: node.score // Este dato lo usa highcarts (se calcula para los nodos padres)
             });
             return arr;
         }
