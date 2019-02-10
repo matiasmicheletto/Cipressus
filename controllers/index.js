@@ -9,29 +9,33 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             templateUrl: "views/login.html",
             controller: "login"
         })
-        .when("/profile", {
-            templateUrl: "views/profile.html",
-            controller: "profile"
-        })
         .when("/dashboard", {
             templateUrl: "views/dashboard.html",
             controller: "dashboard"
         })
-        .when("/activities", {
-            templateUrl: "views/activities.html",
-            controller: "activities"
+        .when("/calendar", {
+            templateUrl: "views/calendar.html",
+            controller: "calendar"
         })
         .when("/users", {
             templateUrl: "views/users.html",
             controller: "users"
         })
+        .when("/attendance", {
+            templateUrl: "views/attendance.html",
+            controller: "attendance"
+        })
+        .when("/activities", {
+            templateUrl: "views/activities.html",
+            controller: "activities"
+        })
         .when("/editor", {
             templateUrl: "views/editor.html",
             controller: "editor"
         })
-        .when("/calendar", {
-            templateUrl: "views/calendar.html",
-            controller: "calendar"
+        .when("/profile", {
+            templateUrl: "views/profile.html",
+            controller: "profile"
         });
 })
 .config(['$locationProvider', function($locationProvider) {

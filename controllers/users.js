@@ -51,7 +51,7 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
                 time = null;
         }
         return time;
-    }
+    };
 
     $scope.select = function(key){ // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar

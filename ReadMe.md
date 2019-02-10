@@ -19,19 +19,19 @@ Actualmente permite registrarse con correo electrónico, configurar el perfil de
 
 
 ### Contacto
-LSD | Laboratorio de Sistemas Digitales
-DIEC | Departamento de Ingeniería Eléctrica y Computadoras
-UNS | Universidad Nacional del Sur
-San Andrés 800, CP8000 Bahía Blanca
-Buenos Aires, Argentina
-Teléfono: +54 291 4595153/4
-Website: http://www.diec.uns.edu.ar/
+LSD | Laboratorio de Sistemas Digitales  
+DIEC | Departamento de Ingeniería Eléctrica y Computadoras  
+UNS | Universidad Nacional del Sur  
+San Andrés 800, CP8000 Bahía Blanca  
+Buenos Aires, Argentina  
+Teléfono: +54 291 4595153/4  
+Website: http://www.diec.uns.edu.ar/  
 
 
 #### Diseño e implementación
-Ing. Matías J. Micheletto
-Email: matias.micheletto@uns.edu.ar
-Documentación: https://github.com/matiasmicheletto/cipressus
+Ing. Matías J. Micheletto  
+Email: matias.micheletto@uns.edu.ar  
+Documentación: https://github.com/matiasmicheletto/cipressus  
 
 
 
@@ -102,13 +102,19 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     +-evaluator // ID de quien evaluo
     +-score     // Puntaje de 0 a 100
     +-timestamp // Fecha/hora de correccion
-  +-submits
+  +-submits // Lista de fechas de entrega de tps
    |
    +-(child_name) // Nombre de la actividad 
     |
     +-evaluator // ID de quien evaluo
     +-date      // Fecha de entrega de la actividad
     +-timestamp // Fecha/hora de correccion
+  +-attendance // Para computo de asistencia a clase
+   |
+   +-(child_key) // ID del evento asistido
+    |
+    +-evaluator // ID de quien tomo asistencia
+    +-timestamp // Fecha/hora de evaluacion de asistencia
 -users_public // Datos de usuarios
  |
  +-(child_key)  // ID firebase
@@ -130,18 +136,14 @@ Usuario con rol de alumno:
 
   - Dashboard
     - Progreso de la materia.
-    - Próximos eventos
+    - Próximos eventos.
     - Descripción textual para graficos.
   - Material
-    - Lista de trabajos prácticos, laboratorios o parciales viejos para descargar
+    - Lista de trabajos prácticos, laboratorios o parciales viejos para descargar.
 
 
 Usuario con rol de administrador:
 
-  - Alumnos
-    - Ver lista de alumnos
-    - Asignación de calificaciones
-    - Envío de mensajes
   - Asistencia
     - Evaluacion de asistencia
   - Actividades
