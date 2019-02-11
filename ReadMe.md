@@ -135,6 +135,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 Usuario con rol de alumno:
 
   - Dashboard
+    - Asistencia
     - Progreso de la materia.
     - Próximos eventos.
     - Descripción textual para graficos.
@@ -144,7 +145,5 @@ Usuario con rol de alumno:
 
 Usuario con rol de administrador:
 
-  - Asistencia
-    - Evaluacion de asistencia
   - Actividades
     - Configuración de árbol de actividades

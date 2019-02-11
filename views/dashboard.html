@@ -1,7 +1,8 @@
 <div class="container">
-    <h3>Dashboard</h3>
+    <h3 class="center">Dashboard</h3>
 </div>
 <div class="row">
+    <!-- Arbol de actividades -->
     <div class="col s12 m6 l6">
         <div class="card hoverable z-depth-1">
             <div class="card-content">
@@ -9,6 +10,7 @@
             </div>
         </div>
     </div>
+    <!-- PieChart de calificaciones -->
     <div class="col s12 m6 l6">    
         <div class="card hoverable z-depth-1">
             <div class="card-content">
@@ -19,5 +21,33 @@
             </div>
         </div>
     </div>
+    <!-- Avance de la materia -->
+    <div class="col s12 m6 l6">    
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">               
+                <div id="progress_pie_container" style="max-height: 300px"></div>
+            </div>
+        </div>
+    </div>    
+</div>
+<div class="row">
+    <!-- Proximos eventos -->
+    <div class="col s12 m6 l6">    
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">
+                <h5>Próximos eventos</h5>               
+                <div class="timeline">
+                    <div class="tl-container {{ev.side}}" ng-repeat="(key,ev) in events track by $index">
+                        <div class="tl-content">
+                        <p><b>{{ev.title}}</b></p>
+                        <p style="font-size: 75%">{{relativeTime(ev.start)}}</p>
+                        <p ng-bind-html="ev.info" class="truncate"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
