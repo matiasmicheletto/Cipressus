@@ -36,17 +36,33 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
     };
 
     var updatePolarPlot = function(id){ // Actualizar grafico de notas
-        if($scope.student){ // Si el alumno no esta habilitado por el docente no se muestra nada
+        if($scope.user){ // Si el alumno no esta habilitado por el docente no se muestra nada
             var data = []; // Datos para mostrar en el grafico polar
             // Buscar nodo de la actividad seleccionada
             $scope.currentNode = Cipressus.utils.searchNode($scope.activities,id); 
+            var value = Cipressus.utils.eval($scope.user,$scope.currentNode)/$scope.currentNode.score*100;
+            $scope.currentActivityScores = { // Para detallar textualmente
+                name: $scope.currentNode.name,
+                points: ($scope.currentNode.score*value/100).toFixed(2), 
+                score: value.toFixed(2),
+                children:[] // Asjuntar los nodos hijos
+            };
             for(k in $scope.currentNode.children){ // Para cada sub actividad
-                data.push({ // Agregar nota de esa actividad
+                // Calcular nota de las sub actividades
+                var subValue = Cipressus.utils.eval($scope.user,$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
+                // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
+                $scope.currentActivityScores.children.push({
+                    name: $scope.currentNode.children[k].name, // Nombre de la actividad
+                    points: ($scope.currentNode.children[k].score*subValue/100).toFixed(2), // Puntos obtenidos por la actividad
+                    score: subValue.toFixed(2) // Nota en porcentaje
+                });
+                data.push({ // Agregar nota de esa actividad a los datos para el chart
                     y: $scope.currentNode.children[k].score,
-                    z: Math.round(Cipressus.utils.eval($scope.student,$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100),
+                    z: parseInt(subValue.toFixed(2)),
                     name: $scope.currentNode.children[k].name
                 })
             }
+            $scope.$apply();
             Highcharts.chart('variable_pie_container', {
                 chart: {type: 'variablepie'},
                 title: {text: 'Mis calificaciones'},
@@ -60,14 +76,12 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         }
     };
 
+    var totalEvents=0, futureEvents=0;
     var updateProgressPlot = function(){ // Generar grafico polar de progreso de la materia
-        
-        // TODO: Calcular progreso 
-        
-        var data1 = [
+        var progressData = [ // Progreso de la materia
             {
-                name: 'Avance cronograma',
-                y: 15,
+                name: 'Avance programa',
+                y: totalEvents-futureEvents,
                 color: "#8181F7",
                 dataLabels: {
                     enabled: false
@@ -75,17 +89,17 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             },
             {
                 name: 'Restantes',
-                y: 5,
+                y: futureEvents,
                 color:"#dddddd",
                 dataLabels: {
                     enabled: false
                 }
             }
         ];
-        var data2 = [
+        var attendanceData = [ // Porcentaje de asistencia
             {
                 name: 'Presente',
-                y: 9,
+                y: $scope.user.scores.asistencia.score,
                 color: "#FF4444",
                 dataLabels: {
                     enabled: false
@@ -93,7 +107,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             },
             {
                 name: 'Ausente',
-                y: 1,
+                y: 100-$scope.user.scores.asistencia.score,
                 color:"#dddddd",
                 dataLabels: {
                     enabled: false
@@ -107,25 +121,21 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                 plotBorderWidth: 0
             },
             title: {
-                text: 'Participación'
+                text: 'Mi participación'
             },
             tooltip: {
                 pointFormat: '<b>{point.percentage:.1f}%</b>'
             },
             plotOptions: {
-                pie: {
-                    dataLabels: {
-                        enabled: true,
-                        style: {fontWeight: 'bold', color: 'white'}
-                    },
+                pie: {                    
                     startAngle: -90,
                     endAngle: 90,
                     center: ['50%', '50%']
                 }
             },
             series: [
-                {name: 'Asistencia',size: '70%',data: data2},
-                {name: 'Progreso',innerSize: '70%',data: data1},
+                {name: 'Asistencia',size: '70%',data: attendanceData},
+                {name: 'Progreso',innerSize: '70%',data: progressData},
             ]
         });        
     };
@@ -141,12 +151,12 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             $scope.activities = activities_data; // Nodo root del arbol de notas
             Cipressus.db.get('users_private/'+$rootScope.user.uid) // Descargar notas del usuario
                 .then(function(user_data){
-                    $scope.student = user_data;
+                    $scope.user = user_data;
                     // Si aun no fue evaluado en nada, dejar arreglos vacios (porque en DB no se guardan)
-                    if(typeof($scope.student.scores) == 'undefined')
-                        $scope.student.scores = [];
-                    if(typeof($scope.student.submits) == 'undefined')
-                        $scope.student.submits = [];
+                    if(typeof($scope.user.scores) == 'undefined')
+                        $scope.user.scores = [];
+                    if(typeof($scope.user.submits) == 'undefined')
+                        $scope.user.submits = [];
                     // Actualizar graficos al nodo root
                     var arr = [];
                     arr = Cipressus.utils.getArray($scope.activities, arr, '');
@@ -159,13 +169,14 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     .then(function(events_data){
                         events_data.forEach(function(childSnapshot){
                             var ev = childSnapshot.val();
-                            if(ev.start > Date.now()){ // Si es un evento futuro, agregar
-                                // Asignar lado de linea del tiempo alternados
-                                ev.side = $scope.events.length%2 ? "tl-right" : "tl-left";
-                                $scope.events.push(ev);
-                                // Solo los primeros 5 eventos (puede filtrarse por consulta)
-                                if($scope.events.length > 5) 
-                                    return;
+                            totalEvents++; // Contar actividad
+                            if(ev.start > Date.now()){ // Si es un evento futuro
+                                futureEvents++; // Contar los que faltan
+                                if($scope.events.length < 5){ // Agregar solamente 5
+                                    // Asignar lado de linea del tiempo alternados
+                                    ev.side = $scope.events.length%2 ? "tl-right" : "tl-left";
+                                    $scope.events.push(ev);   
+                                }
                             }
                         });
                         updateProgressPlot();

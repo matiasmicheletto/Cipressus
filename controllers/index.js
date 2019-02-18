@@ -77,11 +77,11 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
         Cipressus.users.signOut()
         .then(function(res){
             console.log(res);
-            M.toast({html: "Hasta pronto!",classes: 'rounded green',displayLength: 1500});
+            M.toast({html: "Hasta pronto!",classes: 'rounded green darken-3',displayLength: 1500});
         })
         .catch(function(err){
             console.log(err[0]);
-            M.toast({html: err[1],classes: 'rounded green',displayLength: 1500});
+            M.toast({html: err[1],classes: 'rounded green darken-3',displayLength: 1500});
         });
     }
 

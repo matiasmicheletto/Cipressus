@@ -62,7 +62,7 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
         // Guardar cambios
         Cipressus.db.update(updates)
         .then(function(snapshot){
-            M.toast({html: "Cambios guardados!",classes: 'rounded green',displayLength: 1500});        
+            M.toast({html: "Cambios guardados!",classes: 'rounded green darken-3 darken-3',displayLength: 1500});        
             $rootScope.loading = false;
             $scope.changes = false;
             $scope.$apply();

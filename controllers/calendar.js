@@ -165,7 +165,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
                 $scope.selectedEvent.idx = $scope.selectedEventExtras.idx;
                 $scope.events[$scope.selectedEventExtras.idx] = $scope.selectedEvent; // Actualizar en arreglo
                 $scope.refreshCalendar();
-                M.toast({html: "Evento actualizado",classes: 'rounded green',displayLength: 2000});  
+                M.toast({html: "Evento actualizado",classes: 'rounded green darken-3',displayLength: 2000});  
                 $scope.selectedEvent = null; // Para que no se vuelva a utilizar por error
                 $scope.selectedEventExtras = null;
                 editModal.close();      
@@ -189,7 +189,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
                 $scope.selectedEvent.id = snapshot.key;
                 $scope.events.push($scope.selectedEvent); // Insertar en arreglo
                 $('#calendar').fullCalendar('renderEvent',$scope.selectedEvent);
-                M.toast({html: "Nuevo evento registrado",classes: 'rounded green',displayLength: 2000});  
+                M.toast({html: "Nuevo evento registrado",classes: 'rounded green darken-3',displayLength: 2000});  
                 $scope.selectedEventExtras = null; // Para que no se vuelva a utilizar por error
                 editModal.close();      
                 $rootScope.loading = false;
@@ -210,7 +210,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
             $scope.events.splice($scope.selectedEventExtras.idx,1); // Quitar del arreglo
             $scope.refreshCalendar();
             $scope.selectedEventExtras = null; // Para que no se vuelva a utilizar por error
-            M.toast({html: "Evento eliminado",classes: 'rounded green',displayLength: 2000});  
+            M.toast({html: "Evento eliminado",classes: 'rounded green darken-3',displayLength: 2000});  
             confirmDeleteModal.close();      
             $rootScope.loading = false;
             $scope.$apply();
@@ -235,7 +235,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
             $scope.selectedEvent.end = moment($scope.selectedEvent.end).format();
             $scope.refreshCalendar();
             $scope.selectedEventExtras = null;
-            M.toast({html: "Evento actualizado",classes: 'rounded green',displayLength: 2000});  
+            M.toast({html: "Evento actualizado",classes: 'rounded green darken-3',displayLength: 2000});  
             confirmMoveModal.close();
             $rootScope.loading = false;
             $scope.$apply();

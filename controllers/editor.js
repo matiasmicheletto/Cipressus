@@ -15,6 +15,8 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
     M.Modal.init(document.getElementById("view_modal"), {preventScrolling: false});
     var confirmModal = M.Modal.init(document.getElementById("confirm_modal"), {preventScrolling: false, dismissible: false});
     var editModal = M.Modal.init(document.getElementById("edit_modal"), {preventScrolling: false, dismissible: false});
+    
+    var quill; // El editor se inicializa al seleccionar una entrada
 
     $scope.readableTime = function(timestamp){ // Fecha y hora formal
         return moment(timestamp).format("DD/MM/YYYY HH:mm");
@@ -25,9 +27,36 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
     };
 
     $scope.select = function(key){ // Seleccionar noticia para ver, editar o borrar
-        if(key != undefined) // Editar, ver o eliminar existente
+        // Aunque no edite se inicializa el editor igual. Para evitarlo hay que meter esto en otra funcion
+        var quilleditor = document.createElement("div"); // Crear el contenedor cada vez para reiniciar
+        quilleditor.id = "quill";
+        document.getElementById("quill_container").innerHTML = "";
+        document.getElementById("quill_container").appendChild(quilleditor);            
+        quill = new Quill('#quill', { // Controlador del editor (inicializo cada vez)
+            modules: {            
+                toolbar: [ // Botones de la barra de tareas
+                    ['bold', 'italic', 'underline', 'strike'],        
+                    [{ 'size': ['small', false, 'large', 'huge'] }], 
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],            
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],      
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],         
+                    [{ 'direction': 'rtl' }],                         
+                    [{ 'color': [] }, { 'background': [] }],          
+                    [{ 'font': [] }],
+                    [{ 'align': [] }],
+                    ['link', 'image'],
+                    ['clean']                                         
+                ],
+                imageResize: {} // Este funciona con un script adicional
+            },
+            theme: 'snow'
+        });        
+        if(key != undefined){ // Editar, ver o eliminar existente
             $scope.selected = $scope.news[key];
-        else // Editar nueva
+            quill.container.firstChild.innerHTML = $scope.selected.content;
+        }else{ // Editar nueva
+            quill.container.firstChild.innerHTML = "";
             $scope.selected = {
                 title: "",
                 content: "",
@@ -35,6 +64,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
                 timestamp: 0,
                 author: $rootScope.user.uid
             }
+        }
     };
 
     $scope.deleteSelected = function(){ // Borrar noticia seleccionada
@@ -51,7 +81,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
             }
             Cipressus.db.update(updates)
             .then(function(snapshot){
-                M.toast({html: "Listo!",classes: 'rounded green',displayLength: 1000});
+                M.toast({html: "Listo!",classes: 'rounded green darken-3',displayLength: 1000});
                 $rootScope.loading = false;
                 $scope.$apply();
             })
@@ -87,7 +117,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
                     var temp = $scope.news[key];
                     $scope.news[key] = $scope.news[key-1];
                     $scope.news[key-1] = temp;
-                    M.toast({html: "Orden actualizado",classes: 'rounded green',displayLength: 1000});
+                    M.toast({html: "Orden actualizado",classes: 'rounded green darken-3',displayLength: 1000});
                     $rootScope.loading = false;
                     $scope.$apply();
                 })
@@ -112,7 +142,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
                     var temp = $scope.news[key];
                     $scope.news[key] = $scope.news[key+1];
                     $scope.news[key+1] = temp;
-                    M.toast({html: "Orden actualizado",classes: 'rounded green',displayLength: 1000});
+                    M.toast({html: "Orden actualizado",classes: 'rounded green darken-3',displayLength: 1000});
                     $rootScope.loading = false;
                     $scope.$apply();
                 })
@@ -141,13 +171,13 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
         }else{
             $scope.selected.timestamp = Date.now(); // Fecha/hora actuales
         }
+        $scope.selected.content = quill.container.firstChild.innerHTML;
         if($scope.selected.key){ // Si ya tiene una clave, hay que sobreescribir noticia en DB
-            var key = $scope.selected.key;
-            
+            var key = $scope.selected.key;            
             $scope.selected.key = null; // Borro la clave para que no quede en la db
             Cipressus.db.update($scope.selected,'news/'+key)
             .then(function(snapshot){
-                M.toast({html: "Comunicado actualizado",classes: 'rounded green',displayLength: 1500});
+                M.toast({html: "Comunicado actualizado",classes: 'rounded green darken-3',displayLength: 1500});
                 editModal.close();
                 $rootScope.loading = false;
                 $scope.$apply();

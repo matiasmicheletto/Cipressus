@@ -15,12 +15,14 @@
     <meta http-equiv="Expires" content="0" />
 
     <!-- ##################### CSS ##################### -->
-    <link rel="icon" href="img/favicon.ico" sizes="16x16" />
-    <link type="text/css" rel="stylesheet" href="style/icons.css" />
-    <link type="text/css" rel="stylesheet" href="style/materialize.min.css" media="screen,projection" />
-    <link type="text/css" rel="stylesheet" href="style/fullcalendar.css">
-    <link type="text/css" rel="stylesheet" href="style/timeline.css" />
-    <link type="text/css" rel="stylesheet" href="style/custom.css" />
+    <link rel="icon" href="img/favicon.ico" sizes="16x16"/>
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <!--<link type="text/css" rel="stylesheet" href="style/icons.css"/>-->
+    <link type="text/css" rel="stylesheet" href="style/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="style/fullcalendar.css"/>
+    <link type="text/css" rel="stylesheet" href="style/quill.snow.css"/>
+    <link type="text/css" rel="stylesheet" href="style/timeline.css"/>
+    <link type="text/css" rel="stylesheet" href="style/custom.css"/>
 
     <!-- ##################### ASSETS ##################### -->
     <script type="text/javascript" src="assets/materialize.min.js"></script>
@@ -35,6 +37,8 @@
     <script type="text/javascript" src="assets/highcharts.js"></script>
     <script type="text/javascript" src="assets/sunburst.js"></script>
     <script type="text/javascript" src="assets/variable-pie.js"></script>
+    <script type="text/javascript" src="assets/quill.min.js"></script>
+    <script type="text/javascript" src="assets/image-resize.min.js"></script>
     <script type="text/javascript" src="assets/cipressus.js"></script>
 
 
@@ -74,7 +78,7 @@
         <!-- Contenido de la barra superior (navbar) -->
         <div class="navbar-fixed">
             <nav>
-                <div class="nav-wrapper green darken-2">
+                <div class="nav-wrapper green darken-4">
                     <a id="menu" data-target="slide-out" class="sidenav-trigger" ng-show="userLogged"
                         style="cursor: pointer;"><i class="material-icons small">menu</i></a>
                     <a class="brand-logo"><img width="100px" src="images/navbarlogo.png"></a>
@@ -220,7 +224,7 @@
                     <textarea id="textarea" class="materialize-textarea" ng-model="helpMessage"></textarea>
                     <label for="textarea">Consulta</label>
                     </div>
-                    <a class="modal-close waves-effect waves-white btn green darken-2" ng-disabled = "!helpMessage || helpMessage.length < 1" ng-click="sendHelp()">Enviar</a>
+                    <a class="modal-close waves-effect waves-white btn green darken-4" ng-disabled = "!helpMessage || helpMessage.length < 1" ng-click="sendHelp()">Enviar</a>
                 </div>
             </div>
         </div>

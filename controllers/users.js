@@ -76,7 +76,7 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
             // Copiar atributos para actualizar vista
             $scope.users[$scope.selectedKey].admin = false;
             $scope.users[$scope.selectedKey].enrolled = user_private.enrolled;
-            M.toast({html: "Listo!",classes: 'rounded green',displayLength: 2000});
+            M.toast({html: "Listo!",classes: 'rounded green darken-3',displayLength: 2000});
             confirmEnrollModal.close();
             $scope.selectedKey = null; // Deseleccionar user
             $rootScope.loading = false;
@@ -161,7 +161,7 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
             $scope.selectedKey = null;
             $scope.auxiliaryScores = null;
             $scope.auxiliarySubmits = null;
-            M.toast({html: "Calificaciones actualizadas",classes: 'rounded green',displayLength: 2000});
+            M.toast({html: "Calificaciones actualizadas",classes: 'rounded green darken-3',displayLength: 2000});
             $rootScope.loading = false;
             $scope.$apply();
         })

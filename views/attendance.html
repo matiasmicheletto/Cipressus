@@ -19,7 +19,7 @@
     </div>
 
     <div class="section" ng-if="absents.length>0">
-        <table class="highlight responsive-table">
+        <table class="highlight">
             <thead>
                 <tr>
                     <th>Foto</th>
@@ -51,7 +51,7 @@
     </div>
 
     <div class="section" ng-if="presents.length>0">
-        <table class="highlight responsive-table">
+        <table class="highlight">
             <thead>
                 <tr>
                     <th>Foto</th>
@@ -75,7 +75,7 @@
     </div>
 
     <div class="right">
-        <a class="waves-effect waves-white btn green {{changes?'':'disabled'}}" ng-click="saveList()">Guardar</a>
+        <a class="waves-effect waves-white btn green darken-4 {{changes?'':'disabled'}}" ng-click="saveList()">Guardar</a>
     </div>
 </div>
 
@@ -86,7 +86,7 @@
     </div>
     
     <div class="modal-footer">      
-        <a class="modal-close waves-effect waves-white btn green" ng-click="changes=false">Cancelar</a>
+        <a class="modal-close waves-effect waves-white btn green darken-4" ng-click="changes=false">Cancelar</a>
         <a class="waves-effect waves-white btn teal" ng-click="saveList()">Guardar</a>
     </div>
 </div>

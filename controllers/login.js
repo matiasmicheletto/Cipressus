@@ -11,7 +11,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 console.log(res);                
                 M.toast({
                     html: "Bienvenido!",
-                    classes: 'rounded green',
+                    classes: 'rounded green darken-3',
                     displayLength: 5000
                 });
                 $rootScope.$apply();
@@ -41,7 +41,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 console.log(res);
                 M.toast({
                     html: "Listo! Te enviamos el formulario a tu correo electrónico",
-                    classes: 'rounded green',
+                    classes: 'rounded green darken-3',
                     displayLength: 2500
                 });
             }).catch(function (err) {
@@ -68,7 +68,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 console.log(res);
                 M.toast({
                     html: "Bienvenido!",
-                    classes: 'rounded green',
+                    classes: 'rounded green darken-3',
                     displayLength: 2500
                 });
             }).catch(function (err) {

@@ -1,6 +1,7 @@
 <div class="container">
     <h3 class="center">Dashboard</h3>
 </div>
+
 <div class="row">
     <!-- Arbol de actividades -->
     <div class="col s12 m6 l6">
@@ -14,13 +15,25 @@
     <div class="col s12 m6 l6">    
         <div class="card hoverable z-depth-1">
             <div class="card-content">
-                <div ng-hide="student">
+                <div ng-hide="user">
                     <h5>Aguarde a ser habilitado por los administradores para poder consultar sus calificaciones</h5>
                 </div>
-                <div ng-show="student" id="variable_pie_container"></div>
+                <div ng-show="user" id="variable_pie_container"></div>
+                <span class="card-title activator grey-text text-darken-4">Detalles<i class="material-icons right">more_vert</i></span> 
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">Detalles<i class="material-icons right">close</i></span>
+                <p><b>{{currentActivityScores.name}}: </b>{{currentActivityScores.score}}% ({{currentActivityScores.points}} pts.)</p>
+                <ul style="margin-left: 4%">
+                    <li ng-repeat="(key,node) in currentActivityScores.children"> <!--Nota de los hijos del nodo-->
+                        <b>{{node.name}}: </b>{{node.score}}% ({{node.points}} pts.) 
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
+    </div>    
+</div>
+<div class="row">
     <!-- Avance de la materia -->
     <div class="col s12 m6 l6">    
         <div class="card hoverable z-depth-1">
@@ -29,18 +42,16 @@
             </div>
         </div>
     </div>    
-</div>
-<div class="row">
     <!-- Proximos eventos -->
     <div class="col s12 m6 l6">    
-        <div class="card hoverable z-depth-1">
+        <div class="card hoverable z-depth-1" ng-show="events">
             <div class="card-content">
-                <h5>Próximos eventos</h5>               
+                <h5>Próximas actividades</h5>               
                 <div class="timeline">
                     <div class="tl-container {{ev.side}}" ng-repeat="(key,ev) in events track by $index">
                         <div class="tl-content">
                         <p><b>{{ev.title}}</b></p>
-                        <p style="font-size: 75%">{{relativeTime(ev.start)}}</p>
+                        <p style="font-size: 75%"><i>{{relativeTime(ev.start)}}</i></p>
                         <p ng-bind-html="ev.info" class="truncate"></p>
                         </div>
                     </div>

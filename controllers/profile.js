@@ -55,7 +55,7 @@ app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$
 
     Cipressus.db.update(newData,"users_public/"+$rootScope.user.uid) // Actualizar
     .then(function(res){
-      M.toast({html: "Datos actualizados!",classes: 'rounded green',displayLength: 2500});
+      M.toast({html: "Datos actualizados!",classes: 'rounded green darken-3',displayLength: 2500});
       $scope.edit = false;
       $rootScope.$apply();
     })
