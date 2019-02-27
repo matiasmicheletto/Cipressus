@@ -38,6 +38,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             controller: "profile"
         });
 })
+.filter('trusted', ['$sce', function ($sce) {
+    // Ver: https://stackoverflow.com/questions/39480969/angular-interpolateinterr-error-when-adding-url-from-variable
+    return $sce.trustAsResourceUrl;
+ }])
 .config(['$locationProvider', function($locationProvider) {
     // Ver: https://stackoverflow.com/questions/41272314/angular-all-slashes-in-url-changed-to-2f
     $locationProvider.hashPrefix('');
@@ -98,10 +102,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             $rootScope.user.uid = uid;
             Cipressus.db.get('users_private/'+uid) // Descargar datos privados de usuario
             .then(function(private_data){
-                if(private_data){ // Usuario no aceptado aun
+                if(private_data){ // Usuario aceptado por admin
                     $rootScope.user.admin = private_data.admin;
                     $rootScope.user.enrolled = private_data.enrolled;
-                }else{
+                }else{ // Usuario no aceptado aun
                     $rootScope.user.admin = false;
                     $rootScope.user.enrolled = -1;
                 }
@@ -141,5 +145,23 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
         console.log("Error de incialización de Cipressus");
         $rootScope.loading = false;
         $rootScope.$apply();
-    });     
+    });  
+    
+    var isInStandaloneMode = function() { return ('standalone' in window.navigator) && (window.navigator.standalone); };
+    
+    if (is.ios() && !isInStandaloneMode()) {
+       this.setState({ showInstallMessage: true });
+    }
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.userChoice.then(function(choiceResult) {
+            console.log(choiceResult.outcome);
+            if(choiceResult.outcome == 'dismissed') {
+                console.log('User cancelled home screen install');
+            }
+            else {
+                console.log('User added to home screen');
+            }
+        });
+    });
 });

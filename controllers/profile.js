@@ -23,7 +23,12 @@ app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$
       if(file) reader.readAsDataURL(file);
     });
 
-  M.Tooltip.init(document.querySelectorAll('.tooltipped'),{}); // Inicializar tooltips
+  M.Tooltip.init(document.querySelectorAll('.tooltipped'),{}); // Inicializar tooltips      
+  document.getElementById("inputName").value = $rootScope.user.name;
+  document.getElementById("inputSecondName").value = $rootScope.user.secondName;
+  document.getElementById("inputLU").value = $rootScope.user.lu;
+  document.getElementById("inputDegree").value = $rootScope.user.degree;
+  M.FormSelect.init(document.querySelectorAll('select'), {});
 
   $scope.uploadPic = function(){ // Redirigir el evento al input para cargar una foto
     document.getElementById("imgInput").click();

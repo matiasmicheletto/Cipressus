@@ -1,10 +1,12 @@
 <div class="container">
     <h3 class="center">Dashboard</h3>
+    <h5 class="grey-text text-lighten-1" ng-hide="user"><i>Aguarde a ser habilitado por los administradores para poder consultar sus calificaciones</i></h5>
 </div>
 
-<div class="row">
+
+<div class="row {{user?'':'container'}}">
     <!-- Arbol de actividades -->
-    <div class="col s12 m6 l6">
+    <div class="col {{user ? 's12 m6 l6':'s12'}}">
         <div class="card hoverable z-depth-1">
             <div class="card-content">
                 <div id="sunburst_container"></div>
@@ -12,13 +14,10 @@
         </div>
     </div>
     <!-- PieChart de calificaciones -->
-    <div class="col s12 m6 l6">    
+    <div class="col s12 m6 l6" ng-show="user">    
         <div class="card hoverable z-depth-1">
-            <div class="card-content">
-                <div ng-hide="user">
-                    <h5>Aguarde a ser habilitado por los administradores para poder consultar sus calificaciones</h5>
-                </div>
-                <div ng-show="user" id="variable_pie_container"></div>
+            <div class="card-content">                
+                <div id="variable_pie_container"></div>
                 <span class="card-title activator grey-text text-darken-4">Detalles<i class="material-icons right">more_vert</i></span> 
             </div>
             <div class="card-reveal">
@@ -33,17 +32,10 @@
         </div>
     </div>    
 </div>
-<div class="row">
-    <!-- Avance de la materia -->
-    <div class="col s12 m6 l6">    
-        <div class="card hoverable z-depth-1">
-            <div class="card-content">               
-                <div id="progress_pie_container" style="max-height: 300px"></div>
-            </div>
-        </div>
-    </div>    
+
+<div class="row">    
     <!-- Proximos eventos -->
-    <div class="col s12 m6 l6">    
+    <div class="col {{user ? 's12 m6 l6':'s12'}}">    
         <div class="card hoverable z-depth-1" ng-show="events">
             <div class="card-content">
                 <h5>Próximas actividades</h5>               
@@ -59,6 +51,13 @@
             </div>
         </div>
     </div>
-
+    <!-- Avance de la materia -->
+    <div class="col s12 m6 l6" ng-show="user">    
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">                     
+                <div id="progress_pie_container" style="max-height: 300px"></div>
+            </div>
+        </div>
+    </div>    
 </div>
 

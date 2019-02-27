@@ -64,7 +64,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             }
             $scope.$apply();
             Highcharts.chart('variable_pie_container', {
-                chart: {type: 'variablepie'},
+                chart: {type: 'variablepie',height: '100%'},
                 title: {text: 'Mis calificaciones'},
                 tooltip: {
                     headerFormat: '',
@@ -152,14 +152,17 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             Cipressus.db.get('users_private/'+$rootScope.user.uid) // Descargar notas del usuario
                 .then(function(user_data){
                     $scope.user = user_data;
-                    // Si aun no fue evaluado en nada, dejar arreglos vacios (porque en DB no se guardan)
-                    if(typeof($scope.user.scores) == 'undefined')
-                        $scope.user.scores = [];
-                    if(typeof($scope.user.submits) == 'undefined')
-                        $scope.user.submits = [];
+                    if($scope.user){ // Si ya fue aprobado por admin
+                        // Si aun no fue evaluado en nada, dejar arreglos vacios (porque en DB no se guardan)
+                        if(typeof($scope.user.scores) == 'undefined')
+                            $scope.user.scores = [];
+                        if(typeof($scope.user.submits) == 'undefined')
+                            $scope.user.submits = [];
+                    }
                     // Actualizar graficos al nodo root
                     var arr = [];
                     arr = Cipressus.utils.getArray($scope.activities, arr, '');
+                    $scope.$apply(); // Este es para que actualice la vista antes de graficar
                     updateSunburst(arr);
                     updatePolarPlot($scope.activities.id);                                        
                     $rootScope.$apply(); 
@@ -179,7 +182,9 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                                 }
                             }
                         });
-                        updateProgressPlot();
+                        if($scope.user)
+                            if($scope.user.scores.asistencia) // Si tiene calificado la asistencia, graficar
+                                updateProgressPlot();
                         $rootScope.loading = false;
                         $rootScope.$apply(); 
                     })
@@ -189,6 +194,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                         $rootScope.loading = false;
                         $rootScope.$apply(); 
                     });
+                    
                 })
                 .catch(function(err){ // users_private
                     console.log(err);

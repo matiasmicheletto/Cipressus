@@ -1,6 +1,6 @@
 <center>
     <div ng-show="userLogged==false" class="container black-text" style="margin-top: 50px;" style="z-index:-2">
-        <div class="z-depth-1 row hoverable login-box" style="z-index:1; width:{{login_mode==1 ? '600px':'400px'}}">
+        <div class="z-depth-1 row hoverable login-box" style="z-index:1;max-width: {{login_mode==1 ? '800px':'400px'}};">
             <div>
                 <a><img src="images/mainlogo.png" width="150px" /></a>
             </div>
@@ -8,39 +8,42 @@
             <form class="col s12" method="post">
 
                 <div class="row" ng-show="login_mode==1">
-                    <div class="input-field col s6">
+                    <div class="input-field col s12 m6 l6">
                         <i class="material-icons prefix">person</i>
                         <input class="validate black-text" name="name" id="name" ng-model="userForm.name" type="text" />
                         <label for="name">Nombre</label>
                     </div>
                 
-                    <div class="input-field col s6">
+                    <div class="input-field col s12 m6 l6">
                         <i class="material-icons prefix">people</i>
                         <input class="validate black-text" name="secondName" id="secondName" ng-model="userForm.secondName" type="text" />
                         <label for="secondName">Apellido</label>
                     </div>
      
-                    <div class="input-field col s6">
+                    <div class="input-field col s12 m6 l6">
                         <i class="material-icons prefix">credit_card</i>
                         <input class="validate black-text" name="lu" id="lu" ng-model="userForm.lu" type="number" />
                         <label for="lu">LU</label>
                     </div>
-          
-                    <div class="input-field col s6">
-                        <i class="material-icons prefix">school</i>
-                        <input class="black-text" name="degree" id="degree" ng-model="userForm.degree" type="text" />
-                        <label for="degree">Carrera</label>
+ 
+                    <div class="input-field col s12 m6 l6">
+                        <select id="degreeSelect" class="icons">
+                            <option value="" disabled selected>Elija una opción</option>
+                            <option value="Ing. Electrónica" data-icon="images/electronica.jpg">Ing. Electrónica</option>
+                            <option value="Ing. Electricista" data-icon="images/electricista.jpg">Ing. Electricista</option>
+                        </select>
+                        <label><i class="material-icons">school</i> Carrera</label>
                     </div>
                 </div>
             
                 <div class="row">
-                    <div class="input-field col {{login_mode==1 ? 's6':'s12'}}">
+                    <div class="input-field col s12">
                         <i class="material-icons prefix">email</i>
                         <input class="validate black-text" name="email" id="email" type="email" ng-model="userForm.email" />
                         <label for="email">Email</label>
                     </div>
          
-                    <div ng-hide="login_mode==2" class="input-field col {{login_mode==1 ? 's6':'s12'}}">
+                    <div ng-hide="login_mode==2" class="input-field col s12">
                         <i class="material-icons prefix">vpn_key</i>
                         <input class="validate black-text" name="password" id="password" type="password" ng-model="userForm.password" />
                         <label for="password">Contraseña</label>

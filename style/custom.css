@@ -1,3 +1,9 @@
+body {
+  display: flex!important;
+  min-height: 100vh!important;
+  flex-direction: column!important;
+}
+
 /* Preloader */
 .preloader-wrapper {
   margin: 0 auto; 
@@ -25,7 +31,7 @@
 /* Login */
 .login-box{
   display: inline-block; 
-  padding: 32px 48px 0px 48px; 
+  padding: 32px 35px 0px 35px; 
   background: rgba(210, 210, 210, 0.7)!important;
 }
 

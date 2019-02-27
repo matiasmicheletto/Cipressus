@@ -63,7 +63,13 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
     };
 
     $scope.registerNewUser = function () {
-        if (typeof $scope.userForm !== 'undefined') {
+        var formOk = false; // Chequeo de formulario
+        if (typeof($scope.userForm) != 'undefined'){ // Al menos un dato
+            $scope.userForm.degree = document.getElementById("degreeSelect").value; // No funciona el ng-model
+            if($scope.userForm.name != "" && $scope.userForm.secondName != "" && typeof($scope.userForm.lu) != 'undefined' && $scope.userForm.degree != "") // Chequeo de campos
+                formOk = true;
+        }
+        if (formOk) { // Registrar usuario
             Cipressus.users.signUp($scope.userForm).then(function (res) {
                 console.log(res);
                 M.toast({
@@ -80,7 +86,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 });
             });
         }else{ 
-            console.log("Formulario vacío");
+            console.log("Formulario incompleto");
             M.toast({
                 html: "Debe completar el formulario!",
                 classes: 'rounded red',
@@ -113,6 +119,15 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
     };
 
     // Valores por defecto de los botones (modo inicio de sesión)
+    /*$scope.userForm = {
+        name: "",
+        secondName: "",
+        lu: null,
+        degree: "",
+        email: "",
+        password: ""
+    };*/
     $scope.login_mode = 0; // 0->login; 1->registro; 2->recuperacion de clave
     $scope.updateButtons();
+    M.FormSelect.init(document.querySelectorAll('select'), {});    
 }]);

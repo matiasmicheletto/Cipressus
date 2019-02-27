@@ -13,9 +13,23 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <!-- Web manifest -->
+    <link rel="manifest" href="manifest.json"></link>
+    <!-- PWA Service Worker -->
+    <script>
+        if (navigator.serviceWorker.controller)
+            console.log('[PWA Builder] active service worker found, no need to register')
+        else
+            navigator.serviceWorker.register('pwabuilder-sw.js', {scope: './'})
+            .then(function(reg){
+                console.log('Service worker has been registered for scope:'+ reg.scope);
+            });
+    </script>
+    <script src="manup.min.js"></script> 
+
 
     <!-- ##################### CSS ##################### -->
-    <link rel="icon" href="img/favicon.ico" sizes="16x16"/>
+    <link rel="icon" href="images/favicon.ico" sizes="16x16"/>
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <!--<link type="text/css" rel="stylesheet" href="style/icons.css"/>-->
     <link type="text/css" rel="stylesheet" href="style/materialize.min.css" media="screen,projection"/>
@@ -30,6 +44,7 @@
     <script type="text/javascript" src="assets/angular-route.min.js"></script>
     <script type="text/javascript" src="assets/angular-sanitize.min.js"></script>
     <script type="text/javascript" src="assets/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/is.min.js"></script>
     <script type="text/javascript" src="assets/firebase.js"></script>
     <script type="text/javascript" src="assets/moment.min.js"></script>
     <script type="text/javascript" src="assets/fullcalendar.min.js"></script>
@@ -40,7 +55,6 @@
     <script type="text/javascript" src="assets/quill.min.js"></script>
     <script type="text/javascript" src="assets/image-resize.min.js"></script>
     <script type="text/javascript" src="assets/cipressus.js"></script>
-
 
 </head>
 
@@ -188,24 +202,24 @@
                         z-index: -10;">
             </div>
             <div class="row">
-            <h4>Acerca de CIPRESSUS</h4>
-            <p>CIPRESSUS es una plataforma online que implementa un sistema de cómputo de calificaciones para actividades educativas y permite la consulta en tiempo real de resultados de evaluaciones, noticias y cronograma de cátedra, descarga de material de estudio y muchas otras utilidades.</p>
+            <h4><b>Acerca de CIPRESSUS</b></h4>
+            <p>Cipressus es una aplicación con herramientas para la gestión de actividades educativas. Implementa un sistema de cómputo automático de calificaciones y permite la consulta en tiempo real de resultados de evaluaciones, noticias y cronograma de cátedra, descarga de material de estudio y muchas otras utilidades.</p>
             </div>
             <div class="row">
                 <h5>Contacto</h5>
-                <p>LSD | Laboratorio de Sistemas Digitales</p>
-                <p>DIEC | Departamento de Ingeniería Eléctrica y Computadoras</p>
-                <p>San Andrés 800, CP8000 Bahía Blanca</p>
-                <p>Buenos Aires, Argentina</p>
-                <p>Teléfono: +54 291 4595153/4</p>
-                <p>Website: <a href="http://www.diec.uns.edu.ar/">http://www.diec.uns.edu.ar/</a></p>
+                <p>LSD | Laboratorio de Sistemas Digitales<br>
+                DIEC | Departamento de Ingeniería Eléctrica y Computadoras<br>
+                San Andrés 800, CP8000 Bahía Blanca<br>
+                Buenos Aires, Argentina<br>
+                Teléfono: +54 291 4595153/4<br>
+                Website: <a href="http://www.diec.uns.edu.ar/">http://www.diec.uns.edu.ar/</a></p>
             </div>
-            <br><br>
+            <br>
             <div class="row" style="font-size:75%;">  
                 <h5>Diseño e implementación</h5>
-                <p>Ing. Matías J. Micheletto</p>
-                <p>Email: <a href="mailto:matias.micheletto@uns.edu.ar?Subject=Ref.%20Cipressus">matias.micheletto@uns.edu.ar</a></p>
-                <p>Documentación: <a href="https://github.com/matiasmicheletto/cipressus">https://github.com/matiasmicheletto/cipressus</a></p>
+                Ing. Matías J. Micheletto<br>
+                Email: <a href="mailto:matias.micheletto@uns.edu.ar?Subject=Ref.%20Cipressus">matias.micheletto@uns.edu.ar</a><br>
+                Documentación: <a href="https://github.com/matiasmicheletto/cipressus">https://github.com/matiasmicheletto/cipressus</a></p>
             </div>
             <div class="row" style="font-size:75%;">
                 <h6>Términos y condiciones</h6>

@@ -177,6 +177,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
             $scope.selected.key = null; // Borro la clave para que no quede en la db
             Cipressus.db.update($scope.selected,'news/'+key)
             .then(function(snapshot){
+                $scope.selected.key = key; // Volver a poner la clave para que no se pierda
                 M.toast({html: "Comunicado actualizado",classes: 'rounded green darken-3',displayLength: 1500});
                 editModal.close();
                 $rootScope.loading = false;

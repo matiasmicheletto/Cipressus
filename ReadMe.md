@@ -2,7 +2,7 @@
 
 CIPRESSUS es una plataforma online pensada inicialmente para implementar un sistema de cómputo automático de calificaciones para actividades educativas y permitir la consulta en tiempo real de resultados de evaluaciones. 
 
-Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de administrador pueden configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, entre muchas otras utilidades.
+Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de administrador pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, entre muchas otras utilidades.
 
 
 ### Características
@@ -54,6 +54,10 @@ Sólo como dependencia requerida para FullCalendar
 #### Fullcalendar
 http://fullcalendar.io
 Calendario de eventos para el cronograma de la materia. 
+#### Quill
+https://quilljs.com/
+https://github.com/kensnyder/quill-image-resize-module
+Editor de texto enriquecido para crear publicaciones con comunicados y noticias.
 #### Moment
 http://momentjs.com
 Operaciones de fecha y hora
@@ -132,18 +136,15 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ### TODO
 
-Usuario con rol de alumno:
+Usuario con rol de alumno:  
 
-  - Dashboard
-    - Asistencia
-    - Progreso de la materia.
-    - Próximos eventos.
-    - Descripción textual para graficos.
-  - Material
-    - Lista de trabajos prácticos, laboratorios o parciales viejos para descargar.
+  - Material  
+    - Lista de trabajos prácticos, laboratorios o parciales viejos para descargar.  
+  - Entrega de informes de laboratorio.
+  - Interfase para probador digital (requiere Node.js o desarrollar un driver).
 
 
-Usuario con rol de administrador:
+Usuario con rol de administrador:  
 
-  - Actividades
-    - Configuración de árbol de actividades
+  - Actividades  
+    - Configuración de árbol de actividades.  

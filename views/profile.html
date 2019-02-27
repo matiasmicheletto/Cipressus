@@ -3,17 +3,17 @@
 	<div class="card-panel grey lighten-3 z-depth-3" ng-show="!edit">
 		<div class="row">
 
-			<div class="col s3">
+			<div class="col s12 m3 l3">
 				<img class="responsive-img" src="{{user.avatar}}"></a>
 			</div>
 
-			<div class="col s6">
+			<div class="col s12 m9 l9">
 				<h4>{{user.name}} {{user.secondName}}</h4>
-				<h5 class="truncate"><i>{{user.email}}</i></h5>		
-				<h5>LU: <i>{{user.lu}}</i></h5>		
-				<h5 class="truncate"><i>{{user.degree}}</i></h5>				
+				<h5 class="truncate"><i>{{user.email}}</i></h5>
+				<h5>LU: <i>{{user.lu}}</i></h5>
+				<h5 class="truncate"><i>{{user.degree}}</i></h5>
 				<p><b>Usuario desde:</b> {{created}}</p>
-			</div>	
+			</div>
 
 		</div>
 
@@ -28,47 +28,59 @@
 
 	<div class="card-panel grey lighten-3 z-depth-3" ng-show="edit">
 		<div class="row">
-		
-			<div class="col s3">
+
+			<div class="col s12 m3 l3">
 				<img class="responsive-img" src="{{newAvatar}}" style="cursor: pointer;" ng-click="uploadPic()">
 			</div>
-		
 
-			<div class="col s9">
-				<div class="input-field">
-					<i class="material-icons prefix">person</i>
-					<input placeholder="{{user.name}}" class="validate" id="inputName" type="text">
-					<label for="inputName">Nombre</label>
-				</div>	
 
-				<div class="input-field">
-					<i class="material-icons prefix">people</i>
-					<input placeholder="{{user.secondName}}" class="validate" id="inputSecondName" type="text">
-					<label for="inputSecondName">Apellido</label>
+			<div class="col s12 m9 l9">
+				<div class="row">
+					<i class="col s1 material-icons">person</i>
+					<div class="input-field col s11">
+						<input placeholder="{{user.name}}" class="validate" id="inputName" type="text">
+						<label for="inputName">Nombre</label>
+					</div>
 				</div>
 
-				<div class="input-field">
-					<i class="material-icons prefix">credit_card</i>
-					<input placeholder="{{user.lu}}" class="validate" id="inputLU" type="number">
-					<label for="inputLU">LU</label>
-				</div>	
+				<div class="row">
+					<i class="col s1 material-icons">people</i>
+					<div class="input-field col s11">
+						<input placeholder="{{user.secondName}}" class="validate" id="inputSecondName" type="text">
+						<label for="inputSecondName">Apellido</label>
+					</div>
+				</div>
 
-				<div class="input-field">
-					<i class="material-icons prefix">school</i>
-					<input placeholder="{{user.degree}}" class="validate" id="inputDegree" type="text">
-					<label for="inputDegree">Carrera</label>
-				</div>	
-			
+				<div class="row">
+					<i class="col s1 material-icons">credit_card</i>
+					<div class="input-field col s11">
+						<input placeholder="{{user.lu}}" class="validate" id="inputLU" type="number">
+						<label for="inputLU">LU</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<i class="col s1 material-icons">school</i>
+					<div class="input-field col s11">
+						<select id="inputDegree" class="icons">
+							<option value="" disabled selected>Elija una opción</option>
+							<option value="Ing. Electrónica" data-icon="images/electronica.jpg">Ing. Electrónica</option>
+							<option value="Ing. Electricista" data-icon="images/electricista.jpg">Ing. Electricista</option>
+						</select>
+						<label>Carrera</label>
+					</div>
+				</div>
+
 				<h6>Usuario desde: {{created}}</h6>
 			</div>
 
 		</div>
 
 		<div class="row">
-			<button ng-click="saveForm()" type="button" class="btn-large green darken-4 right">Guardar</button>
-			<button ng-click="edit=false" type="button" class="btn-large red darken-4 right">Descartar</button>
-		</div>	
+			<button ng-click="saveForm()" type="button" class="btn green darken-4 right">Guardar</button>
+			<button ng-click="edit=false" type="button" class="btn red darken-4 right">Descartar</button>
+		</div>
 	</div>
 
-			
+
 </div>

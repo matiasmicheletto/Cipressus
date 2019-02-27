@@ -46,6 +46,11 @@
     
     <h5>Editor de noticias</h5>
 
+    <div class="input-field col s6">
+      <input id="title" type="text" class="validate" ng-model="selected.title">
+      <label for="title">Título</label>
+    </div>
+
     <div class="row">
         <div id="quill_container"></div>
     </div>
@@ -78,12 +83,12 @@
   <div class="modal-content">
     <h2>Novedades</h2> 
     <div class="card hoverable z-depth-1">
+        <div class="right chip">
+            <img src="{{users[selected.author].avatar}}">
+            Publicado {{relativeTime(selected.timestamp)}} por {{users[selected.author].name}}
+        </div>
         <div class="card-content">                         
-            <div class="right chip">
-                <img src="{{users[selected.author].avatar}}">
-                Publicado {{relativeTime(selected.timestamp)}} por {{users[selected.author].name}}
-            </div>
-            <br>
+            <h5><b>{{selected.title}}</b></h5>
             <div ng-bind-html=selected.content></div>
         </div>
     </div>   
