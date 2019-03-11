@@ -54,6 +54,8 @@
     <script type="text/javascript" src="assets/variable-pie.js"></script>
     <script type="text/javascript" src="assets/quill.min.js"></script>
     <script type="text/javascript" src="assets/image-resize.min.js"></script>
+    <script type="text/javascript" src="assets/pdf.js"></script>
+    <script type="text/javascript" src="assets/pdf.worker.js"></script>
     <script type="text/javascript" src="assets/cipressus.js"></script>
 
 </head>
@@ -130,13 +132,13 @@
         <li class="no-padding">
             <a href="#/" class="collapsible-header">Inicio<i class="material-icons">home</i></a>
         </li>
-        <li class="no-padding">
+        <li class="no-padding" ng-show="user.enrolled">
             <a href="#/dashboard" class="collapsible-header">Dashboard<i class="material-icons">dashboard</i></a>
         </li>
-        <li class="no-padding">
+        <li class="no-padding" ng-show="user.enrolled">
             <a href="#/calendar" class="collapsible-header">Cronograma<i class="material-icons">calendar_today</i></a>
         </li>
-        <li class="no-padding">
+        <li class="no-padding" ng-show="user.enrolled">
             <a href="#/sources" class="collapsible-header">Material<i class="material-icons">local_library</i></a>
         </li>
         <li class="no-padding" ng-show="user.admin">
@@ -251,6 +253,7 @@
     <script type="text/javascript" src="controllers/home.js"></script>
     <script type="text/javascript" src="controllers/dashboard.js"></script>
     <script type="text/javascript" src="controllers/calendar.js"></script>
+    <script type="text/javascript" src="controllers/sources.js"></script>
     <script type="text/javascript" src="controllers/users.js"></script>
     <script type="text/javascript" src="controllers/attendance.js"></script>
     <script type="text/javascript" src="controllers/activities.js"></script>

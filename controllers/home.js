@@ -12,14 +12,6 @@ app.controller("home", ['$scope','$rootScope','$location', function ($scope,$roo
     // Las publicaciones se deshabilitan configurando la fecha en el futuro
     $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual
     
-    $scope.readableTime = function(timestamp){ // Fecha y hora formal
-        return moment(timestamp).format("DD/MM/YYYY HH:mm");
-    };
-
-    $scope.relativeTime = function(timestamp){ // Tiempo relativo al actual
-        return moment(timestamp).fromNow();
-    };
-
     $scope.news = [];
     Cipressus.db.getSorted('news','order') // Descargar lista de novedades
     .then(function(snapshot){

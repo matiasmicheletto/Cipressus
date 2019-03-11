@@ -132,7 +132,8 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
             Cipressus.db.get("users_public") // Descargar datos de usuario
             .then(function(users_public_data){
                 for(var k in users_public_data) // Los datos de usuario para listar
-                    $scope.users[k].data = users_public_data[k]; 
+                    if($scope.users[k]) // Si es usuario esta en lista de habilitados
+                        $scope.users[k].data = users_public_data[k]; 
                 $scope.updateLists(); // Como ya tengo el selectedEventKey, puedo generar las listas para ese dia
                 $rootScope.loading = false;
                 $scope.changes = false; // Para habilitar el boton de guardar

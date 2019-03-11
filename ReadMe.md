@@ -2,7 +2,9 @@
 
 CIPRESSUS es una plataforma online pensada inicialmente para implementar un sistema de cómputo automático de calificaciones para actividades educativas y permitir la consulta en tiempo real de resultados de evaluaciones. 
 
-Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de administrador pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, entre muchas otras utilidades.
+Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, entre muchas otras utilidades.
+
+Incluye GUI para controlar un tester de circuitos digitales basado en Arduino.
 
 
 ### Características
@@ -16,6 +18,7 @@ Actualmente permite registrarse con correo electrónico, configurar el perfil de
   - Evaluación de asistencia con cómputo automático.
   - Mensajería instantánea.
   - Descarga de material de estudio.
+  - GUI para tester de circuitos.
 
 
 ### Contacto
@@ -25,7 +28,7 @@ UNS | Universidad Nacional del Sur
 San Andrés 800, CP8000 Bahía Blanca  
 Buenos Aires, Argentina  
 Teléfono: +54 291 4595153/4  
-Website: http://www.diec.uns.edu.ar/  
+Website: http://www.diec.uns.edu.ar/rts  
 
 
 #### Diseño e implementación
@@ -35,7 +38,7 @@ Documentación: https://github.com/matiasmicheletto/cipressus
 
 
 
-## Librerías utilizadas
+## Librerías importadas
 #### Angular
 http://angularjs.org
 Framework para el control de la app.
@@ -61,7 +64,9 @@ Editor de texto enriquecido para crear publicaciones con comunicados y noticias.
 #### Moment
 http://momentjs.com
 Operaciones de fecha y hora
-
+#### Mozilla PDF.js
+https://mozilla.github.io/pdf.js/
+Visor de documentos pdf para html5.
 
 
 ## Evaluación de calificaciones
@@ -93,6 +98,21 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-order     // Numero para ordenar el listado
   +-timestamp // Fecha de publicacion/edicion
   +-title     // Titulo del post
+-sources // Listas de archivos
+ |
+ +-(child_key) // Subcategoria de directorio
+  |
+  +-name    // Nombre del subdirectorio
+  +-files // ID del archivo
+   |
+   +-(child_key) // Identificador del archivo
+    |
+    +-link // Enlace al storage
+    +-name // Nombre visible (editable)
+    +-filename // Nombre en storage
+    +-size // Tamanio en storage
+    +-format // Formato del archivo
+    +-uploaded // Fecha de carga
 -users_private // Informacion de usuarios alumnos
  |
  +-(child_key) // ID firebase del usuario
@@ -138,8 +158,6 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 Usuario con rol de alumno:  
 
-  - Material  
-    - Lista de trabajos prácticos, laboratorios o parciales viejos para descargar.  
   - Entrega de informes de laboratorio.
   - Interfase para probador digital (requiere Node.js o desarrollar un driver).
 

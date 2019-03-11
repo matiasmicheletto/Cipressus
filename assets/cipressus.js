@@ -376,6 +376,39 @@ window.Cipressus = (function () {
         }
     };
 
+    core.utils.sendEmail = function (data) { // Enviar email (requiere script php en hosting)
+        return new Promise(function (fulfill, reject) {
+            var uriData = 'nombre=' + data.name + '&email=' + data.email + '&cc=' + data.cc.join() + '&asunto=' + data.subject + '&mensaje=' + data.message;
+            //var ajax_url = 'https://cipressus.uns.edu.ar/mail.php';
+            var ajax_url = '';
+            var ajax_request = new XMLHttpRequest();
+            ajax_request.onreadystatechange = function () {
+                if (ajax_request.readyState === 4)
+                    return fulfill({
+                        response: ajax_request.responseText,
+                        type: "success",
+                        status: ajax_request.status
+                    });
+            };
+            try {
+                ajax_request.open("POST", ajax_url, false);
+                ajax_request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                ajax_request.send(encodeURI(uriData));
+            } 
+            catch (err) {
+                return reject(err);
+            }
+        });
+    };
+
+    core.utils.generateFileName = function (len) { // Nombres aleatorios para archivos
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < len; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    };
+
     core.utils.quillToHTML = function(str){ // Hacer la adaptacion del formato quill al formato html
         return str.replace(/ql-align-center/g,"center-align"); // Por ahora solo este, buscar otros
     };

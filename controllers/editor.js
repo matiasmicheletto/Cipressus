@@ -18,14 +18,6 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
     
     var quill; // El editor se inicializa al seleccionar una entrada
 
-    $scope.readableTime = function(timestamp){ // Fecha y hora formal
-        return moment(timestamp).format("DD/MM/YYYY HH:mm");
-    };
-
-    $scope.relativeTime = function(timestamp){ // Tiempo relativo al actual
-        return moment(timestamp).fromNow();
-    };
-
     $scope.select = function(key){ // Seleccionar noticia para ver, editar o borrar
         // Aunque no edite se inicializa el editor igual. Para evitarlo hay que meter esto en otra funcion
         var quilleditor = document.createElement("div"); // Crear el contenedor cada vez para reiniciar

@@ -11,10 +11,10 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
     $scope.events = []; // Arreglo de eventos (clases, labs, parciales)
 
     // Componentes materialize
-    var viewModal = M.Modal.init(document.getElementById("view_modal"), {preventScrolling: false});
-    var editModal = M.Modal.init(document.getElementById("edit_modal"), {preventScrolling: false});
-    var confirmDeleteModal = M.Modal.init(document.getElementById("confirm_delete_modal"), {preventScrolling: false});
-    var confirmMoveModal = M.Modal.init(document.getElementById("confirm_move_modal"), {preventScrolling: false});
+    var viewModal = M.Modal.init(document.getElementById("view_modal"), {});
+    var editModal = M.Modal.init(document.getElementById("edit_modal"), {});
+    var confirmDeleteModal = M.Modal.init(document.getElementById("confirm_delete_modal"), {});
+    var confirmMoveModal = M.Modal.init(document.getElementById("confirm_move_modal"), {});
     M.FormSelect.init(document.querySelectorAll('select'), {});
 
     $scope.refreshCalendar = function(){ // Sincroniza arreglo de eventos con lo que se muestra
@@ -99,6 +99,11 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
         }
     });
 
+    $scope.confirmDeleteEvent = function(){
+        viewModal.close();
+        setTimeout(function(){confirmDeleteModal.open();},650); // Esto va con delay porque materialize provoca un loop de call stack infinito
+    };
+
     $scope.editEvent = function(newEvent){ // Editar evento o crear nuevo
         if(newEvent){ // Crear nuevo (click en +)
             $scope.selectedEvent = {};
@@ -108,6 +113,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
             document.getElementById("event_end_time").value = null;
             document.getElementById("tag_select").value = "#aaaaaa";
         }else{ // Editar existente (click en evento del calendario)
+            viewModal.close();
             document.getElementById("event_date").value = moment($scope.selectedEvent.start).format("YYYY-MM-DD");
             document.getElementById("event_start_time").value =  moment($scope.selectedEvent.start).format("HH:mm");
             document.getElementById("event_end_time").value = moment($scope.selectedEvent.end).format("HH:mm");
@@ -115,7 +121,8 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
             setTimeout(function(){
                 M.updateTextFields();
             },200);
-        }
+        }        
+        setTimeout(function(){editModal.open();},650); // Esto va con delay porque materialize provoca un loop de call stack infinito
     };
 
     $scope.saveEvent = function(){ // Guardar evento en DB

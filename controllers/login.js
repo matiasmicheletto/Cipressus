@@ -7,6 +7,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
 
     $scope.loginAttempt = function () { // Intentar logear usuario
         if (typeof $scope.userForm !== 'undefined') { // Verificar si se ingreso algo en los campos
+            $rootScope.loading = true;
             Cipressus.users.signIn($scope.userForm).then(function (res) {
                 console.log(res);                
                 M.toast({
@@ -15,15 +16,16 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                     displayLength: 5000
                 });
                 $rootScope.$apply();
-            }).catch(function (err) {
-                console.log("Login incorrecto");
+            }).catch(function (err) {                
                 $scope.userForm.password = null;
-                console.log(err);
+                console.log(err[0]);
                 M.toast({
-                    html: err.text,
+                    html: err[1],
                     classes: 'rounded red',
                     displayLength: 2500
                 });
+                $rootScope.loading = false;
+                $rootScope.$apply();
             });
         } else {
             console.log("Formulario vacío");
@@ -130,4 +132,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
     $scope.login_mode = 0; // 0->login; 1->registro; 2->recuperacion de clave
     $scope.updateButtons();
     M.FormSelect.init(document.querySelectorAll('select'), {});    
+    setTimeout(function(){
+        M.updateTextFields();
+    },1000);
 }]);

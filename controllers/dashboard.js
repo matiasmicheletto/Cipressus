@@ -140,10 +140,6 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         });        
     };
 
-    $scope.relativeTime = function(timestamp){ // Tiempo relativo al actual
-        return moment(timestamp).fromNow();
-    };
-
 
     // Inicializacion 
     Cipressus.db.get('/activities') // Descargar arbol de actividades

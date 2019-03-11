@@ -17,6 +17,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             templateUrl: "views/calendar.html",
             controller: "calendar"
         })
+        .when("/sources", {
+            templateUrl: "views/sources.html",
+            controller: "sources"
+        })
         .when("/users", {
             templateUrl: "views/users.html",
             controller: "users"
@@ -60,6 +64,32 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
         }
     });
 
+    //// Utilidades ////
+    
+    $rootScope.readableTime = function(timestamp){ // Fecha y hora formal
+        return moment(timestamp).format("DD/MM/YYYY HH:mm");
+    };
+
+    $rootScope.relativeTime = function(timestamp){ // Tiempo relativo al actual
+        return moment(timestamp).fromNow();
+    };
+
+    $rootScope.readableFileSize = function(bytes, si) { // Devuelve tamanio de archivo en formato legible
+        var thresh = si ? 1000 : 1024;
+        if(Math.abs(bytes) < thresh) {
+            return bytes + ' B';
+        }
+        var units = si
+            ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+            : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+        var u = -1;
+        do {
+            bytes /= thresh;
+            ++u;
+        } while(Math.abs(bytes) >= thresh && u < units.length - 1);
+        return bytes.toFixed(1)+' '+units[u];
+    };
+
     // Inicializacion componentes de materialize
     $rootScope.sidenav = M.Sidenav.init(document.querySelector('.sidenav'), {
         side: "left", 
@@ -87,7 +117,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             console.log(err[0]);
             M.toast({html: err[1],classes: 'rounded green darken-3',displayLength: 1500});
         });
-    }
+    };
 
     $rootScope.sendHelp = function(){ // Enviar mensaje de ayuda a los usuarios administradores
         console.log($scope.helpMessage);
@@ -107,7 +137,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
                     $rootScope.user.enrolled = private_data.enrolled;
                 }else{ // Usuario no aceptado aun
                     $rootScope.user.admin = false;
-                    $rootScope.user.enrolled = -1;
+                    $rootScope.user.enrolled = null;
                 }
                 Cipressus.db.update({last_login:Date.now()},'users_public/'+uid); // Actualizar fecha y hora
                 if($location.path() == "/login") // Si se acaba de logear en la vista de login
