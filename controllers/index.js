@@ -66,6 +66,18 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
 
     //// Utilidades ////
     
+    $rootScope.greetings = function(){ // Saludo de bienvenida
+        var split_afternoon = 12;
+        var split_evening = 19; 
+        var currentHour = parseFloat(moment().format("HH"));
+        if(currentHour >= split_afternoon && currentHour <= split_evening)
+            return "Buenas tardes";
+        else if(currentHour >= split_evening)
+            return "Buenas noches";
+        else
+            return "Buenos días";
+    };
+
     $rootScope.readableTime = function(timestamp){ // Fecha y hora formal
         return moment(timestamp).format("DD/MM/YYYY HH:mm");
     };

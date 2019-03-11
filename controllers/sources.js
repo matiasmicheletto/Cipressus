@@ -253,6 +253,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
 
 
     ///// Inicialización controller
+    M.Collapsible.init(document.querySelectorAll('.collapsible'), {});
     var files_modal = M.Modal.init(document.getElementById("files_modal"), {preventScrolling: false}); // Dialogo para subir imagenes a la galeria    
     var confirm_delete_modal = M.Modal.init(document.getElementById("confirm_delete_modal"), {preventScrolling: false}); // Dialogo para confirmar borrado
     var pdf_viewer_modal = M.Modal.init(document.getElementById("pdf_viewer_modal"), {preventScrolling: false});
@@ -266,6 +267,11 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
         .then(function (snapshot) {
             //console.log(snapshot);
             $scope.sources = snapshot;
+            // Lista de carpetas para atocompletador
+            var folderList = {};
+            for(var k in $scope.sources)
+                folderList[$scope.sources[k].name] = null;
+            M.Autocomplete.init(document.querySelector('.autocomplete'), {data: folderList}); 
             $rootScope.loading = false;
             $scope.$apply();
         })

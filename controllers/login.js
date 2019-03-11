@@ -11,7 +11,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
             Cipressus.users.signIn($scope.userForm).then(function (res) {
                 console.log(res);                
                 M.toast({
-                    html: "Bienvenido!",
+                    html: $rootScope.greetings()+" "+$rootScope.user.name+"!",
                     classes: 'rounded green darken-3',
                     displayLength: 5000
                 });
@@ -75,7 +75,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
             Cipressus.users.signUp($scope.userForm).then(function (res) {
                 console.log(res);
                 M.toast({
-                    html: "Bienvenido!",
+                    html:  $rootScope.greetings()+" "+$scope.userForm.name+"!",
                     classes: 'rounded green darken-3',
                     displayLength: 2500
                 });
