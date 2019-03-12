@@ -76,7 +76,6 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         }
     };
 
-    var totalEvents=0, futureEvents=0;
     var updateProgressPlot = function(){ // Generar grafico polar de progreso de la materia
         var progressData = [ // Progreso de la materia
             {
@@ -142,6 +141,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
 
 
     // Inicializacion 
+    var totalEvents=0, futureEvents=0;
+
     Cipressus.db.get('/activities') // Descargar arbol de actividades
         .then(function(activities_data){
             $scope.activities = activities_data; // Nodo root del arbol de notas
@@ -162,9 +163,9 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     updateSunburst(arr);
                     updatePolarPlot($scope.activities.id);                                        
                     $rootScope.$apply(); 
-                    // Descargar lista de eventos para linea del tiempo
-                    $scope.events=[];
-                    Cipressus.db.getSorted('events','start')
+                    // Descargar lista de eventos para linea del tiempo y para evaluar asistencia del usuario
+                    $scope.events=[];                    
+                    Cipressus.db.getSorted('events','start') // Lista de eventos ordenados por fecha de inicio
                     .then(function(events_data){
                         events_data.forEach(function(childSnapshot){
                             var ev = childSnapshot.val();
@@ -174,13 +175,27 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                                 if($scope.events.length < 5){ // Agregar solamente 5
                                     // Asignar lado de linea del tiempo alternados
                                     ev.side = $scope.events.length%2 ? "tl-right" : "tl-left";
-                                    $scope.events.push(ev);   
+                                    $scope.events.push(ev); // Agregar evento al arreglo  
                                 }
                             }
                         });
-                        if($scope.user)
-                            if($scope.user.scores.asistencia) // Si tiene calificado la asistencia, graficar
-                                updateProgressPlot();
+                        if($scope.user){ // Si es alumno inscripto
+                            if($scope.user.attendance){ // Calcular asistencia aquí (solo se usa para mostrar pero no se guarda en db)
+                                var userAttendedEvents = Object.getOwnPropertyNames($scope.user.attendance).length; // Cantidad de clases asistidas por el usuario
+                                $scope.user.scores.asistencia = {
+                                    score: userAttendedEvents/(totalEvents-futureEvents)*100,
+                                    evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                                    timestamp: Date.now()
+                                };                                
+                            }else{ // Si no asistió a nada, entonces la asistencia queda en 0
+                                $scope.user.scores.asistencia = {
+                                    score: 0,
+                                    evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                                    timestamp: Date.now()
+                                };
+                            }    
+                            updateProgressPlot();
+                        }
                         $rootScope.loading = false;
                         $rootScope.$apply(); 
                     })

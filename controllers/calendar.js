@@ -89,7 +89,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
                 startDay: moment(event.start).format("DD/MM"),
                 startTime: moment(event.start).format("HH:mm"),
                 endTime: moment(event.end).format("HH:mm"),
-                fromNow: moment(event.end).fromNow()
+                fromNow: moment(event.start).fromNow()
             };
             viewModal.open();
             $scope.$apply();
@@ -237,9 +237,9 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
             // Agregarle los atributos de indice e identificador para que quede en local
             $scope.selectedEvent.id = $scope.selectedEventExtras.id;
             $scope.selectedEvent.idx = $scope.selectedEventExtras.idx;
-            $scope.events[$scope.selectedEventExtras.idx] = $scope.selectedEvent; // Actualizar en arreglo
             $scope.selectedEvent.start = moment($scope.selectedEvent.start).format();
             $scope.selectedEvent.end = moment($scope.selectedEvent.end).format();
+            $scope.events[$scope.selectedEventExtras.idx] = $scope.selectedEvent; // Actualizar en arreglo
             $scope.refreshCalendar();
             $scope.selectedEventExtras = null;
             M.toast({html: "Evento actualizado",classes: 'rounded green darken-3',displayLength: 2000});  

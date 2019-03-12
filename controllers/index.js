@@ -123,6 +123,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
         Cipressus.users.signOut()
         .then(function(res){
             console.log(res);
+            $rootScope.user = null;
             M.toast({html: "Hasta pronto!",classes: 'rounded green darken-3',displayLength: 1500});
         })
         .catch(function(err){

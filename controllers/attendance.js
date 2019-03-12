@@ -50,12 +50,14 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
             };
             updates["users_private/"+$scope.presents[k]+"/attendance/"+$scope.selectedEventKey] = value;
             // Actualizar objeto local
-            if(typeof($scope.users[$scope.presents[k]].attendance)=="undefined") // Para la primera vez
+            if(!$scope.users[$scope.presents[k]].attendance) // Para la primera vez
                 $scope.users[$scope.presents[k]].attendance = {}
             $scope.users[$scope.presents[k]].attendance[$scope.selectedEventKey] = value;
         }
         for(var k in $scope.absents){ // Quitar referencia en la entrada del usuario
             updates["users_private/"+$scope.absents[k]+"/attendance/"+$scope.selectedEventKey] = null;
+            if(!$scope.users[$scope.absents[k]].attendance) // Para la primera vez
+                $scope.users[$scope.absents[k]].attendance = {}
             $scope.users[$scope.absents[k]].attendance[$scope.selectedEventKey] = null;
         }
 

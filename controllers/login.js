@@ -10,11 +10,14 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
             $rootScope.loading = true;
             Cipressus.users.signIn($scope.userForm).then(function (res) {
                 console.log(res);                
-                M.toast({
-                    html: $rootScope.greetings()+" "+$rootScope.user.name+"!",
-                    classes: 'rounded green darken-3',
-                    displayLength: 5000
-                });
+                setTimeout(function(){
+                    if($rootScope.user) // Si ya se realizo el chequeo y descarga de datos
+                        M.toast({
+                            html: $rootScope.greetings()+" "+$rootScope.user.name+"!",
+                            classes: 'rounded green darken-3',
+                            displayLength: 5000
+                        });
+                },2000);
                 $rootScope.$apply();
             }).catch(function (err) {                
                 $scope.userForm.password = null;
