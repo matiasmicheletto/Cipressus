@@ -8,6 +8,9 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
     $rootScope.sidenav.close();
 
     $rootScope.loading = true;
+
+    Cipressus.utils.activityCntr($rootScope.user.uid,"activities").catch(function(err){console.log(err)});
+
     Cipressus.db.get('/activities') // Descargar arbol de actividades
         .then(function (data) {
             $scope.activities = data;

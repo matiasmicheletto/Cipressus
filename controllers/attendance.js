@@ -106,12 +106,14 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
     
     //// Inicializacion ////
 
+    Cipressus.utils.activityCntr($rootScope.user.uid,"attendance").catch(function(err){console.log(err)});
+
     var confirmModal = M.Modal.init(document.getElementById("confirm_modal"), {preventScrolling: false});
     document.getElementById("event_select").addEventListener("change",function(){ // No se puede poner en ng-change
         $scope.selectedEventKey = this.value;
         $scope.updateLists();
     });
-
+    
     Cipressus.db.getSorted("events","start") // Descargar todos los eventos ordenados por fecha
     .then(function(events_data){
         $scope.events = {}; // Lista de eventos que completo dentro del iterator

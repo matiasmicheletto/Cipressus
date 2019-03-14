@@ -12,7 +12,8 @@ app.controller("home", ['$scope','$rootScope','$location', function ($scope,$roo
     // Las publicaciones se deshabilitan configurando la fecha en el futuro
     $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual
     
-    $scope.news = [];
+    Cipressus.utils.activityCntr($rootScope.user.uid,"home").catch(function(err){console.log(err)});
+    $scope.news = [];    
     Cipressus.db.getSorted('news','order') // Descargar lista de novedades
     .then(function(snapshot){
         snapshot.forEach(function(childSnapshot){ // Lista ordenada

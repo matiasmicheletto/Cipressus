@@ -6,6 +6,8 @@ app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$
 }
 
   $rootScope.sidenav.close();
+
+  Cipressus.utils.activityCntr($rootScope.user.uid,"profile").catch(function(err){console.log(err)});
   
   $scope.edit = false; // Toggle para la edicion de los datos del perfil
   $scope.created = $rootScope.user.enrolled > 0 ? moment($rootScope.user.enrolled).format("DD/MM/YYYY HH:mm") : "(Aún no aprobado)"; // Formato legible

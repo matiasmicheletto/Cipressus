@@ -255,6 +255,8 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
         });
     };    
     
+    Cipressus.utils.activityCntr($rootScope.user.uid,"calendar").catch(function(err){console.log(err)});
+
     Cipressus.db.get("events") // Descargar todos los eventos y renderizar en calendar
     .then(function(events_data){
         var idx = 0; // Guardo los indices del arreglo

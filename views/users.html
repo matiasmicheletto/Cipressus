@@ -140,6 +140,7 @@
         <h5><b>LU:</b> <i>{{users[selectedKey].lu}}</i></h5>		
         <h5 class="truncate"><i>{{users[selectedKey].degree}}</i></h5>				
         <p><b>Usuario desde:</b> <i>{{users[selectedKey].enrolled?getTime(3,users[selectedKey].enrolled):"(Usuario no aprobado)"}}</i></p>
+        <p><b>Último acceso:</b> <i>{{readableTime(users[selectedKey].last_login)}} ({{relativeTime(users[selectedKey].last_login)}})</i></p>
       </div>	
     </div>
   </div>

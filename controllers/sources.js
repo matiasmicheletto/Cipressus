@@ -263,6 +263,9 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
 
     $rootScope.loading = true; // Preloader hasta que se descarguen los enlaces
     $rootScope.sidenav.close();
+
+    Cipressus.utils.activityCntr($rootScope.user.uid,"sources").catch(function(err){console.log(err)});
+
     Cipressus.db.get('sources') // Descargar lista de novedades
         .then(function (snapshot) {
             //console.log(snapshot);

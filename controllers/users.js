@@ -173,6 +173,8 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
         });
     };
 
+    Cipressus.utils.activityCntr($rootScope.user.uid,"users").catch(function(err){console.log(err)});
+
     Cipressus.db.get('users_public') // Descargar lista de usuarios
     .then(function(users_public_data){
         $scope.users = users_public_data;

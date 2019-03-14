@@ -22,9 +22,9 @@
         "name" : "Ej 4 - Primer parcial",
         "score" : 6.25
       } ],
-      "score" : 25,
       "id" : "parcial_1",
-      "name" : "Primer parcial"
+      "name" : "Primer parcial",
+      "score" : 25
     }, {
       "children" : [ {
         "id" : "p2_ej1",
@@ -43,13 +43,13 @@
         "name" : "Ej 4 - Segundo parcial",
         "score" : 6.25
       } ],
-      "score" : 25,
       "id" : "parcial_2",
-      "name" : "Segundo parcial"
+      "name" : "Segundo parcial",
+      "score" : 25
     } ],
-    "score" : 50,
     "id" : "parciales",
-    "name" : "Parciales"
+    "name" : "Parciales",
+    "score" : 50
   }, {
     "children" : [ {
       "children" : [ {
@@ -62,13 +62,12 @@
         "score" : 3.5
       } ],
       "deadline" : {
-        "date" : 2000,
-        "id" : "lab0",
-        "param" : 1
+        "date" : 1555441200000,
+        "param" : 0.07
       },
       "id" : "lab0",
-      "score" : 7,
-      "name" : "Probador"
+      "name" : "Probador",
+      "score" : 7
     }, {
       "children" : [ {
         "children" : [ {
@@ -80,9 +79,13 @@
           "name" : "Funcionamiento prototipo laboratorio 1",
           "score" : 1.12
         } ],
+        "deadline" : {
+          "date" : 1554404400000,
+          "param" : 0.56
+        },
         "id" : "lab1_impl",
-        "score" : 2.24,
-        "name" : "Implementación laboratorio 1"
+        "name" : "Implementación laboratorio 1",
+        "score" : 2.24
       }, {
         "children" : [ {
           "id" : "l1_informe_presentacion",
@@ -93,18 +96,17 @@
           "name" : "Contenido informe laboratorio 1",
           "score" : 1.68
         } ],
+        "deadline" : {
+          "date" : 1554404400000,
+          "param" : 0.56
+        },
         "id" : "lab1_inf",
-        "score" : 3.36,
-        "name" : "Informe laboratorio 1"
-      } ],
-      "deadline" : {
-        "date" : 1556593200000,
-        "id" : "lab1",
-        "param" : 10
-      },
-      "score" : 5.6,
+        "name" : "Informe laboratorio 1",
+        "score" : 3.36
+      } ],      
       "id" : "lab1",
-      "name" : "Laboratorio 1"
+      "name" : "Laboratorio 1",
+      "score" : 5.6
     }, {
       "children" : [ {
         "children" : [ {
@@ -116,9 +118,13 @@
           "name" : "Funcionamiento prototipo laboratorio 2",
           "score" : 1.12
         } ],
+        "deadline" : {
+          "date" : 1556046000000,
+          "param" : 0.56
+        },
         "id" : "lab2_impl",
-        "score" : 2.24,
-        "name" : "Implementación laboratorio 2"
+        "name" : "Implementación laboratorio 2",
+        "score" : 2.24
       }, {
         "children" : [ {
           "id" : "l2_informe_presentacion",
@@ -129,18 +135,17 @@
           "name" : "Contenido informe laboratorio 2",
           "score" : 1.68
         } ],
-        "score" : 3.36,
+        "deadline" : {
+          "date" : 1556218800000,
+          "param" : 0.56
+        },
         "id" : "lab2_inf",
-        "name" : "Informe laboratorio 2"
+        "name" : "Informe laboratorio 2",
+        "score" : 3.36
       } ],
-      "deadline" : {
-        "date" : 2000,
-        "id" : "lab2",
-        "param" : 10
-      },
-      "score" : 5.6,
       "id" : "lab2",
-      "name" : "Laboratorio 2"
+      "name" : "Laboratorio 2",
+      "score" : 5.6
     }, {
       "children" : [ {
         "children" : [ {
@@ -152,9 +157,13 @@
           "name" : "Funcionamiento prototipo laboratorio 3",
           "score" : 1.12
         } ],
-        "score" : 2.24,
+        "deadline" : {
+          "date" : 1556650800000,
+          "param" : 0.56
+        },
         "id" : "lab3_impl",
-        "name" : "Implementación laboratorio 3"
+        "name" : "Implementación laboratorio 3",
+        "score" : 2.24
       }, {
         "children" : [ {
           "id" : "l3_informe_presentacion",
@@ -165,18 +174,17 @@
           "name" : "Contenido informe laboratorio 3",
           "score" : 1.68
         } ],
-        "score" : 3.36,
+        "deadline" : {
+          "date" : 1556823600000,
+          "param" : 0.56
+        },
         "id" : "lab3_inf",
-        "name" : "Informe laboratorio 3"
+        "name" : "Informe laboratorio 3",
+        "score" : 3.36
       } ],
-      "deadline" : {
-        "date" : 2000,
-        "id" : "lab3",
-        "param" : 10
-      },
-      "score" : 5.6,
       "id" : "lab3",
-      "name" : "Laboratorio 3"
+      "name" : "Laboratorio 3",
+      "score" : 5.6
     }, {
       "children" : [ {
         "children" : [ {
@@ -188,9 +196,13 @@
           "name" : "Funcionamiento prototipo laboratorio 4",
           "score" : 1.12
         } ],
-        "score" : 2.24,
+        "deadline" : {
+          "date" : 1558465200000,
+          "param" : 0.56
+        },
         "id" : "lab4_impl",
-        "name" : "Implementación laboratorio 4"
+        "name" : "Implementación laboratorio 4",
+        "score" : 2.24
       }, {
         "children" : [ {
           "id" : "l4_informe_presentacion",
@@ -201,19 +213,17 @@
           "name" : "Contenido informe laboratorio 4",
           "score" : 1.68
         } ],
-        "score" : 3.36,
+        "deadline" : {
+          "date" : 1558638000000,
+          "param" : 0.56
+        },
         "id" : "lab4_inf",
-        "name" : "Informe laboratorio 4"
+        "name" : "Informe laboratorio 4",
+        "score" : 3.36
       } ],
-      
-      "deadline" : {
-        "date" : 2000,
-        "id" : "lab4",
-        "param" : 10
-      },
-      "score" : 5.6,
       "id" : "lab4",
-      "name" : "Laboratorio 4"
+      "name" : "Laboratorio 4",
+      "score" : 5.6
     }, {
       "children" : [ {
         "children" : [ {
@@ -225,9 +235,13 @@
           "name" : "Funcionamiento prototipo laboratorio 5",
           "score" : 1.12
         } ],
-        "score" : 2.24,
+        "deadline" : {
+          "date" : 1559674800000,
+          "param" : 0.56
+        },
         "id" : "lab5_impl",
-        "name" : "Implementación laboratorio 5"
+        "name" : "Implementación laboratorio 5",
+        "score" : 2.24
       }, {
         "children" : [ {
           "id" : "l5_informe_presentacion",
@@ -238,29 +252,28 @@
           "name" : "Contenido informe laboratorio 5",
           "score" : 1.68
         } ],
-        "score" : 3.36,
+        "deadline" : {
+          "date" : 1559847600000,
+          "param" : 0.56
+        },
         "id" : "lab5_inf",
-        "name" : "Informe laboratorio 5"
+        "name" : "Informe laboratorio 5",
+        "score" : 3.36
       } ],
-      "deadline" : {
-        "date" : 0,
-        "id" : "lab5",
-        "param" : 10
-      },
-      "score" : 5.6,
       "id" : "lab5",
-      "name" : "Laboratorio 5"
+      "name" : "Laboratorio 5",
+      "score" : 5.6
     } ],
-    "score" : 35,
     "id" : "labs",
-    "name" : "Laboratorios"
+    "name" : "Laboratorios",
+    "score" : 35
   }, {
     "id" : "suplementario",
     "name" : "Examen suplementario",
     "score" : 20
   } ],
   "course" : "Diseño de Circuitos Lógicos",
-  "score" : 120,
   "id" : "final",
-  "name" : "Nota final"
+  "name" : "Nota final",
+  "score" : 100
 }

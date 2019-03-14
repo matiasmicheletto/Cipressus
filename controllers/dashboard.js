@@ -143,6 +143,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
     // Inicializacion 
     var totalEvents=0, futureEvents=0;
 
+    Cipressus.utils.activityCntr($rootScope.user.uid,"dashboard").catch(function(err){console.log(err)});
     Cipressus.db.get('/activities') // Descargar arbol de actividades
         .then(function(activities_data){
             $scope.activities = activities_data; // Nodo root del arbol de notas

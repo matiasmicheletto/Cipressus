@@ -106,6 +106,8 @@ window.Cipressus = (function () {
         });
     };
 
+    
+
 
     //// ALMACENAMIENTO ////
 
@@ -411,6 +413,29 @@ window.Cipressus = (function () {
 
     core.utils.quillToHTML = function(str){ // Hacer la adaptacion del formato quill al formato html
         return str.replace(/ql-align-center/g,"center-align"); // Por ahora solo este, buscar otros
+    };
+
+    core.utils.activityCntr = function(userUid,item){ // Incrementador de contadores de monitoreo de actividad
+        return new Promise(function (fulfill, reject) {
+            core.db.get("users_public/"+userUid+"/activity/"+item)
+            .then(function(user_data){
+                var data = {};                
+                if(user_data) // Tiene valores en este item de actividad
+                    data[item] = user_data+1;
+                else // Aun no registra actividad en este item
+                    data[item] = 1;
+                core.db.update(data,"users_public/"+userUid+"/activity")
+                .then(function(res){
+                    return fulfill(res);
+                })
+                .catch(function(err){
+                    return reject(err);
+                });
+            })
+            .catch(function(err){
+                return reject(err);
+            });
+        });
     };
 
 

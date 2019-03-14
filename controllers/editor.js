@@ -200,6 +200,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
         }
     };
 
+    Cipressus.utils.activityCntr($rootScope.user.uid,"editor").catch(function(err){console.log(err)});
     $scope.news = []; // Lista de noticias en arreglo porque importa el orden
     Cipressus.db.getSorted('news','order') // Descargar lista de novedades
     .then(function(snapshot){

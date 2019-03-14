@@ -153,6 +153,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
                     $rootScope.user.enrolled = null;
                 }
                 Cipressus.db.update({last_login:Date.now()},'users_public/'+uid); // Actualizar fecha y hora
+                Cipressus.utils.activityCntr($rootScope.user.uid,"login").catch(function(err){console.log(err)});
                 if($location.path() == "/login") // Si se acaba de logear en la vista de login
                     $location.path("/"); // Ir a vista de home
                 $rootScope.userLogged = true;
