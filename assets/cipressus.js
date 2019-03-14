@@ -267,7 +267,11 @@ window.Cipressus = (function () {
             .then(function (result) {
                 // Guardar informacion del usuario en la db
                 var users_public = { // Informacion editable por usuarios
-                    last_login: Date.now(),
+                    activity: {
+                        last_login: Date.now(),
+                        browser: {}, // Contador de navegadores
+                        os: {} // Contador de sistemas operativos
+                    },
                     name: form.name,
                     secondName: form.secondName,
                     email: form.email,
@@ -275,6 +279,10 @@ window.Cipressus = (function () {
                     lu: form.lu,
                     avatar: "images/avatar_0.png" // Imagen por defecto (luego se carga una base64)
                 };
+                // Inicializar contadores de navegador y so
+                users_public.activity.browser[is.firefox() ? 'Firefox' : (is.chrome() ? 'Chrome' : (is.ie() ? 'IE' : (is.opera() ? 'Opera' : (is.safari() ? 'Safari' : 'Otro'))))] = 1;
+                users_public.activity.os[is.ios() ? 'IOS' : (is.android() ? 'Android' : (is.windows() ? 'Windows' : (is.linux() ? 'Linux' : 'Otro')))] = 1;
+
                 core.db.set(users_public,'users_public/'+result.user.uid)
                     .then(function (res) {
                         return fulfill("Datos de nuevo usuario registrados.");
@@ -418,10 +426,10 @@ window.Cipressus = (function () {
     core.utils.activityCntr = function(userUid,item){ // Incrementador de contadores de monitoreo de actividad
         return new Promise(function (fulfill, reject) {
             core.db.get("users_public/"+userUid+"/activity/"+item)
-            .then(function(user_data){
+            .then(function(users_public){
                 var data = {};                
-                if(user_data) // Tiene valores en este item de actividad
-                    data[item] = user_data+1;
+                if(users_public) // Tiene valores en este item de actividad
+                    data[item] = users_public+1;
                 else // Aun no registra actividad en este item
                     data[item] = 1;
                 core.db.update(data,"users_public/"+userUid+"/activity")

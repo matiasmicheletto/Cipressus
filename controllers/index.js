@@ -152,8 +152,40 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
                     $rootScope.user.admin = false;
                     $rootScope.user.enrolled = null;
                 }
-                Cipressus.db.update({last_login:Date.now()},'users_public/'+uid); // Actualizar fecha y hora
-                Cipressus.utils.activityCntr($rootScope.user.uid,"login").catch(function(err){console.log(err)});
+
+                // Monitoreo de actividad
+                var browser = is.firefox() ? 'Firefox' : (is.chrome() ? 'Chrome' : (is.ie() ? 'IE' : (is.opera() ? 'Opera' : (is.safari() ? 'Safari' : 'Otro'))));
+                var OS = is.ios() ? 'IOS' : (is.android() ? 'Android' : (is.windows() ? 'Windows' : (is.linux() ? 'Linux' : 'Otro')));
+                var update_activity = public_data.activity; // Variable de monitoreo de actividad
+                if(!update_activity)
+                    update_activity = {
+                        browser: {},
+                        os: {},
+                        last_login: 0
+                    }
+                update_activity.last_login = Date.now();
+                if(update_activity.browser){ // Esta registrado la variable de navegador?
+                    if(update_activity.browser[browser]) // Contar si existe
+                        update_activity.browser[browser]++;
+                    else // Si es la primera vez que usa este navegador, iniciar
+                        update_activity.browser[browser] = 1;
+                }else{ // Si no tiene variable de navegadores, inicializar
+                    update_activity.browser = {};
+                    update_activity.browser[browser] = 1;
+                }
+                if(update_activity.os){ // Puede que no este registrado este campo
+                    if(update_activity.os[OS]) // Verificar si tiene este os contado
+                        update_activity.os[OS]++; 
+                    else // Si no tiene el os, inicializar
+                        update_activity.os[OS] = 1;                
+                }else{
+                    update_activity.os = {};
+                    update_activity.os[OS] = 1;
+                }
+                
+                Cipressus.db.update(update_activity,'users_public/'+uid+'/activity').then(function(res){console.log("Actividad actualizada")}); // Actualizar logeo y dispositivo usado
+
+
                 if($location.path() == "/login") // Si se acaba de logear en la vista de login
                     $location.path("/"); // Ir a vista de home
                 $rootScope.userLogged = true;
