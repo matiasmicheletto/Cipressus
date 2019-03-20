@@ -132,7 +132,7 @@
         <li class="no-padding">
             <a href="#/" class="collapsible-header">Inicio<i class="material-icons">home</i></a>
         </li>
-        <li class="no-padding" ng-show="user.enrolled">
+        <li class="no-padding" ng-show="user.enrolled && !user.admin">
             <a href="#/dashboard" class="collapsible-header">Dashboard<i class="material-icons">dashboard</i></a>
         </li>
         <li class="no-padding" ng-show="user.enrolled">
@@ -142,12 +142,16 @@
             <a href="#/sources" class="collapsible-header">Material<i class="material-icons">local_library</i></a>
         </li>
         <li class="no-padding" ng-show="user.admin">
+            <a href="#/hardware" class="collapsible-header">Probador<i class="material-icons">usb</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.admin">
             <ul class="collapsible_1 collapsible collapsible-accordion">
                 <li>
                     <a class="collapsible-header">Administrar<i class="material-icons">arrow_drop_down</i></a>
                     <div class="collapsible-body">
                         <ul>
                             <li><a href="#/users">Usuarios<i class="material-icons">group</i></a></li>
+                            <li><a href="#/stats">Estadísticas<i class="material-icons">insert_chart</i></a></li>
                             <li><a href="#/attendance">Asistencia<i class="material-icons">how_to_reg</i></a></li>
                             <li><a href="#/activities">Actividades<i class="material-icons">build</i></a></li>
                             <li><a href="#/editor">Noticias<i class="material-icons">fiber_new</i></a></li>
@@ -254,7 +258,9 @@
     <script type="text/javascript" src="controllers/dashboard.js"></script>
     <script type="text/javascript" src="controllers/calendar.js"></script>
     <script type="text/javascript" src="controllers/sources.js"></script>
+    <script type="text/javascript" src="controllers/hardware.js"></script>
     <script type="text/javascript" src="controllers/users.js"></script>
+    <script type="text/javascript" src="controllers/stats.js"></script>
     <script type="text/javascript" src="controllers/attendance.js"></script>
     <script type="text/javascript" src="controllers/activities.js"></script>
     <script type="text/javascript" src="controllers/editor.js"></script>

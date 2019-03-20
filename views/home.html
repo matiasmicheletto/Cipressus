@@ -2,12 +2,12 @@
    
     <h3>Novedades</h3> 
 
-    <div class="card hoverable z-depth-1" ng-repeat="entry in news">
+    <div class="card hoverable z-depth-1" ng-repeat="entry in news" ng-show="entry.timestamp < now">
         <div class="right chip">
             <img src="{{users[entry.author].avatar}}">
             Publicado {{relativeTime(entry.timestamp)}} por {{users[entry.author].name}}
         </div>
-        <div class="card-content" ng-show="entry.timestamp < now"> 
+        <div class="card-content"> 
             <h5><b>{{entry.title}}</b></h5>
             <div class="row" ng-bind-html=entry.content></div>
         </div>

@@ -419,20 +419,20 @@ window.Cipressus = (function () {
         return text;
     };
 
-    core.utils.quillToHTML = function(str){ // Hacer la adaptacion del formato quill al formato html
+    core.utils.quillToHTML = function(str){ // Hacer la adaptacion del formato quill al formato html de home
         return str.replace(/ql-align-center/g,"center-align"); // Por ahora solo este, buscar otros
     };
 
     core.utils.activityCntr = function(userUid,item){ // Incrementador de contadores de monitoreo de actividad
         return new Promise(function (fulfill, reject) {
-            core.db.get("users_public/"+userUid+"/activity/"+item)
-            .then(function(users_public){
+            core.db.get("users_public/"+userUid+"/activity/items/"+item)
+            .then(function(activity_data){
                 var data = {};                
-                if(users_public) // Tiene valores en este item de actividad
-                    data[item] = users_public+1;
+                if(activity_data) // Tiene valores en este item de actividad
+                    data[item] = activity_data+1;
                 else // Aun no registra actividad en este item
                     data[item] = 1;
-                core.db.update(data,"users_public/"+userUid+"/activity")
+                core.db.update(data,"users_public/"+userUid+"/activity/items")
                 .then(function(res){
                     return fulfill(res);
                 })

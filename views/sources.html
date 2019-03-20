@@ -6,7 +6,7 @@
     <li ng-repeat="(key,folder) in sources track by $index">
       <div class="collapsible-header"><i class="material-icons">expand_more</i>{{folder.name}}</div>
       <div class="collapsible-body">
-        <table class="highlight responsive-table">
+        <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
           <thead>
             <tr>
               <th>Nombre</th>
@@ -19,7 +19,7 @@
 
           <tbody>
             <tr ng-repeat="(key2,row) in sources[key].files" ng-click="downloadFile(key2)">
-              <td>{{row.name}}</td>
+              <td class="truncate">{{row.name}}</td>
               <td>{{readableFileSize(row.size,true)}}</td>
               <td>{{row.format | lowercase }}</td>
               <td>{{readableTime(row.uploaded)}}</td>

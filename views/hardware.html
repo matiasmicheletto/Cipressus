@@ -1,0 +1,28 @@
+<div class="container">
+    <h4>Probador de circuitos lógicos</h4>
+</div>
+
+<center class="row">
+    <div class="card hoverable z-depth-1 col s12 m4 offset-m4">
+        <div class="card-content">
+            <div clas="row">
+                <div class="col s6">
+                    <p><b>Salidas</b></p>
+                </div>
+                <div class="col s6">
+                    <p><b>Entradas</b></p>
+                </div>
+            </div>
+            <div class="row" ng-repeat="(idx,item) in tester">
+                <div class="switch col s6">
+                    <label>Off<input type="checkbox" ng-model="item.switch"><span class="lever"></span>On</label>
+                </div>
+                <div class="led-box col s6">
+                    <label>
+                        <div class="led-red {{item.led  ? 'led-on':'led-off'}}"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>

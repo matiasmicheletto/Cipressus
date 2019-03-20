@@ -8,9 +8,8 @@ app.controller("home", ['$scope','$rootScope','$location', function ($scope,$roo
     $rootScope.loading = true;
     $rootScope.sidenav.close();
 
-
     // Las publicaciones se deshabilitan configurando la fecha en el futuro
-    $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual
+    $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual y controlar visibilidad
     
     Cipressus.utils.activityCntr($rootScope.user.uid,"home").catch(function(err){console.log(err)});
     $scope.news = [];    
@@ -19,7 +18,7 @@ app.controller("home", ['$scope','$rootScope','$location', function ($scope,$roo
         snapshot.forEach(function(childSnapshot){ // Lista ordenada
             var child = childSnapshot.val();
             child.content = Cipressus.utils.quillToHTML(child.content); // Parsear para quitar formato de quill
-            $scope.news.push(child);
+            $scope.news.unshift(child); // Sentido inverso para que las nuevas noticias queden arriba
         });  
         Cipressus.db.get('users_public') // Descargar lista de usuarios
         .then(function(users_data){

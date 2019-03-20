@@ -15,9 +15,10 @@ Incluye GUI para controlar un tester de circuitos digitales basado en Arduino.
   - Consulta de cronograma de actividades.
   - Calificaciones actualizadas en tiempo real.
   - Tablero de calificaciones animado.
+  - Estadística y analíticos de usuarios.
   - Evaluación de asistencia con cómputo automático.
   - Mensajería instantánea.
-  - Descarga de material de estudio.
+  - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.
   - GUI para tester de circuitos.
 
 
@@ -64,6 +65,9 @@ Editor de texto enriquecido para crear publicaciones con comunicados y noticias.
 #### Moment
 http://momentjs.com
 Operaciones de fecha y hora
+#### Is
+https://is.js.org/
+Identificación de Sist. Operativo, navegador, dispositivo, etc.
 #### Mozilla PDF.js
 https://mozilla.github.io/pdf.js/
 Visor de documentos pdf para html5.
@@ -75,81 +79,86 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ## Estructura de la DB
 ```
--activities // Contiene la estructura de actividades, puntajes, vencimientos, etc
+-activities             // Contiene la estructura de actividades, puntajes, vencimientos, etc
  |
  + ... (arbol)
--events // Lista de eventos de calendario
+-events                 // Lista de eventos de calendario
  | 
- +-(child_key) // ID firebase del evento
+ +-(child_key)          // ID firebase del evento
   |
-  +-start     // Inicio ms unix
-  +-end       // Fin ms unix
-  +-author    // ID del autor
-  +-title     // Titulo del evento
-  +-info      // Detalles del evento formato html
-  +-timestamp // Fecha de publicacion/edicion
-  +-color     // Color de la etiqueta
--news // Lista de comunicados a mostrar en home
+  +-start               // Inicio ms unix
+  +-end                 // Fin ms unix
+  +-author              // ID del autor
+  +-title               // Titulo del evento
+  +-info                // Detalles del evento formato html
+  +-timestamp           // Fecha de publicacion/edicion
+  +-color               // Color de la etiqueta
+-news                   // Lista de comunicados a mostrar en home
  |
- +-(child_key)  // ID firebase de la noticia
+ +-(child_key)          // ID firebase de la noticia
   |
-  +-author    // ID del autor
-  +-content   // Contenido del post formato html
-  +-order     // Numero para ordenar el listado
-  +-timestamp // Fecha de publicacion/edicion
-  +-title     // Titulo del post
--sources // Listas de archivos
+  +-author              // ID del autor
+  +-content             // Contenido del post formato html
+  +-order               // Numero para ordenar el listado
+  +-timestamp           // Fecha de publicacion/edicion
+  +-title               // Titulo del post
+-sources                // Listas de archivos
  |
- +-(child_key) // Subcategoria de directorio
+ +-(child_key)          // Subcategoria de directorio
   |
-  +-name    // Nombre del subdirectorio
-  +-files // ID del archivo
+  +-name                // Nombre del subdirectorio
+  +-files               // ID del archivo
    |
-   +-(child_key) // Identificador del archivo
+   +-(child_key)        // Identificador del archivo
     |
-    +-link // Enlace al storage
-    +-name // Nombre visible (editable)
-    +-filename // Nombre en storage
-    +-size // Tamanio en storage
-    +-format // Formato del archivo
-    +-uploaded // Fecha de carga
--users_private // Informacion de usuarios alumnos
+    +-link              // Enlace al storage
+    +-name              // Nombre visible (editable)
+    +-filename          // Nombre en storage
+    +-size              // Tamanio en storage
+    +-format            // Formato del archivo
+    +-uploaded          // Fecha de carga
+-users_private          // Informacion de usuarios alumnos
  |
- +-(child_key) // ID firebase del usuario
+ +-(child_key)          // ID firebase del usuario
   |
-  +-admin     // True/false dependiendo de si es administrador
-  +-enrolled  // Fecha de aprobacion como usuario alumno
-  +-scores    // Arreglo de notas
+  +-admin               // True/false dependiendo de si es administrador
+  +-enrolled            // Fecha de aprobacion como usuario alumno
+  +-scores              // Arreglo de notas
    |
-   +-(child_name) // Nombre de la actividad 
+   +-(child_name)       // Nombre de la actividad 
     |
-    +-evaluator // ID de quien evaluo
-    +-score     // Puntaje de 0 a 100
-    +-timestamp // Fecha/hora de correccion
-  +-submits // Lista de fechas de entrega de tps
+    +-evaluator         // ID de quien evaluo
+    +-score             // Puntaje de 0 a 100
+    +-timestamp         // Fecha/hora de correccion
+  +-submits             // Lista de fechas de entrega de tps
    |
-   +-(child_name) // Nombre de la actividad 
+   +-(child_name)       // Nombre de la actividad 
     |
-    +-evaluator // ID de quien evaluo
-    +-date      // Fecha de entrega de la actividad
-    +-timestamp // Fecha/hora de correccion
-  +-attendance // Para computo de asistencia a clase
+    +-evaluator         // ID de quien evaluo
+    +-date              // Fecha de entrega de la actividad
+    +-timestamp         // Fecha/hora de correccion
+  +-attendance          // Para computo de asistencia a clase
    |
-   +-(child_key) // ID del evento asistido
+   +-(child_key)        // ID del evento asistido
     |
-    +-evaluator // ID de quien tomo asistencia
-    +-timestamp // Fecha/hora de evaluacion de asistencia
--users_public // Datos de usuarios
+    +-evaluator         // ID de quien tomo asistencia
+    +-timestamp         // Fecha/hora de evaluacion de asistencia
+-users_public           // Datos de usuarios (unico campo editable por cualquier usuario)
  |
- +-(child_key)  // ID firebase
+ +-(child_key)          // ID firebase
   |
-  +-avatar      // Foto de perfil
-  +-degree      // Carrera
-  +-email       // Email
-  +-last_login  // Fecha de ultimo inicio de sesion
-  +-lu          // LU
-  +-name        // Nombre
-  +-secondName  // Apellido
+  +-avatar              // Foto de perfil
+  +-degree              // Carrera
+  +-email               // Email
+  +-lu                  // LU
+  +-name                // Nombre
+  +-secondName          // Apellido
+  +-activity            // Monitor de actividad
+   |
+   +-last_login         // Estampa de tiempo de ultimo acceso
+   +-so                 // Sist. operativos utilizados
+   +-browser            // Navegadores utilizados
+   +-item               // Contadores de acceso a secciones de la pagina
 ```
 
 
@@ -158,8 +167,9 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 Usuario con rol de alumno:  
 
+  - Tests y cuestionarios.
+  - Notificaciones.
   - Entrega de informes de laboratorio.
-  - Interfase para probador digital (requiere Node.js o desarrollar un driver).
 
 
 Usuario con rol de administrador:  

@@ -163,7 +163,7 @@ app.controller("editor", ['$scope','$rootScope','$location', function ($scope,$r
         }else{
             $scope.selected.timestamp = Date.now(); // Fecha/hora actuales
         }
-        $scope.selected.content = quill.container.firstChild.innerHTML;
+        $scope.selected.content = quill.container.firstChild.innerHTML.replace(new RegExp("<img src=", 'g'), "<img class='responsive-img' src="); // Agregar clase responsive a las imagenes
         if($scope.selected.key){ // Si ya tiene una clave, hay que sobreescribir noticia en DB
             var key = $scope.selected.key;            
             $scope.selected.key = null; // Borro la clave para que no quede en la db

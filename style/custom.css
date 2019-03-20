@@ -4,11 +4,11 @@ body {
   flex-direction: column!important;
 }
 
+
 /* Preloader */
 .preloader-wrapper {
   margin: 0 auto; 
 }
-
 .preloader-wrapper-pre {
   background-color: black;
   opacity: 0.7;
@@ -19,7 +19,6 @@ body {
   top: 0!important;
   z-index: 2000; 
 }
-
 .preloader-progress-text {
   position:fixed;
   text-align: center;
@@ -41,7 +40,6 @@ body {
 }
 
 
-
 /* Modals de tamanio personalizado */
 .wide-modal {
   width: 85% !important;
@@ -59,4 +57,24 @@ body {
   min-height: 98% !important;  
   top: 1% !important;
   border-radius: 10px;
+}
+
+
+/* Leds probador */
+.led-box {
+  height: 20px;
+  width: 25%;
+}
+.led-red {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+.led-off{
+	background-color: #AAAAAA;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #000000 0 -1px 9px, #FFFFFF 0 2px 12px;
+}
+.led-on{
+	background-color: #B91717;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #F75B5B 0 2px 12px;
 }

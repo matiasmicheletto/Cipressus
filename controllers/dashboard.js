@@ -161,8 +161,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     var arr = [];
                     arr = Cipressus.utils.getArray($scope.activities, arr, '');
                     $scope.$apply(); // Este es para que actualice la vista antes de graficar
-                    updateSunburst(arr);
-                    updatePolarPlot($scope.activities.id);                                        
+                    updateSunburst(arr);                    
+                    updatePolarPlot($scope.activities.id);
                     $rootScope.$apply(); 
                     // Descargar lista de eventos para linea del tiempo y para evaluar asistencia del usuario
                     $scope.events=[];                    
@@ -195,7 +195,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                                     timestamp: Date.now()
                                 };
                             }    
-                            updateProgressPlot();
+                            updateProgressPlot(); // Actualizar el grafico de avance de la materia
+                            updatePolarPlot($scope.activities.id); // Actualizar nuevamente el grafico de notas ya que tiene asistencia
                         }
                         $rootScope.loading = false;
                         $rootScope.$apply(); 

@@ -2,7 +2,7 @@
   <!-- Lista de usuarios -->
   <div class = "section"> 
     <h5 class="row" ng-if="users">Usuarios</h5>
-    <table class="highlight" ng-if="users">
+    <table class="highlight" ng-if="users" style="max-width:100%;overflow-x:auto;display:inline-block;">
       <thead>
         <tr>
           <th>Foto</th>
@@ -44,7 +44,7 @@
       <h4>Calificaciones</h4>
 
       <div class = "section"> 
-          <table class="highlight">
+          <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
             <thead>
               <tr>
                 <th>Actividad</th>
@@ -140,7 +140,7 @@
         <h5><b>LU:</b> <i>{{users[selectedKey].lu}}</i></h5>		
         <h5 class="truncate"><i>{{users[selectedKey].degree}}</i></h5>				
         <p><b>Usuario desde:</b> <i>{{users[selectedKey].enrolled?getTime(3,users[selectedKey].enrolled):"(Usuario no aprobado)"}}</i></p>
-        <p><b>Último acceso:</b> <i>{{readableTime(users[selectedKey].last_login)}} ({{relativeTime(users[selectedKey].last_login)}})</i></p>
+        <p><b>Último acceso:</b> <i>{{readableTime(users[selectedKey].activity.last_login)}} ({{relativeTime(users[selectedKey].activity.last_login)}})</i></p>
       </div>	
     </div>
   </div>
