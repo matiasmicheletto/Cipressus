@@ -6,48 +6,49 @@ var WebSocketServer = require('ws').Server;
 
 var portName = process.argv[2]; // Nombre del puerto serie (pasado como argumento al ejecutar con nodeJs)
 
-// Configuracion del servidor WebSocket
-var wss = new WebSocketServer({port: 8081}); // Servidor WebSocket
-var connections = new Array; // Lista de conexiones al servidor
-var myPort = new SerialPort(portName, 9600); // Abrir puerto serie
-var Readline = SerialPort.parsers.Readline; // Instanciar el parser
-var parser = new Readline(); // Hacer nuevo parser para leer ACII
-
-myPort.pipe(parser); // Mandar el stream serie al parser
-
-myPort.on('open', function () { // Al abrir puerto serie
-  console.log('Conexión exitosa. Baudrate: ' + myPort.baudRate);
-});
-
-myPort.on('close', function () { // Al cerrar el puerto serie
-  console.log('Puerto desconectado.');
-});
-
-myPort.on('error', function (error) {
-  console.log('Error de puerto serie: ' + error);
-}); // En caso de que haya errores
-
-parser.on('data', function (data) { // Al recibir nuevos datos
-  // Si hay nuevas conexiones websocket, enviar los datos serie a todos
-  console.log(data);
-  if (connections.length > 0)
-    for (c in connections)
-      connections[c].send(JSON.stringify(data));
-});
-
-wss.on('connection', function (client) {
-  console.log("Nueva conexión"); // Nuevo cliente
-  connections.push(client); // Agregar este cliente al arreglo de conexiones
-
-  client.on('message', function (data) {
-    // Enviar datos por puerto serie
-    console.log("Enviando al puerto serie: " + data);
-    myPort.write(data); 
-  }); // Cuando un cliente manda un mensaje
-
-  client.on('close', function () { // Cuando el cliente cierra la consexion
-    console.log("Puerto desconectado");
-    var position = connections.indexOf(client); // Obtener el indice del cliente
-    connections.splice(position, 1); // Borrarlo
+if (!portName) { // Si no se indico un puerto, listar los puertos disponibles  
+  SerialPort.list(function (err, ports) {
+    ports.forEach(function (port) {
+      console.log(port);
+      //console.log(port.comName+'\t'+port.pnpId+'\t'+port.manufacturer);
+    });
   });
-});
+} else { // Si se indico puerto, intentar conectar e iniciar WebSocketServer
+  // Configuracion del servidor WebSocket
+  var wss = new WebSocketServer({port: 8081}); // Servidor WebSocket
+  var currentClient;
+  var tester = new SerialPort(portName, 9600); // Abrir puerto serie  
+
+  tester.on('open', function () { // Al abrir puerto serie
+    console.log('Conexión exitosa. Baudrate: ' + tester.baudRate);
+  });
+
+  tester.on('close', function () { // Al cerrar el puerto serie
+    console.log('Puerto desconectado.');
+  });
+
+  tester.on('error', function (error) {
+    console.log('Error de puerto serie.');
+    console.log(error);
+  });
+
+  tester.on('data', function (data) { // Al recibir nuevos datos    
+    if (currentClient)      
+      currentClient.send(data);
+  });
+
+  wss.on('connection', function (client) { // Nuevo cliente
+    console.log("Nueva conexión");
+    currentClient = client; // Agregar este cliente al arreglo de conexiones
+
+    client.on('message', function (data) { // Cuando el cliente manda datos, pasar al puerto serie      
+      console.log(JSON.stringify(data));
+      //tester.write(data);
+    });
+
+    client.on('close', function () { // Cuando el cliente cierra la conexion
+      console.log("Conexión cerrada");
+      currentClient = null;
+    });
+  });
+}

@@ -5,8 +5,8 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         return;
     }
 
-    //$rootScope.loading = true;
-    $rootScope.sidenav.close();
+    $rootScope.loading = true;
+    $rootScope.sidenav.close();    
 
     $scope.tester = [ // Entrada/salida del probador
         {switch: false,led: false}, 
@@ -19,19 +19,37 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         {switch: false,led: true}
     ];
 
-    var socket = new WebSocket("ws://localhost:8081");
-
     var switches = "00000000";
     var leds = "00000000";
 
-    socket.onopen = function () { // Puerto conectado
-        console.log("Socket abierto");
-        updateIO(); // Iniciar actualizador
+    var socket = new WebSocket("ws://localhost:8081");
+
+    socket.onerror = function(error){
+        console.log(error);
     };
 
-    socket.onmessage = function (result) { // Respuesta del server
-        //console.log("Dato recibido:" + result.data);
-        leds = result.data.substring(1, 9);
+    socket.onopen = function () { // Puerto conectado
+        console.log("Socket abierto.");
+    };
+
+    socket.onmessage = function (message) { // Respuesta del server
+        if($scope.serialPorts){
+            leds=message.data;
+            //console.log("Mensaje recibido:" + message.data); 
+            //leds = message.data.substring(1, 9);            
+        }else{
+            $scope.serialPorts = JSON.parse(message.data);
+            $rootScope.loading = false;        
+            $scope.$apply();        
+            M.FormSelect.init(document.querySelectorAll('select'), {});
+        }
+    };
+
+    $scope.connect = function(){ // Cuando se elige
+        var value = document.getElementById("portSelect").value;
+        var baudrate = document.getElementById("baudrateSelect").value;
+        socket.send(JSON.stringify({portIndex:parseInt(value), baudrate:parseInt(baudrate)})); // Port Connection Request        
+        updateIO(); // Iniciar actualizador
     };
 
     var replaceAt = function(string, index, replace) {
@@ -42,11 +60,11 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         for (var k in $scope.tester) {
             switches = replaceAt(switches,k,$scope.tester[k].switch ? "1" : "0"); // Actualizar string switches para enviar
             $scope.tester[k].led = (leds[k] == "1"); // Actualizar leds a partir del string leds
-        }
+        }        
         socket.send(switches);
-        $scope.$apply();
         setTimeout(function () {
             updateIO();
+            $scope.$apply();
         }, 200);
     }
 }]);

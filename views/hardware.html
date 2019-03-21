@@ -2,25 +2,49 @@
     <h4>Probador de circuitos lógicos</h4>
 </div>
 
-<center class="row">
-    <div class="card hoverable z-depth-1 col s12 m4 offset-m4">
-        <div class="card-content">
-            <div clas="row">
-                <div class="col s6">
-                    <p><b>Salidas</b></p>
+<center>
+    <div class="row">
+        <div class="input-field col s3 offset-s3">
+            <select id="portSelect">
+                <option value="" selected>Elija una opción</option>
+                <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
+            </select>
+        </div>
+        <div class="input-field col s2">
+            <select id="baudrateSelect">
+                <option value="1200">1200</option>                    
+                <option value="4800">4800</option>
+                <option value="9600" selected>9600</option>
+                <option value="14400">14400</option>
+                <option value="19200">19200</option>
+                <option value="57600">57600</option>
+                <option value="115200">115200</option>
+            </select>
+        </div>
+        <div class="col s2">
+            <a class="waves-effect waves-white btn green darken-4" ng-click="connect()">Conectar</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card hoverable z-depth-1 col s12 m4 offset-m4">
+            <div class="card-content">
+                <div clas="row">
+                    <div class="col s6">
+                        <p><b>Salidas</b></p>
+                    </div>
+                    <div class="col s6">
+                        <p><b>Entradas</b></p>
+                    </div>
                 </div>
-                <div class="col s6">
-                    <p><b>Entradas</b></p>
-                </div>
-            </div>
-            <div class="row" ng-repeat="(idx,item) in tester">
-                <div class="switch col s6">
-                    <label>Off<input type="checkbox" ng-model="item.switch"><span class="lever"></span>On</label>
-                </div>
-                <div class="led-box col s6">
-                    <label>
-                        <div class="led-red {{item.led  ? 'led-on':'led-off'}}"></div>
-                    </label>
+                <div class="row" ng-repeat="(idx,item) in tester">
+                    <div class="switch col s6">
+                        <label>Off<input type="checkbox" ng-model="item.switch"><span class="lever"></span>On</label>
+                    </div>
+                    <div class="led-box col s6">
+                        <label>
+                            <div class="led-red {{item.led  ? 'led-on':'led-off'}}"></div>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

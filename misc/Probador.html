@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+
+<head>
+    <!-- ##################### META ##################### -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="description" content="Webapp Cipressus" />
+    <meta name="keywords" content="Cipressus, educación, diseño, circuitos lógicos" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Deshabilitar cache -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+
+</head>
+
+<body>
+
+    <script>
+        var socket = new WebSocket("ws://localhost:8081");
+
+        socket.onopen = function () { // Puerto conectado
+            console.log("Socket abierto");        
+        };
+
+        socket.onmessage = function (message) { // Mensaje del server            
+            var serialPorts = JSON.parse(message.data);
+            setTimeout(function(){ // Enviar el puerto
+                socket.send(JSON.stringify({portIndex:0, baudrate:9600})); // Port Connection Request
+            },3000);
+
+            socket.onmessage = function(message){
+                console.log(message.data);
+            };
+        };
+
+        socket.onerror = function(error){
+            console.log(error);
+        };        
+
+        var updateIO = function () { // Envia el estado de los swiches cada 200ms            
+            socket.send("00000000");            
+            setTimeout(function () {
+                updateIO();
+            }, 200);
+        }
+    </script>
+
+</body>
+
+</html>

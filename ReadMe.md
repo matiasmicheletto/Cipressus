@@ -174,5 +174,6 @@ Usuario con rol de alumno:
 
 Usuario con rol de administrador:  
 
+  - Detalles de alumnos: clases asistidas, actividad
   - Actividades  
     - Configuración de árbol de actividades.  
