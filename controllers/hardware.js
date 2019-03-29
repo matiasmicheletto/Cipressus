@@ -5,8 +5,17 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         return;
     }
 
+    $scope.wssFound = false;
     $rootScope.loading = true;
     $rootScope.sidenav.close();    
+
+    setTimeout(function(){
+        if(!$scope.wssFound){ // Todavía no se pudo conectar con websocket
+            $rootScope.loading = false;
+            M.toast({html: "No se pudo acceder al Web Socket",classes: 'rounded red',displayLength: 2000});
+            $scope.$apply();
+        }
+    },2500);
 
     $scope.tester = [ // Entrada/salida del probador
         {switch: false,led: false}, 
@@ -32,6 +41,11 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         console.log("Socket abierto.");
     };
 
+    socket.onclose = function() {
+        console.log("Socket cerrado.");
+        M.toast({html: "Se desconectó el Web Socket",classes: 'rounded red',displayLength: 2000});
+    };
+
     socket.onmessage = function (message) { // Respuesta del server
         if($scope.serialPorts){
             leds=message.data;
@@ -39,7 +53,8 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
             //leds = message.data.substring(1, 9);            
         }else{
             $scope.serialPorts = JSON.parse(message.data);
-            $rootScope.loading = false;        
+            $rootScope.loading = false;  
+            $scope.wssFound = true;      
             $scope.$apply();        
             M.FormSelect.init(document.querySelectorAll('select'), {});
         }

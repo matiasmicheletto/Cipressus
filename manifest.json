@@ -4,7 +4,7 @@
   "name": "Cipressus",
   "scope": "/",
   "display": "standalone",
-  "start_url": "http://www.diec.uns.edu.ar/rts/cipressus",
+  "start_url": "https://www.cipressus.uns.edu.ar",
   "short_name": "Cipressus",
   "theme_color": "transparent",
   "description": "Sistema de gestión de cátedra",

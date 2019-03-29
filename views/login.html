@@ -2,10 +2,10 @@
     <div ng-show="userLogged==false" class="container black-text" style="margin-top: 50px;" style="z-index:-2">
         <div class="z-depth-1 row hoverable login-box" style="z-index:1;max-width: {{login_mode==1 ? '800px':'400px'}};">
             <div>
-                <a><img src="images/mainlogo.png" width="150px" /></a>
+                <a><img src="images/newmainlogo.png" width="150px" /></a>
             </div>
             <p class="center">Iniciar sesión en <span><img src="images/secondarylogo.png" width="100" align="top"/></span></p>
-            <form class="col s12" method="post">
+            <form class="col s12" method="post" ng-init="showKey=false">
 
                 <div class="row" ng-show="login_mode==1">
                     <div class="input-field col s12 m6 l6">
@@ -43,10 +43,20 @@
                         <label for="email">Email</label>
                     </div>
          
-                    <div ng-hide="login_mode==2" class="input-field col s12">
+                    <div ng-hide="login_mode==2" class="input-field col s10">
                         <i class="material-icons prefix">vpn_key</i>
-                        <input class="validate black-text" name="password" id="password" type="password" ng-model="userForm.password" />
+                        <input class="validate black-text" name="password" id="password" type="{{showKey ? 'text':'password'}}" ng-model="userForm.password" />
                         <label for="password">Contraseña</label>
+                    </div>
+
+                    <div ng-hide="login_mode==2" class="input-field col s1">
+                        <a title="" href="" ng-mousedown="showKey=true" ng-mouseup="showKey=false"><i class="black-text material-icons prefix">visibility</i></a>
+                    </div>
+
+                    <div ng-hide="login_mode!=1" class="input-field col s12">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input class="validate black-text" name="passwordConfirm" id="passwordConfirm" type="password" ng-model="passwordConfirm" />
+                        <label for="passwordConfirm">Repetir ontraseña</label>
                     </div>
                 </div>
 

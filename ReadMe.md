@@ -4,22 +4,23 @@ CIPRESSUS es una plataforma online pensada inicialmente para implementar un sist
 
 Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, entre muchas otras utilidades.
 
-Incluye GUI para controlar un tester de circuitos digitales basado en Arduino.
+Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos.
 
 
 ### Características
   - Registro con email y contraseña.
-  - Usuarios con distintos roles y permisos.
+  - Usuarios con roles de alumnos o docentes.
   - Perfiles personalizables.
   - Listado de comunicados y novedades.
   - Consulta de cronograma de actividades.
   - Calificaciones actualizadas en tiempo real.
   - Tablero de calificaciones animado.
+  - Interfaz gráfica para conectar el probador digital de circuitos lógicos.
+  - Simulador de circuitos lógicos.
   - Estadística y analíticos de usuarios.
   - Evaluación de asistencia con cómputo automático.
-  - Mensajería instantánea.
+  - Notificaciones y mensajería instantánea.
   - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.
-  - GUI para tester de circuitos.
 
 
 ### Contacto
@@ -58,6 +59,9 @@ Sólo como dependencia requerida para FullCalendar
 #### Fullcalendar
 http://fullcalendar.io
 Calendario de eventos para el cronograma de la materia. 
+#### SimCirJS
+https://kazuhikoarase.github.io/simcirjs/
+Simulador de circuitos digitales
 #### Quill
 https://quilljs.com/
 https://github.com/kensnyder/quill-image-resize-module
@@ -167,13 +171,13 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 Usuario con rol de alumno:  
 
+  - Simulador lógico embebido en la app (librería simcirjs).
   - Tests y cuestionarios.
   - Notificaciones.
   - Entrega de informes de laboratorio.
-
+  - Inscripción como comisiones.
 
 Usuario con rol de administrador:  
 
-  - Detalles de alumnos: clases asistidas, actividad
-  - Actividades  
-    - Configuración de árbol de actividades.  
+  - Detalles de alumnos: notas, asistencia, actividad, etc
+  - Configuración de árbol de actividades.  

@@ -75,21 +75,30 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 formOk = true;
         }
         if (formOk) { // Registrar usuario
-            Cipressus.users.signUp($scope.userForm).then(function (res) {
-                console.log(res);
-                M.toast({
-                    html:  $rootScope.greetings()+" "+$scope.userForm.name+"!",
-                    classes: 'rounded green darken-3',
-                    displayLength: 2500
+            if($scope.userForm.password == $scope.passwordConfirm){ // Contraseñas ingresadas deben coincidir
+                Cipressus.users.signUp($scope.userForm).then(function (res) {
+                    console.log(res);
+                    M.toast({
+                        html:  $rootScope.greetings()+" "+$scope.userForm.name+"!",
+                        classes: 'rounded green darken-3',
+                        displayLength: 2500
+                    });
+                }).catch(function (err) {
+                    console.log(err[0]);
+                    M.toast({
+                        html: err[1],
+                        classes: 'rounded red',
+                        displayLength: 2500
+                    });
                 });
-            }).catch(function (err) {
-                console.log(err[0]);
+            }else{ // Si no coinciden, avisar
+                console.log("Confirmación de contraseña fallida");                
                 M.toast({
-                    html: err[1],
+                    html: "Verificación de contraseña incorrecto!",
                     classes: 'rounded red',
-                    displayLength: 2500
+                    displayLength: 2000
                 });
-            });
+            }
         }else{ 
             console.log("Formulario incompleto");
             M.toast({
@@ -123,19 +132,8 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
         }
     };
 
-    // Valores por defecto de los botones (modo inicio de sesión)
-    /*$scope.userForm = {
-        name: "",
-        secondName: "",
-        lu: null,
-        degree: "",
-        email: "",
-        password: ""
-    };*/
     $scope.login_mode = 0; // 0->login; 1->registro; 2->recuperacion de clave
     $scope.updateButtons();
     M.FormSelect.init(document.querySelectorAll('select'), {});    
-    setTimeout(function(){
-        M.updateTextFields();
-    },1000);
+    setTimeout(function(){M.updateTextFields();},1500); // Esto no funciona 
 }]);
