@@ -37,6 +37,8 @@
     <link type="text/css" rel="stylesheet" href="style/quill.snow.css"/>
     <link type="text/css" rel="stylesheet" href="style/timeline.css"/>
     <link type="text/css" rel="stylesheet" href="style/custom.css"/>
+    <link type="text/css" rel="stylesheet" href="style/simcir.css"/>
+    <link type="text/css" rel="stylesheet" href="style/simcir-basicset.css"/>
 
     <!-- ##################### ASSETS ##################### -->
     <script type="text/javascript" src="assets/materialize.min.js"></script>
@@ -54,8 +56,11 @@
     <script type="text/javascript" src="assets/variable-pie.js"></script>
     <script type="text/javascript" src="assets/quill.min.js"></script>
     <script type="text/javascript" src="assets/image-resize.min.js"></script>
-    <script type="text/javascript" src="assets/pdf.js"></script>
+    <script type="text/javascript" src="assets/pdf.js"></script>    
     <script type="text/javascript" src="assets/pdf.worker.js"></script>
+    <script type="text/javascript" src="assets/SimCirJS/simcir.js"></script>
+    <script type="text/javascript" src="assets/SimCirJS/simcir-basicset.js"></script>
+    <script type="text/javascript" src="assets/SimCirJS/simcir-library.js"></script>
     <script type="text/javascript" src="assets/cipressus.js"></script>
 
 </head>
@@ -143,6 +148,9 @@
         </li>
         <li class="no-padding" ng-show="user.admin">
             <a href="#/hardware" class="collapsible-header">Probador<i class="material-icons">usb</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.admin">
+            <a href="#/simulator" class="collapsible-header">Simulador<i class="material-icons">developer_board</i></a>
         </li>
         <li class="no-padding" ng-show="user.admin">
             <ul class="collapsible_1 collapsible collapsible-accordion">
@@ -259,6 +267,7 @@
     <script type="text/javascript" src="controllers/calendar.js"></script>
     <script type="text/javascript" src="controllers/sources.js"></script>
     <script type="text/javascript" src="controllers/hardware.js"></script>
+    <script type="text/javascript" src="controllers/simulator.js"></script>
     <script type="text/javascript" src="controllers/users.js"></script>
     <script type="text/javascript" src="controllers/stats.js"></script>
     <script type="text/javascript" src="controllers/attendance.js"></script>

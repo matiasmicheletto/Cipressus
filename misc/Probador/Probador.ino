@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  *  Name        : Firmware.cpp
+  *  Name        : Probador.ino
   *  Author      : Matias J. Micheletto
   *  Version     : 1.0
   *  Copyright   : GPLv3

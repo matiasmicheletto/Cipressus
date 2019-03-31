@@ -17,13 +17,15 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
         $scope.absents = []; // Lista con id de usuarios ausentes al evento actual
         $scope.presents = []; // Lista de presentes
         for(var k in $scope.users){ // Recorrer lista de usuarios
-            if($scope.users[k].attendance){ // Si el usuario asistio a alguna clase
-                if($scope.users[k].attendance[$scope.selectedEventKey]) // Si tiene el evento actual
-                    $scope.presents.push(k); // Marcar alumno como presente
-                else // Si no tiene el evento actual
+            if(!$scope.users[k].admin){ // A los usuarios admin no se les computa asistencia
+                if($scope.users[k].attendance){ // Si el usuario asistio a alguna clase
+                    if($scope.users[k].attendance[$scope.selectedEventKey]) // Si tiene el evento actual
+                        $scope.presents.push(k); // Marcar alumno como presente
+                    else // Si no tiene el evento actual
+                        $scope.absents.push(k); // Agregar a lista de ausentes
+                }else // Si no asistio a ningun evento, marcar como ausente 
                     $scope.absents.push(k); // Agregar a lista de ausentes
-            }else // Si no asistio a ningun evento, marcar como ausente 
-                $scope.absents.push(k); // Agregar a lista de ausentes
+            }
         }
 
         $scope.$apply();

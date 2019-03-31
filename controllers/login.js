@@ -116,18 +116,21 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
                 $scope.menu_left = "Registrarse";
                 $scope.menu_right = "¿Olvidó su contraseña?";
                 $scope.btn_click = $scope.loginAttempt;
+                $scope.welcomeText = "Iniciar sesión en ";
                 break;
             case 1: // registro
                 $scope.btn_text = "Registrarse";
                 $scope.menu_left = "¿Olvidó su contraseña?";
                 $scope.menu_right = "Iniciar sesión";
                 $scope.btn_click = $scope.registerNewUser;
+                $scope.welcomeText = "Registrarse en ";
                 break;
             case 2: // recuperacion
                 $scope.btn_text = "Recuperar contraseña";
                 $scope.menu_left = "Iniciar sesión";
                 $scope.menu_right = "Registrarse";
                 $scope.btn_click = $scope.retrievePassword;
+                $scope.welcomeText = "Recuperar contraseña de ";
                 break;
         }
     };
