@@ -270,7 +270,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
         .then(function (snapshot) {
             //console.log(snapshot);
             $scope.sources = snapshot;
-            // Lista de carpetas para atocompletador
+            // Lista de carpetas para autocompletador
             var folderList = {};
             for(var k in $scope.sources)
                 folderList[$scope.sources[k].name] = null;

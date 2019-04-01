@@ -19,15 +19,18 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
         };
         $scope.$apply();
     };
-    
-    // Componentes materialize
-    M.Modal.init(document.getElementById("view_modal"), {preventScrolling: false});
-    var messageModal = M.Modal.init(document.getElementById("message_modal"), {preventScrolling: false});
-    var confirmEnrollModal = M.Modal.init(document.getElementById("confirm_enroll_modal"), {preventScrolling: false});
-    var scoresModal = M.Modal.init(document.getElementById("scores_modal"), {preventScrolling: false, dismissible: false});
 
     $scope.select = function(key){ // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
+    };
+
+    $scope.getUserNames = function(userUids){ // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
+        if($scope.users){ // Esperar a que se bajen de la db
+            var names = [];
+            for(var k in userUids)
+             names.push($scope.users[userUids[k]].secondName);
+            return names.join(); // Apellidos separados por coma
+        }
     };
 
     $scope.sendMessage = function(){ // Enviar mensaje al usuario seleccionado
@@ -145,6 +148,14 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
             $scope.$apply();
         });
     };
+
+
+    ///// Inicializacion del controller
+
+    M.Modal.init(document.getElementById("view_modal"), {preventScrolling: false});
+    var messageModal = M.Modal.init(document.getElementById("message_modal"), {preventScrolling: false});
+    var confirmEnrollModal = M.Modal.init(document.getElementById("confirm_enroll_modal"), {preventScrolling: false});
+    var scoresModal = M.Modal.init(document.getElementById("scores_modal"), {preventScrolling: false, dismissible: false});
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"users").catch(function(err){console.log(err)});
 

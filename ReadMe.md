@@ -43,38 +43,38 @@ Documentación: https://github.com/matiasmicheletto/cipressus
 
 ## Librerías importadas
 #### Angular
-http://angularjs.org
+http://angularjs.org  
 Framework para el control de la app.
 #### Materialize
-http://materializecss.com
+http://materializecss.com  
 Estilo de la GUI.
 #### Firebase
-http://firebase.google.com
+http://firebase.google.com  
 Para el control de autenticación de usuarios y almacenamiento de información en la nube.
 #### HighCharts
-http://highcharts.com
+http://highcharts.com  
 Graficos del dashboard
 #### JQuery
-http://jquery.com
+http://jquery.com  
 Sólo como dependencia requerida para FullCalendar
 #### Fullcalendar
-http://fullcalendar.io
+http://fullcalendar.io  
 Calendario de eventos para el cronograma de la materia. 
 #### SimCirJS
-https://kazuhikoarase.github.io/simcirjs/
+https://kazuhikoarase.github.io/simcirjs/  
 Simulador de circuitos lógicos digitales
 #### Quill
-https://quilljs.com/
-https://github.com/kensnyder/quill-image-resize-module
+https://quilljs.com/  
+https://github.com/kensnyder/quill-image-resize-module  
 Editor de texto enriquecido para crear publicaciones con comunicados y noticias.
 #### Moment
-http://momentjs.com
+http://momentjs.com  
 Operaciones de fecha y hora
 #### Is
-https://is.js.org/
+https://is.js.org/  
 Identificación de Sist. Operativo, navegador, dispositivo, etc.
 #### Mozilla PDF.js
-https://mozilla.github.io/pdf.js/
+https://mozilla.github.io/pdf.js/  
 Visor de documentos pdf para html5.
 
 
@@ -137,6 +137,8 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     +-timestamp         // Fecha/hora del registro
     +-action            // Acciones del registro (0:subido, 1:descargado, 2:observacion, 3:evaluado)
     +-user              // Usuario que realizo la accion
+    +-display           // Mensaje a mostrar del estado de revision
+    +-obs               // Observaciones
 -users_private          // Informacion de usuarios alumnos
  |
  +-(child_key)          // ID firebase del usuario
@@ -190,7 +192,6 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 Usuario con rol de alumno:  
 
-  - Entrega de informes de laboratorio.
   - Tests y cuestionarios.
   - Notificaciones.
 
