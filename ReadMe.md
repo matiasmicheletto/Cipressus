@@ -2,7 +2,7 @@
 
 CIPRESSUS es una plataforma online pensada inicialmente para implementar un sistema de cómputo automático de calificaciones para actividades educativas y permitir la consulta en tiempo real de resultados de evaluaciones. 
 
-Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, entre muchas otras utilidades.
+Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, descargar archivos enviados por alumnos, entre muchas otras utilidades.
 
 Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos.
 
@@ -15,8 +15,9 @@ Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y 
   - Consulta de cronograma de actividades.
   - Calificaciones actualizadas en tiempo real.
   - Tablero de calificaciones animado.
+  - Entrega de informes o archivos para evaluación.
   - Interfaz gráfica para conectar el probador digital de circuitos lógicos.
-  - Simulador de circuitos lógicos.
+  - Simulador de circuitos lógicos mediante diagrama de compuertas.
   - Estadística y analíticos de usuarios.
   - Evaluación de asistencia con cómputo automático.
   - Notificaciones y mensajería instantánea.
@@ -61,7 +62,7 @@ http://fullcalendar.io
 Calendario de eventos para el cronograma de la materia. 
 #### SimCirJS
 https://kazuhikoarase.github.io/simcirjs/
-Simulador de circuitos digitales
+Simulador de circuitos lógicos digitales
 #### Quill
 https://quilljs.com/
 https://github.com/kensnyder/quill-image-resize-module
@@ -121,6 +122,21 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     +-size              // Tamanio en storage
     +-format            // Formato del archivo
     +-uploaded          // Fecha de carga
+-submissions            // Lista de entregas realizadas por alumnos
+ |
+ +-(child_key)          // Identificador de la entrega
+  |
+  +-authors             // Autores de la entrega (apellido de los integrantes separado por coma)
+  +-filename            // Nombre de archivo subido
+  +-link                // Enlace al storage
+  +-activity            // Identificador de la actividad entregada
+  +-status              // Estado de la correccion
+   |
+   +-(child_key)        // Identificador del registro
+    |
+    +-timestamp         // Fecha/hora del registro
+    +-action            // Acciones del registro (0:subido, 1:descargado, 2:observacion, 3:evaluado)
+    +-user              // Usuario que realizo la accion
 -users_private          // Informacion de usuarios alumnos
  |
  +-(child_key)          // ID firebase del usuario
@@ -157,6 +173,9 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-lu                  // LU
   +-name                // Nombre
   +-secondName          // Apellido
+  +-partners            // Compañeros de comision
+   |
+   +-(array_index)      // Indice de arreglo e identificador de usuario como valor
   +-activity            // Monitor de actividad
    |
    +-last_login         // Estampa de tiempo de ultimo acceso
@@ -171,11 +190,10 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 Usuario con rol de alumno:  
 
-  - Simulador lógico embebido en la app (librería simcirjs).
+  - Entrega de informes de laboratorio.
   - Tests y cuestionarios.
   - Notificaciones.
-  - Entrega de informes de laboratorio.
-  - Inscripción como comisiones.
+
 
 Usuario con rol de administrador:  
 

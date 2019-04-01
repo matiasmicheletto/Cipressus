@@ -1,5 +1,5 @@
 window.Cipressus = (function () {
-    // Libreria para el control de la base de datos y metodos de evaluacion
+    // Libreria para el control de la base de datos y metodos propios de la app
 
     var core = { // Instancia de la clase
         db: {}, // Operaciones de base de datos
@@ -423,7 +423,7 @@ window.Cipressus = (function () {
         return str.replace(/ql-align-center/g,"center-align"); // Por ahora solo este, buscar otros
     };
 
-    core.utils.activityCntr = function(userUid,item){ // Incrementador de contadores de monitoreo de actividad
+    core.utils.activityCntr = function(userUid,item){ // Incrementador de contadores para monitoreo de actividad de usuarios
         return new Promise(function (fulfill, reject) {
             core.db.get("users_public/"+userUid+"/activity/items/"+item)
             .then(function(activity_data){

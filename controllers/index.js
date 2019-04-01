@@ -21,6 +21,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
             templateUrl: "views/sources.html",
             controller: "sources"
         })
+        .when("/submissions", {
+            templateUrl: "views/submissions.html",
+            controller: "submissions"
+        })
         .when("/hardware", {
             templateUrl: "views/hardware.html",
             controller: "hardware"
@@ -96,6 +100,33 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
 
     $rootScope.relativeTime = function(timestamp){ // Tiempo relativo al actual
         return moment(timestamp).fromNow();
+    };
+
+    $rootScope.getTime = function(code,stamp){ // Para ejecutar moment en view
+        var time;
+        switch(code){
+            case 0:
+                time = Date.now();
+                break;
+            case 1:
+                time = moment(Date.now()).format("DD/MM/YYYY HH:mm"); // readableTime()?
+                break;
+            case 2:
+                time = moment(Date.now()).format("DD/MM/YYYY");
+                break;
+            case 3:
+                time = moment(stamp).format("DD/MM/YYYY HH:mm");
+                break;
+            case 4:
+                time = moment(stamp).format("DD/MM/YYYY");
+                break;
+            case 5:
+                time = moment(stamp).fromNow();
+                break;
+            default:
+                time = null;
+        }
+        return time;
     };
 
     $rootScope.readableFileSize = function(bytes, si) { // Devuelve tamanio de archivo en formato legible

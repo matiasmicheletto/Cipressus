@@ -1,0 +1,172 @@
+<div class="container">
+
+  <h3>Entrega de actividades</h3>
+
+  <h4 ng-if="submCnt == 0 && !user.admin" class="center grey-text"><i>Aún no has realizado entrega de informes!</i></h4>
+  <h4 ng-if="submCnt == 0 && user.admin" class="center grey-text"><i>Aún no hay entregas realizadas</i></h4>
+
+  <table ng-if="submCnt > 0" class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
+    <thead>
+      <tr>
+        <th>Actividad</th>
+        <th>Autores</th>
+        <th>Estado</th>
+        <th>Modificado por</th>
+        <th>Menu</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="(key,row) in submissions" class="{{row.status[row.status.length-1].action==2?'red-text':''}} {{row.status[row.status.length-1].action==0?'grey-text':''}}">
+        <td>{{row.activityName}}</td>
+        <td>{{getUserNames(row.authors)}}</td>
+        <td>{{row.status[row.status.length-1].display}}</td> 
+        <td>
+          <div class="chip">
+            <img src="{{users[row.status[row.status.length-1].user].avatar}}">
+            {{users[row.status[row.status.length-1].user].name}}
+          </div>
+        </td>
+        <td width="1%" style="white-space:nowrap;">
+          <a ng-show="user.admin" title="Descargar" class="waves-effect waves-light green darken-3 btn-small btn-floating z-depth-3" href="{{row.link}}" target="_blank" rel="noopener noreferrer" ng-click="downloaded(key)"><i class="material-icons">get_app</i></a>
+          <a title="Historial" class="waves-effect waves-light blue darken-3 btn-small btn-floating z-depth-3" ng-click="viewSubm(key)"><i class="material-icons">history</i></a>
+          <a title="Eliminar" class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger {{!user.admin && (row.status[row.status.length-1].action > 0) ? 'disabled':''}}" data-target="confirm_delete_modal" ng-click="deleteFile(key)"><i class="material-icons">delete</i></a>
+          <a title="Evaluar" ng-show="user.admin && row.status[row.status.length-1].action == 1" title="Corregido" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3" ng-click="evaluated(key)"><i class="material-icons">done_outline</i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+
+<div class="fixed-action-btn" ng-hide="user.admin">
+  <a title="Agregar" class="btn-floating btn-large green darken-1 pulse modal-trigger" data-target="files_modal" ng-click="resetForm()"><i
+      class="large material-icons">add</i></a>
+</div>
+
+<div id="files_modal" class="modal" ng-hide="user.admin">
+  <div class="modal-content">
+    <h4>Subir archivos</h4>
+
+    <div class="input-field">
+        <select id="activity_select">
+            <option value="" disabled selected>Elija una opción</option>
+            <option value="{{row.id}}" ng-repeat="(key,row) in activities track by $index" ng-if="row.dl">{{row.name}}</option>
+        </select>
+        <label for="activity_select">Actividad</label>
+    </div>
+
+    <div ng-show="selectedActivity">
+      <p><b>Vencimiento:</b> {{readableTime(selectedActivity.deadline)}}</p>
+    </div>
+
+    <div ng-show="selectedActivity" class="file-field input-field">
+      <div class="btn green darken-3">
+        <span>Elegir archivo</span>
+        <input id="fileInput" type="file">
+      </div>
+      <div class="file-path-wrapper">
+        <input id="fileInputText" class="file-path validate" type="text">
+      </div>
+    </div>
+
+    <div ng-show="selectedActivity" class="input-field">
+        <textarea id="obsTextarea" class="materialize-textarea"></textarea>
+        <label for="obsTextarea">Observaciones</label>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
+    <a class="waves-effect waves-white btn green darken-3 {{selectedActivity?'':'disabled'}}" ng-click="pushFile()">Entregar</a>
+  </div>
+</div>
+
+<div id="confirm_delete_modal" class="modal">
+  <div class="modal-content">
+    <h5>Confirme la operación</h5>
+    <p>¿Está seguro que desea eliminar esta entrega?</p>
+    <p><b>Nombre de archivo: </b>{{submissions[fileKeyToDelete].name}}</p>
+    <p><b>Subido: </b>{{readableTime(submissions[fileKeyToDelete].status[0].timestamp)}}</p>
+    <br>
+    <p>Esta operación no se puede deshacer.</p>
+  </div>
+
+  <div class="modal-footer">
+    <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
+    <a class="waves-effect waves-white btn green darken-3" ng-click="confirmDelete()">Eliminar</a>
+  </div>
+</div>
+
+<div id="confirm_evaluate_modal" class="modal" ng-show="user.admin">
+    <div class="modal-content">
+      <h5>Resultado de la evaluación</h5>
+      
+      <p><b>Actividad:</b> {{submissions[evaluatingKey].activityName}}</p>
+      <p><b>Comisión:</b> {{getUserNames(submissions[evaluatingKey].authors)}}</p>
+      <p><b>Nombre de archivo:</b> {{submissions[evaluatingKey].name}} [.{{submissions[evaluatingKey].format}}]</p>
+      <p><b>Formato:</b> {{readableFileSize(submissions[evaluatingKey].size)}}</p>
+      
+      <br>
+
+      <div class="input-field">
+          <select id="evaluation_select">
+              <option value="" disabled selected>Elija una opción</option>
+              <option value="2">Revisar</option>
+              <option value="3">Aprobado</option>
+          </select>
+          <label for="evaluation_select">Evaluar como</label>
+      </div>
+    
+      <div class="input-field">
+          <textarea id="obsTextarea2" class="materialize-textarea"></textarea>
+          <label for="obsTextarea2">Observaciones</label>
+      </div>
+      
+    </div>
+  
+    <div class="modal-footer">
+      <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
+      <a class="waves-effect waves-white btn green darken-3" ng-click="confirmEvaluate()">Confirmar</a>
+    </div>
+  </div>
+
+<div id="submission_modal" class="modal">
+    <div class="modal-content">
+      <h4>Detalles de la entrega</h4>
+      <p><b>Actividad:</b> {{submissions[submKeyView].activityName}}</p>
+      <p><b>Comisión:</b> {{getUserNames(submissions[submKeyView].authors)}}</p>
+      <p><b>Nombre de archivo:</b> {{submissions[submKeyView].name}} [.{{submissions[submKeyView].format}}]</p>
+      <p><b>Formato:</b> {{readableFileSize(submissions[submKeyView].size)}}</p>
+      <h5>Historial:</h5>
+      <table class="highlight row" style="max-width:100%;overflow-x:auto">
+          <thead>
+            <tr>
+              <th>Fecha/hora</th>
+              <th>Usuario</th>
+              <th>Acción</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
+      
+          <tbody>
+            <tr ng-repeat="(key,row) in submissions[submKeyView].status">
+              <td>{{readableTime(row.timestamp)}}</td>
+              <td>
+                <div class="chip">
+                  <img src="{{users[row.user].avatar}}">
+                  {{users[row.user].name}}
+                </div>
+              </td>
+              <td>{{row.display}}</td>
+              <td title="{{row.obs}}" style="white-space:pre-wrap; word-wrap:break-word" width="20%">{{row.obs}}</td> 
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  
+    <div class="modal-footer">
+      <a class="modal-close waves-effect waves-white btn green darken-3">Aceptar</a>
+    </div>
+  </div>

@@ -78,33 +78,6 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
         });
 
     };
-
-    $scope.getTime = function(code,stamp){ // Para ejecutar moment en view
-        var time;
-        switch(code){
-            case 0:
-                time = Date.now();
-                break;
-            case 1:
-                time = moment(Date.now()).format("DD/MM/YYYY HH:mm");
-                break;
-            case 2:
-                time = moment(Date.now()).format("DD/MM/YYYY");
-                break;
-            case 3:
-                time = moment(stamp).format("DD/MM/YYYY HH:mm");
-                break;
-            case 4:
-                time = moment(stamp).format("DD/MM/YYYY");
-                break;
-            case 5:
-                time = moment(stamp).fromNow();
-                break;
-            default:
-                time = null;
-        }
-        return time;
-    };
     
     //// Inicializacion ////
 

@@ -26,33 +26,6 @@ app.controller("users", ['$scope','$rootScope','$location', function ($scope,$ro
     var confirmEnrollModal = M.Modal.init(document.getElementById("confirm_enroll_modal"), {preventScrolling: false});
     var scoresModal = M.Modal.init(document.getElementById("scores_modal"), {preventScrolling: false, dismissible: false});
 
-    $scope.getTime = function(code,stamp){ // Para ejecutar moment en view
-        var time;
-        switch(code){
-            case 0:
-                time = Date.now();
-                break;
-            case 1:
-                time = moment(Date.now()).format("DD/MM/YYYY HH:mm");
-                break;
-            case 2:
-                time = moment(Date.now()).format("DD/MM/YYYY");
-                break;
-            case 3:
-                time = moment(stamp).format("DD/MM/YYYY HH:mm");
-                break;
-            case 4:
-                time = moment(stamp).format("DD/MM/YYYY");
-                break;
-            case 5:
-                time = moment(stamp).fromNow();
-                break;
-            default:
-                time = null;
-        }
-        return time;
-    };
-
     $scope.select = function(key){ // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
     };

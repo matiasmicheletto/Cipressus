@@ -28,14 +28,14 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
                                 name: uploadingFiles[k].name.split(".")[0], // Extraer nombre de archivo
                                 size: res.sizes[k], // Tamanio de archivo
                                 format: uploadingFiles[k].name.split(".")[1], // Extension del archivo
-                                link: res.urls[k], // Url de la foto
+                                link: res.urls[k], // Url de los archivos
                                 filename: filenames[k], // Nombre de archivo en el storage
                                 uploaded: Date.now(),
                                 downloads: 0
                             });
                         }
                         Cipressus.db.pushMultiple($scope.fileListQueue, "sources/" + folderKey + "/files")
-                            .then(function (snapshot) {
+                            .then(function (res2) {
                                 // Actualizar tablas (carpetas) de archivos
                                 var idx = 0; // Contador para items de carpeta o directorio
                                 if(!$scope.sources){ // Para la primera vez cuando no hay ningun directorio
@@ -46,8 +46,8 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
                                         $scope.sources[folderKey] = {name: folderName, files:{}}; // Crear el arreglo de archivos
                                     }
                                 }
-                                for(var k in snapshot){ // Para cada key   
-                                    $scope.sources[folderKey].files[snapshot[k].key]=$scope.fileListQueue[idx];
+                                for(var k in res2){ // Para cada key   
+                                    $scope.sources[folderKey].files[res2[k].key]=$scope.fileListQueue[idx];
                                     idx++;
                                 }
                                 // Cerrar dialogo

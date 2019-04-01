@@ -5,13 +5,6 @@ app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$
     return;
 }
 
-  $rootScope.sidenav.close();
-
-  Cipressus.utils.activityCntr($rootScope.user.uid,"profile").catch(function(err){console.log(err)});
-  
-  $scope.edit = false; // Toggle para la edicion de los datos del perfil
-  $scope.created = $rootScope.user.enrolled > 0 ? moment($rootScope.user.enrolled).format("DD/MM/YYYY HH:mm") : "(Aún no aprobado)"; // Formato legible
-  $scope.newAvatar = $rootScope.user.avatar; // Nuevo src si carga nueva foto de perfil
   
   // Callback al subir foto de perfil
   document.getElementById("imgInput").addEventListener('change', 
@@ -25,12 +18,14 @@ app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$
       if(file) reader.readAsDataURL(file);
     });
 
-  M.Tooltip.init(document.querySelectorAll('.tooltipped'),{}); // Inicializar tooltips      
-  document.getElementById("inputName").value = $rootScope.user.name;
-  document.getElementById("inputSecondName").value = $rootScope.user.secondName;
-  document.getElementById("inputLU").value = $rootScope.user.lu;
-  document.getElementById("inputDegree").value = $rootScope.user.degree;
-  M.FormSelect.init(document.querySelectorAll('select'), {});
+  $scope.getUserNames = function(userUids){ // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
+    if($scope.users){ // Esperar a que se bajen de la db
+      var names = [];
+      for(var k in userUids)
+          names.push($scope.users[userUids[k]].secondName);
+      return names.join(); // Apellidos separados por coma
+    }
+  };
 
   $scope.uploadPic = function(){ // Redirigir el evento al input para cargar una foto
     document.getElementById("imgInput").click();
@@ -72,5 +67,35 @@ app.controller("profile", ['$scope','$rootScope','$location', function ($scope,$
     });
   };
 
+
+  ///// Inicialización controller
+  $rootScope.loading = true;
+  $rootScope.sidenav.close();
+
+  
+  
+  $scope.edit = false; // Toggle para la edicion de los datos del perfil
+  $scope.created = $rootScope.user.enrolled > 0 ? moment($rootScope.user.enrolled).format("DD/MM/YYYY HH:mm") : "(Aún no aprobado)"; // Formato legible
+  $scope.newAvatar = $rootScope.user.avatar; // Nuevo src si carga nueva foto de perfil
+  
+  M.Tooltip.init(document.querySelectorAll('.tooltipped'),{}); // Inicializar tooltips      
+  document.getElementById("inputName").value = $rootScope.user.name;
+  document.getElementById("inputSecondName").value = $rootScope.user.secondName;
+  document.getElementById("inputLU").value = $rootScope.user.lu;
+  document.getElementById("inputDegree").value = $rootScope.user.degree;
+  M.FormSelect.init(document.querySelectorAll('select'), {});
   M.updateTextFields(); // Para mostrar los placeholders
+
+  Cipressus.utils.activityCntr($rootScope.user.uid,"profile").catch(function(err){console.log(err)});
+
+  Cipressus.db.get("users_public") // Descargar datos de usuario
+  .then(function(users_public_data){
+      $scope.users = users_public_data;
+      $rootScope.loading = false;
+      $scope.$apply();    
+  })
+  .catch(function(err){
+      console.log(err);
+      M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});        
+  });        
 }]);

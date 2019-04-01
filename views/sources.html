@@ -24,13 +24,13 @@
               <td>{{row.format | lowercase }}</td>
               <td>{{readableTime(row.uploaded)}}</td>
               <td width="1%" style="white-space:nowrap;">
-                <a title="Descargar" class="waves-effect waves-light green darken-3 btn-small btn-floating z-depth=3"
+                <a title="Descargar" class="waves-effect waves-light green darken-3 btn-small btn-floating z-depth-3"
                   target="_blank" rel="noopener noreferrer" href="{{row.link}}"><i class="material-icons">get_app</i></a>
-                <a ng-show="row.format=='pdf'" title="Ver" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth=3"
+                <a ng-show="row.format=='pdf'" title="Ver" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3"
                   ng-click="openPdfViewer(row.link)"><i class="material-icons">visibility</i></a>
-                <a ng-show="row.format=='jpg'||row.format=='jpeg'||row.format=='png'" title="Ver" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth=3"
+                <a ng-show="row.format=='jpg'||row.format=='jpeg'||row.format=='png'" title="Ver" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3"
                   ng-click="openImage(row.link)"><i class="material-icons">visibility</i></a>
-                <a ng-show="user.admin" title="Eliminar" class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth=3 modal-trigger"
+                <a ng-show="user.admin" title="Eliminar" class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger"
                   data-target="confirm_delete_modal" ng-click="deleteFile(key,key2)"><i class="material-icons">delete</i></a>
               </td>
             </tr>
@@ -57,7 +57,7 @@
       <label for="source_name_input">Carpeta</label>
     </div>
     <div class="file-field input-field">
-      <div class="btn blue-grey darken-3">
+      <div class="btn green darken-3">
         <span>Elegir archivos</span>
         <input id="filesInput" type="file" multiple>
       </div>
@@ -68,7 +68,7 @@
   </div>
   <div class="modal-footer">
     <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
-    <a class="waves-effect waves-white btn blue-grey darken-3" ng-click="pushFiles(sourceName)">Guardar</a>
+    <a class="waves-effect waves-white btn green darken-3" ng-click="pushFiles(sourceName)">Guardar</a>
   </div>
 </div>
 
@@ -85,7 +85,7 @@
 
   <div class="modal-footer">
     <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
-    <a class="waves-effect waves-white btn blue-grey darken-3" ng-click="confirmDelete()">Eliminar</a>
+    <a class="waves-effect waves-white btn green darken-3" ng-click="confirmDelete()">Eliminar</a>
   </div>
 </div>
 
@@ -94,9 +94,9 @@
     <canvas id="pdf_viewer_canvas" style="width: 100%"></canvas>
   </div>
   <div class="modal-footer">
-    <a class="left modal-close waves-effect waves-white btn blue-grey darken-1">Volver</a>
-    <a class="waves-effect waves-white btn blue-grey darken-2 {{currentPage==1 ? 'disabled':''}}" ng-click="prevPdfPage()">Anterior</a>
-    <a class="waves-effect waves-white btn blue-grey darken-3 {{currentPage==maxPages ? 'disabled':''}}" ng-click="nextPdfPage()">Siguiente</a>
+    <a class="left modal-close waves-effect waves-white btn green darken-1">Volver</a>
+    <a class="waves-effect waves-white btn green darken-2 {{currentPage==1 ? 'disabled':''}}" ng-click="prevPdfPage()">Anterior</a>
+    <a class="waves-effect waves-white btn green darken-3 {{currentPage==maxPages ? 'disabled':''}}" ng-click="nextPdfPage()">Siguiente</a>
   </div>
 </div>
 

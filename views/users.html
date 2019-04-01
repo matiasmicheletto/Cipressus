@@ -24,9 +24,9 @@
           <td>{{row.lu}} <span title="Usuario aprobado" ng-if="row.enrolled" class="new badge green" data-badge-caption="inscr"></span></td>
           <td>{{row.degree}}</td>
           <td width="1%" style="white-space:nowrap;">
-            <a title="Enviar mensaje" class="waves-effect waves-light teal btn-small btn-floating z-depth=3 modal-trigger" data-target="message_modal"><i class="material-icons">mail_outline</i></a>
-            <a title="Calificaciones" class="waves-effect waves-light orange btn-floating btn-small z-depth=3" ng-show="row.enrolled && !row.admin" ng-click="startScoresModal(key)"><i class="material-icons">playlist_add_check</i></a>
-            <a title="Aprobar" class="waves-effect waves-light red btn-floating btn-small z-depth=3 modal-trigger" data-target="confirm_enroll_modal" ng-hide="row.enrolled"><i class="material-icons">done_outline</i></a>
+            <a title="Enviar mensaje" class="waves-effect waves-light teal btn-small btn-floating z-depth-3 modal-trigger" data-target="message_modal"><i class="material-icons">mail_outline</i></a>
+            <a title="Calificaciones" class="waves-effect waves-light orange btn-floating btn-small z-depth-3" ng-show="row.enrolled && !row.admin" ng-click="startScoresModal(key)"><i class="material-icons">playlist_add_check</i></a>
+            <a title="Aprobar" class="waves-effect waves-light red btn-floating btn-small z-depth-3 modal-trigger" data-target="confirm_enroll_modal" ng-hide="row.enrolled"><i class="material-icons">done_outline</i></a>
           </td>
         </tr>      
       </tbody>

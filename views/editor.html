@@ -23,17 +23,16 @@
           </td>
           <td>{{readableTime(row.timestamp)}}</td>
           <td width="1%" style="white-space:nowrap;">
-            <a title="Editar" class="waves-effect waves-light blue darken-4 btn-small btn-floating z-depth=3 modal-trigger" data-target="edit_modal" ng-click="select(key)"><i class="material-icons">edit</i></a>
-            <a title="Ver" class="waves-effect waves-light green darken-4 btn-floating btn-small z-depth=3 modal-trigger" data-target="view_modal" ng-click="select(key)"><i class="material-icons">visibility</i></a>
-            <a title="Eliminar" class="waves-effect waves-light red darken-4 btn-floating btn-small z-depth=3 modal-trigger" data-target="confirm_modal" ng-click="select(key)"><i class="material-icons">delete</i></a>
-            <a title="Subir" class="waves-effect waves-light teal darken-2 btn-floating btn-small z-depth=3 {{key > 0 ? '':'disabled'}}" ng-click="moveSelected(true,key);"><i class="material-icons">vertical_align_top</i></a>
-            <a title="Bajar" class="waves-effect waves-light teal darken-2 btn-floating btn-small z-depth=3 {{key < news.length-1 ? '':'disabled'}}" ng-click="moveSelected(false,key);"><i class="material-icons">vertical_align_bottom</i></a>
+            <a title="Editar" class="waves-effect waves-light blue darken-4 btn-small btn-floating z-depth-3 modal-trigger" data-target="edit_modal" ng-click="select(key)"><i class="material-icons">edit</i></a>
+            <a title="Ver" class="waves-effect waves-light green darken-4 btn-floating btn-small z-depth-3 modal-trigger" data-target="view_modal" ng-click="select(key)"><i class="material-icons">visibility</i></a>
+            <a title="Eliminar" class="waves-effect waves-light red darken-4 btn-floating btn-small z-depth-3 modal-trigger" data-target="confirm_modal" ng-click="select(key)"><i class="material-icons">delete</i></a>
+            <a title="Subir" class="waves-effect waves-light teal darken-2 btn-floating btn-small z-depth-3 {{key > 0 ? '':'disabled'}}" ng-click="moveSelected(true,key);"><i class="material-icons">vertical_align_top</i></a>
+            <a title="Bajar" class="waves-effect waves-light teal darken-2 btn-floating btn-small z-depth-3 {{key < news.length-1 ? '':'disabled'}}" ng-click="moveSelected(false,key);"><i class="material-icons">vertical_align_bottom</i></a>
           </td>
         </tr>      
       </tbody>
     </table>
   </div>
-
 
   <div class="fixed-action-btn">
     <a title="Nueva" class="btn-floating btn-large green darken-3 pulse modal-trigger" data-target="edit_modal" ng-click="select()"><i class="large material-icons">add</i></a>

@@ -1,7 +1,31 @@
 <div class="container">
-    <h4>Simulador de circuitos</h4>
+    <h4>Simulador de circuitos
+        <sup class="modal-trigger" style="cursor: pointer" data-target="tutorial_modal">
+            <i class="small material-icons">help</i>
+        </sup>
+    </h4>
 
-    <div id="mySimcir"></div>
+    <div class="card hoverable z-depth-1" id="mySimcir" style="width: 100%;height: 75vh;"></div>
 </div>
 
 
+<div id="tutorial_modal" class="modal">
+
+    <div class="modal-content">
+        <h3>Simulador de circuitos</h3>
+
+        <p>Instrucciones de uso:</p>
+
+        <ol>
+            <li>Elija un dispositivo de la lista y arrastre hacia la derecha.</li>
+            <li>Conecte entradas con salidas arrastrando.</li>
+            <li>Para desconectar un nodo, haga click en la entrada.</li>
+            <li>Para borrar un componente, arrastre hacia la barra de herramientas.</li>
+            <li>Ctrl+Click (command+Click en Mac) para alternar la vista de circuito o código.</li>
+            <li>Doble click en una etiqueta para renombrar dispositivo.</li>
+            <li>Doble click en una librería para abrir el circuito que contiene.</li>
+        </ol>
+
+        <p><a href="https://github.com/kazuhikoarase/simcirjs">Documentación</a></p>
+    </div>
+</div>
