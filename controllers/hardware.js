@@ -9,6 +9,9 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
     $rootScope.loading = true;
     $rootScope.sidenav.close();    
 
+    M.Modal.init(document.getElementById("tutorial_modal"),{});
+    Cipressus.utils.activityCntr($rootScope.user.uid, "hardware").catch(function (err) {console.log(err)});
+
     setTimeout(function(){
         if(!$scope.wssFound){ // Todavía no se pudo conectar con websocket
             $rootScope.loading = false;
@@ -60,7 +63,7 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         }
     };
 
-    $scope.connect = function(){ // Cuando se elige
+    $scope.connect = function(){ // Cuando se elige dispositivo
         var value = document.getElementById("portSelect").value;
         var baudrate = document.getElementById("baudrateSelect").value;
         socket.send(JSON.stringify({portIndex:parseInt(value), baudrate:parseInt(baudrate)})); // Port Connection Request        

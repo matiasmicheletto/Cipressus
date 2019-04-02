@@ -1,5 +1,9 @@
 <div class="container">
-    <h4>Probador de circuitos lógicos</h4>
+    <h4>Probador de circuitos lógicos
+        <sup class="modal-trigger" style="cursor: pointer" data-target="tutorial_modal">
+            <i class="small material-icons">help</i>
+        </sup>
+    </h4>
 </div>
 
 <center>
@@ -50,3 +54,21 @@
         </div>
     </div>
 </center>
+
+<div id="tutorial_modal" class="modal">
+
+    <div class="modal-content">
+        <h3>Probador de circuitos lógicos</h3>
+
+        <p>Instrucciones de uso:</p>
+
+        <ol>
+            <li><a href="https://nodejs.org/es/download/">Descargar</a> e instalar NodeJS</li>
+            <li>Conectar el probador al puerto USB.</li>
+            <li>Descargar <a href="https://www.cipressus.uns.edu.ar/assets/serialPortServer.js">serialPortServer.js</a> y ejecutar con NodeJS</li>
+            <li>Refrescar esta página.</li>
+            <li>Seleccionar el puerto serie del probador y la velocidad.</li>
+            <li>Click en "Conectar".</li>
+        </ol>
+    </div>
+</div>

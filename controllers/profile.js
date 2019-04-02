@@ -142,9 +142,7 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
 
   M.Tooltip.init(document.querySelectorAll('.tooltipped'), {}); // Inicializar tooltips      
 
-  Cipressus.utils.activityCntr($rootScope.user.uid, "profile").catch(function (err) {
-    console.log(err)
-  });
+  Cipressus.utils.activityCntr($rootScope.user.uid, "profile").catch(function (err) {console.log(err)});
 
   Cipressus.db.get("users_public") // Descargar datos de usuarios
     .then(function (users_public_data) {

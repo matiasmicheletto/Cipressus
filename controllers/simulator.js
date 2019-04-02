@@ -16,4 +16,6 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
     var $s = simcir;
     var $simcir = $('#mySimcir');
     $s.setupSimcir($simcir, { width:divWidth, height:divHeight });
+
+    Cipressus.utils.activityCntr($rootScope.user.uid, "simulator").catch(function (err) {console.log(err)});
 }]);
