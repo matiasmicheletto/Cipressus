@@ -10,14 +10,14 @@ Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y 
 ### Características
   - Registro con email y contraseña.
   - Usuarios con roles de alumnos o docentes.
-  - Perfiles personalizables.
-  - Listado de comunicados y novedades.
+  - Perfil de usuario personalizable.
+  - Publicación de comunicados y novedades.
   - Consulta de cronograma de actividades.
   - Calificaciones actualizadas en tiempo real.
   - Tablero de calificaciones animado.
-  - Entrega de informes o archivos para evaluación.
+  - Entrega online de informes o archivos para evaluación.
   - Interfaz gráfica para conectar el probador digital de circuitos lógicos.
-  - Simulador de circuitos lógicos mediante diagrama de compuertas.
+  - Simulador de circuitos lógicos embebido.
   - Estadística y analíticos de usuarios.
   - Evaluación de asistencia con cómputo automático.
   - Notificaciones y mensajería instantánea.
@@ -184,11 +184,22 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
    +-so                 // Sist. operativos utilizados
    +-browser            // Navegadores utilizados
    +-item               // Contadores de acceso a secciones de la pagina
+-metadata               // Informacion adicional
+ |
+ +-updates              // Tiempos de actualizacion de los datos de cada entrada
+  |
+  +-news
+  +-events
+  +-sources
+  +-submissions
 ```
 
 
 
 ### TODO
+
+- Visor de pdf embebido
+- 
 
 Usuario con rol de alumno:  
 

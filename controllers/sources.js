@@ -1,4 +1,4 @@
-app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
+app.controller("sources", ['$scope', '$rootScope', '$location', '$sce', function ($scope, $rootScope, $location,$sce) {
 
     if (!$rootScope.userLogged) {
         $location.path("/login");
@@ -186,71 +186,10 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
         image_viewer_modal.open();
     };
 
-    //// Funciones de control del visor de pdf
-    $scope.prevPdfPage = function () { // Volver a pagina anterior
-        if ($scope.currentPage > 1) {
-            $scope.currentPage--;
-            pdfGoToPage($scope.currentPage);
-        }
+    $scope.openPdfViewer = function(url){ // Abrir el pdf en un modal
+        $scope.pdfURL = $sce.trustAsResourceUrl(url);
+        pdf_viewer_modal.open();
     };
-
-    $scope.nextPdfPage = function () { // Pasar a pagina siguiente
-        if ($scope.currentPage < $scope.maxPages) {
-            $scope.currentPage++;
-            pdfGoToPage($scope.currentPage);
-        }
-    };
-
-    var pdfGoToPage = function (page) { // Mostrar pagina especifica del pdf
-        $scope.pdf.getPage(page).then(function (pag) {
-            //console.log('Pagina cargada');
-            var viewport = pag.getViewport({
-                scale: $scope.scale
-            });
-            var canvas = document.getElementById('pdf_viewer_canvas');
-            var context = canvas.getContext('2d');
-            canvas.height = viewport.height; // VER!
-            canvas.width = viewport.width;
-            var renderContext = {
-                canvasContext: context,
-                viewport: viewport
-            };
-            pag.render(renderContext);
-            //var renderTask = page.render(renderContext);
-            //renderTask.promise.then(function () {
-            //    console.log('Pagina renderizada');                    
-            //});
-        });
-    };
-
-    $scope.openPdfViewer = function (url) { // Abrir el pdf en un modal
-        $rootScope.loading = true;
-        var pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.js';
-        var loadingTask = pdfjsLib.getDocument(url);
-        loadingTask.promise.then(function (pdf) {
-            $scope.pdf = pdf; // Objeto para controlar pdf
-            $scope.currentPage = 1; // Pagina actual
-            $scope.scale = 3;
-            $scope.maxPages = pdf.numPages; // Cantidad de paginas
-            //console.log('PDF cargado');            
-            pdf_viewer_modal.open();
-            pdfGoToPage($scope.currentPage);
-            $rootScope.loading = false;
-            $scope.$apply();
-        }, function (err) { // Error al abrir pdf
-            console.error(err);
-            M.toast({
-                html: "Ocurrio un error al mostrar archivo.",
-                classes: 'rounded red',
-                displayLength: 1500
-            });
-            $rootScope.loading = false;
-            pdf_viewer_modal.close();
-            $scope.$apply();
-        });
-    };
-
 
     ///// Inicialización controller
     M.Collapsible.init(document.querySelectorAll('.collapsible'), {});
