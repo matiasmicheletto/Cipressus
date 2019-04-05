@@ -1,4 +1,4 @@
-var app = angular.module('cipressus', ['ngRoute', 'ngSanitize'])
+var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModule'])
 .config(function ($routeProvider) {
     $routeProvider
         .when("/", {

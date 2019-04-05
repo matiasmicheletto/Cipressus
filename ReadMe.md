@@ -184,9 +184,9 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
    +-so                 // Sist. operativos utilizados
    +-browser            // Navegadores utilizados
    +-item               // Contadores de acceso a secciones de la pagina
--metadata               // Informacion adicional
+-metadata               // Informacion adicional que emplea la app
  |
- +-updates              // Tiempos de actualizacion de los datos de cada entrada
+ +-updates              // Estampas de tiempo de última actualizacion de los datos de cada vista
   |
   +-news
   +-events
@@ -198,9 +198,6 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ### TODO
 
-- Visor de pdf embebido
-- 
-
 Usuario con rol de alumno:  
 
   - Tests y cuestionarios.
@@ -209,5 +206,6 @@ Usuario con rol de alumno:
 
 Usuario con rol de administrador:  
 
+  - Actualizacion de noticias: Al hacer correcciones se duplica la entrada
   - Detalles de alumnos: notas, asistencia, actividad, etc
   - Configuración de árbol de actividades.  
