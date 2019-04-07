@@ -198,14 +198,12 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ### TODO
 
-Usuario con rol de alumno:  
-
+  - Filtro de actividades que tienen entrega online.
+  - Calificar en la misma vista de actividades a todos los integrantes de la comision.
+  - Guardar/cargar circuitos del simulador
+  - Actualizacion de noticias: Al hacer correcciones se duplica la entrada.
+  - Detalles de alumnos: notas, asistencia, actividad, etc.
+  - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.
   - Tests y cuestionarios.
   - Notificaciones.
-
-
-Usuario con rol de administrador:  
-
-  - Actualizacion de noticias: Al hacer correcciones se duplica la entrada
-  - Detalles de alumnos: notas, asistencia, actividad, etc
   - Configuración de árbol de actividades.  

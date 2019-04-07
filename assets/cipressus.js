@@ -453,6 +453,18 @@ window.Cipressus = (function () {
         return new Promise(function (fulfill, reject) {
             firebase.initializeApp(core.db.config); // Inicializar base de datos
 
+            // Configurar mensajeria y notificaciones push
+            var messaging  = firebase.messaging();
+            messaging.usePublicVapidKey("BF0sMjIt0y1H_3oyJzmkBmPkrG9UK7HL5ekgRXj50jEYc3MZSfpjCd051A0tNkNfEtLmmVlYILFvi8PQ0BDXRNM");
+            messaging.requestPermission().then(function() {
+                console.log('Permisos de notificación otorgados.');
+            }).catch(function(err) {
+                console.log('No es posible habilitar notificaciones.', err);
+            });
+            messaging.onMessage(function(payload) {
+                console.log('Message received. ', payload);
+            });
+
             firebase.auth().onAuthStateChanged(function (user) { // Escuchar cambios de logeo de usuario
                 if (user) // El usuario esta logeado
                     core.users.onUserSignedIn(user.uid); // Pasar uid a los callbacks

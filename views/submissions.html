@@ -52,7 +52,7 @@
     <div class="input-field">
         <select id="activity_select">
             <option value="" disabled selected>Elija una opción</option>
-            <option value="{{row.id}}" ng-repeat="(key,row) in activities track by $index" ng-if="row.dl">{{row.name}}</option>
+            <option value="{{row.id}}" ng-repeat="(key,row) in activities track by $index" ng-if="row.dl.submit">{{row.name}}</option>
         </select>
         <label for="activity_select">Actividad</label>
     </div>
