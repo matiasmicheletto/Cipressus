@@ -5,9 +5,13 @@
         </sup>
     </h4>
 
-    <div class="card hoverable z-depth-1" id="mySimcir" style="width: 100%;height: 75vh;"></div>
-</div>
+    <div class="card hoverable z-depth-1" id="simcir" style="width: 100%;height: 75vh;"></div>
 
+    <div>
+        <a class="right waves-effect waves-white btn green darken-3 modal-trigger" data-target="save_modal" ng-click="updateFields()">Guardar</a>
+        <a class="right waves-effect waves-white btn green darken-1" ng-click="getSimulations()">Abrir</a>
+    </div>
+</div>
 
 <div id="tutorial_modal" class="modal">
 
@@ -28,4 +32,44 @@
 
         <p><a href="https://github.com/kazuhikoarase/simcirjs">Documentación</a></p>
     </div>
+</div>
+
+<div id="load_modal" class="modal">
+    <div class="modal-content">
+        <h5>Abrir simulación</h5>
+        <table class="highlight">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Modificado</th>
+                <th>Componentes</th>
+              </tr>
+            </thead>
+      
+            <tbody>
+              <tr ng-repeat="(key,row) in simulations track by $index" style="cursor:pointer" ng-click="loadCircuit(key)">
+                <td>{{row.name}}</td>
+                <td>{{readableTime(row.timestamp)}}</td>
+                <td>{{row.size}}</td>
+              </tr>      
+            </tbody>
+          </table>
+    </div>
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn red darken-3">Cancelar</a>
+    </div>
+</div>
+
+<div id="save_modal" class="modal">
+    <div class="modal-content">
+        <h5>Guardar simulación</h5>
+        <div class="input-field">
+            <input id="filename" type="text" ng-model="circuitFileName">
+            <label for="filename">Nombre</label>
+        </div>
+    </div>
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn red darken-3">Cancelar</a>
+        <a class="waves-effect waves-white btn green" ng-click="saveCircuit()">Guardar</a>
+      </div>
 </div>

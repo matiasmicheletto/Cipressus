@@ -21,7 +21,7 @@
         <td>{{row.activityName}}</td>
         <td>{{getUserNames(row.authors)}}</td>
         <td>{{row.status[row.status.length-1].display}}</td> 
-        <td>
+        <td width="20%" style="white-space:nowrap;">
           <div class="chip">
             <img src="{{users[row.status[row.status.length-1].user].avatar}}">
             {{users[row.status[row.status.length-1].user].name}}
@@ -106,7 +106,7 @@
       <p><b>Actividad:</b> {{submissions[evaluatingKey].activityName}}</p>
       <p><b>Comisión:</b> {{getUserNames(submissions[evaluatingKey].authors)}}</p>
       <p><b>Nombre de archivo:</b> {{submissions[evaluatingKey].name}} [.{{submissions[evaluatingKey].format}}]</p>
-      <p><b>Formato:</b> {{readableFileSize(submissions[evaluatingKey].size)}}</p>
+      <p><b>Peso:</b> {{readableFileSize(submissions[evaluatingKey].size)}}</p>
       
       <br>
 
@@ -138,7 +138,7 @@
       <p><b>Actividad:</b> {{submissions[submKeyView].activityName}}</p>
       <p><b>Comisión:</b> {{getUserNames(submissions[submKeyView].authors)}}</p>
       <p><b>Nombre de archivo:</b> {{submissions[submKeyView].name}} [.{{submissions[submKeyView].format}}]</p>
-      <p><b>Formato:</b> {{readableFileSize(submissions[submKeyView].size)}}</p>
+      <p><b>Peso:</b> {{readableFileSize(submissions[submKeyView].size)}}</p>
       <h5>Historial:</h5>
       <table class="highlight row" style="max-width:100%;overflow-x:auto">
           <thead>

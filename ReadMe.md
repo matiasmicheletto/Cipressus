@@ -184,6 +184,14 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
    +-so                 // Sist. operativos utilizados
    +-browser            // Navegadores utilizados
    +-item               // Contadores de acceso a secciones de la pagina
+  +-simulations            // Carpeta para guardar simulaciones de SimCirJS
+   |
+   +-(child_key)        // Identificador del circuito
+    |
+    +-name              // Nombre de archivo
+    +-size              // Tamanio
+    +-timestamp         // Fecha y hora de generado
+    +-data              // Datos guardados de la simulacion
 -metadata               // Informacion adicional que emplea la app
  |
  +-updates              // Estampas de tiempo de última actualizacion de los datos de cada vista
@@ -198,9 +206,6 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ### TODO
 
-  - Filtro de actividades que tienen entrega online.
-  - Calificar en la misma vista de actividades a todos los integrantes de la comision.
-  - Guardar/cargar circuitos del simulador
   - Actualizacion de noticias: Al hacer correcciones se duplica la entrada.
   - Detalles de alumnos: notas, asistencia, actividad, etc.
   - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.

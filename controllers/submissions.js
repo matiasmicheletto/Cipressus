@@ -281,7 +281,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                 Cipressus.db.get('activities')
                 .then(function (activities_data) {
                     $scope.activities = []; // Convertir el arbol en array (no lo uso como arbol aca)
-                    $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');                
+                    $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');          
                     $rootScope.loading = false;
                     $scope.$apply();
                     M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
