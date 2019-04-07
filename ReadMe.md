@@ -73,9 +73,6 @@ Operaciones de fecha y hora
 #### Is
 https://is.js.org/  
 Identificación de Sist. Operativo, navegador, dispositivo, etc.
-#### Mozilla PDF.js
-https://mozilla.github.io/pdf.js/  
-Visor de documentos pdf para html5.
 
 
 ## Evaluación de calificaciones
@@ -211,4 +208,4 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.
   - Tests y cuestionarios.
   - Notificaciones.
-  - Configuración de árbol de actividades.  
+  - Configuración de árbol de actividades. 

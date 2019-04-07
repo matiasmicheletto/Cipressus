@@ -1,4 +1,4 @@
-app.controller("sources", ['$scope', '$rootScope', '$location', '$sce', function ($scope, $rootScope, $location,$sce) {
+app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
 
     if (!$rootScope.userLogged) {
         $location.path("/login");
@@ -187,7 +187,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', '$sce', function
     };
 
     $scope.openPdfViewer = function(url){ // Abrir el pdf en un modal
-        $scope.pdfURL = $sce.trustAsResourceUrl(url);
+        $scope.pdfURL = url;
         pdf_viewer_modal.open();
     };
 
