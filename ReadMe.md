@@ -18,6 +18,7 @@ Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y 
   - Entrega online de informes o archivos para evaluación.
   - Interfaz gráfica para conectar el probador digital de circuitos lógicos.
   - Simulador de circuitos lógicos embebido.
+  - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios. 
   - Estadística y analíticos de usuarios.
   - Evaluación de asistencia con cómputo automático.
   - Notificaciones y mensajería instantánea.
@@ -199,13 +200,62 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-submissions
 ```
 
+## Setup
+
+  - Crear proyecto Firebase con una cuenta de Google.
+  - Copiar el código de configuración Firebase en objeto ```core.db.config```, en cipressus.js. 
+  - Registrar manualmente, desde la consola firebase, un usuario admin y cargar el arbol de actividades de la asignatura. 
+  - Definir las reglas de escritura y lectura de información de la db (ejemplo para un admin con uid = FlX1c7HXkzUrrKBmuaqK9mLp1EI2):
+```json
+{
+  "rules": {
+    "activities":{
+    	".read": "auth != null",
+      ".write": false
+    },
+    "news":{
+      ".read":"auth != null",
+      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+    },
+    "events":{
+      ".read":"auth != null",
+      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+    },
+    "sources":{
+      ".read" : "auth != null",
+      ".write" : "auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"  
+    },
+    "submissions":{
+      ".read":"auth != null",
+      ".write":"auth != null"
+    },
+    "polls":{
+      ".read" : "auth != null",
+      ".write" : "auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"  
+    },
+    "users_private":{
+      ".read":"auth != null",
+      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+    },
+    "users_public":{ 
+      ".read":"auth != null",
+      ".write":"auth != null"
+    },
+    "metadata":{
+      ".read":"auth != null",
+      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+    }
+  }
+}
+```
+  - Configurar CORS para la descarga de archivos (ver documentacion firebase).
+  - Hostear en servidor con certificado SSL para que funcionen los service workers.
 
 
-### TODO
+### TO DO
 
-  - Actualizacion de noticias: Al hacer correcciones se duplica la entrada.
+  - Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
   - Detalles de alumnos: notas, asistencia, actividad, etc.
   - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.
-  - Tests y cuestionarios.
   - Notificaciones.
   - Configuración de árbol de actividades. 

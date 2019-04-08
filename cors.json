@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["https://www.cipressus.uns.edu.ar"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]

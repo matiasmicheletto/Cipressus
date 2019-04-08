@@ -14,3 +14,39 @@
     </div>    
 
 </div>
+
+
+<div id="test_modal" class="modal {{test_FS ? 'wide-modal' : ''}} modal-fixed-footer">
+    <div class="modal-content">
+        <h5>Test Felder-Silverman sobre estilos de aprendizaje.</h5>
+        <div ng-show="!test_FS">
+            <p>Si dispone de unos minutos, nos gustaría que complete un test conformado por un cuestionario de 44 preguntas.</p> 
+            <p>Este test evaluará su estilo de aprendizaje de preferencia y la magnitud de esa preferencia.</p>
+            <p>¿Desea continuar en este momento?</p>
+        </div>
+        
+        <div ng-show="test_FS">
+            <p>Lea con atención y responda las siguientes preguntas seleccionando la respuesta que mejor describa lo que le ocurre. Si ambas opciones parecen aplicarse a usted, seleccione aquella que se aplique más frecuentemente.</p>
+            <ul>
+                <li ng-repeat="quest in test_FS track by $index" class="{{incomplete[$index] ? 'red-text' : 'black-text'}}">    
+                    <p><b>{{$index+1}}.-</b> <a class="black-text" ng-bind-html="quest.text"></a></p>
+                    <span>
+                        <p>
+                            <label ng-repeat="optionText in quest.options track by $index">
+                                <input ng-checked="results.answers[$parent.$index] == $index" name="quest_{{$parent.$index}}" type="radio" id="opt_stat_{{$parent.$index}}_{{$index}}" ng-click="putOption($parent.$index, $index)" />
+                                <span for="opt_stat_{{$parent.$index}}_{{$index}}">{{optionText}}</span>
+                                <br>
+                            </label> 
+                        </p>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+  
+    <div class="modal-footer">      
+      <a class="modal-close waves-effect waves-white btn red darken-3" ng-show="!test_FS">Más tarde</a>
+      <a class="waves-effect waves-white btn green darken-3" ng-click="loadTest()" ng-show="!test_FS">Continuar</a>
+      <a class="waves-effect waves-white btn green darken-3 {{testComplete ? '':'disabled'}}" ng-click="saveTestResults()" ng-show="test_FS">Finalizar</a>
+    </div>
+  </div>

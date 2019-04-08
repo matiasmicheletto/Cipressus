@@ -153,7 +153,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     M.Collapsible.init(document.querySelector('.collapsible_1')).open();
     M.Collapsible.init(document.querySelector('.collapsible_2')).open();
     M.Modal.init(document.getElementById("about_modal"),{});
-    M.Modal.init(document.getElementById("help_modal"),{});
+    var help_modal = M.Modal.init(document.getElementById("help_modal"),{});
 
     window.addEventListener("resize", function(){
         if($rootScope.resizeEvent)
@@ -176,8 +176,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     };
 
     $rootScope.sendHelp = function(){ // Enviar mensaje de ayuda a los usuarios administradores
-        console.log($scope.helpMessage);
-        M.toast({html: "Mensajería aún no implementada!",classes: 'rounded red',displayLength: 2500});
+        // TODO: enviar email
+        console.log($rootScope.helpMessage);
+        M.toast({html: "Listo! Te enviaremos una respuesta",classes: 'rounded green darken-3',displayLength: 2500});
+        help_modal.close();
     };
 
     Cipressus.users.onUserSignedIn = function(uid){ // Cuando el usuario se logea o si estaba logeado al actualizar pagina
