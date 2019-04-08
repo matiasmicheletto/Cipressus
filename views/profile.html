@@ -28,8 +28,9 @@
 	<div class="card-panel grey lighten-3 z-depth-3" ng-show="edit">
 		<div class="row">
 
-			<div class="col s12 m3 l3">
-				<img class="responsive-img" src="{{newAvatar}}" style="cursor: pointer;" ng-click="uploadPic()">
+			<div class="col s12 m3 l3" style="position: relative">
+				<img class="responsive-img" src="{{newAvatar}}" style="cursor: pointer; opacity: 0.5;" ng-click="uploadPic()">
+				<img class="responsive-img overlay-img" src="images/updatePicture.png" ng-click="uploadPic()"> 
 			</div>
 
 			<div class="col s12 m9 l9">
