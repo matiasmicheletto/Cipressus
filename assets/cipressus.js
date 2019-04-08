@@ -643,6 +643,24 @@ window.Cipressus = (function () {
                 [[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0],[0,0],[0,0],[0,0],[1,0]], // Sec
                 [[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1],[0,0],[0,0],[0,0],[0,1]]  // Glo
         ],
+        profileDesc: [
+            [
+                "Aprende por interacción directa con el material de estudio. Prefiere la comunicación visual.",                                         // Activo
+                "Le gusta reflexionar sobre el material de estudio. Prefiere el trabajo individual y comunicación grupal mínima."                       // Reflexivo
+            ],
+            [
+                "Detallista y práctico con preferencia por hechos concretos y aplicaciones del mundo real.",                                            // Sensitivo
+                "Creativo y se siente atraído por el contenido teórico y abstracto."                                                                    // Intuitivo
+            ],
+            [
+                "Recuerda fácilmente imágenes que se le presenta (gráficos, fotos, esquemas, etc.).",                                                   // Visual   
+                "Recuerda fácilmente frases escritas o habladas."                                                                                       // Verbal
+            ],
+            [
+                "Prefiere aprender de manera lineal, mediante secuencia de pasos lógicos.",                                                              // Secuencial
+                "Prefiere que se le presente un esquema general y luego aprende y entiende las partes por separado sin seguir un orden específico."      // Global
+            ],
+        ],
         eval:function(answers){ // Computo de escalas (metodo general escalas PsiMESH [http://www.psimesh.com])
             var var_sum = []; // Arreglo de puntajes sumados para cada escala
             for(var vble = 0; vble < 8; vble++){
@@ -654,12 +672,7 @@ window.Cipressus = (function () {
             var scales = [];
             for(var sc = 0; sc < 8; sc+=2)
                 scales[sc/2] = var_sum[sc+1] - var_sum[sc];
-            return { // Resultado a retornar (Valor negativo indica escala de la izquierda y positivo de la derecha)
-                "act-ref":scales[0],
-                "sens-int":scales[1],
-                "vis-verb":scales[2],
-                "sec-glob":scales[3]
-            };
+            return scales;
         }
     };
 

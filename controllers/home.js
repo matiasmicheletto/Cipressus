@@ -11,24 +11,26 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
     // Las publicaciones se deshabilitan configurando la fecha en el futuro
     $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual y controlar visibilidad
 
-
     ///// Cuestionario Felder-Silvermann
+    $scope.testStatus = 0; // 0->Espera inicio, 1->Espera completar respuestas, 2->Respuestas completas, espera "Finalizar", 3->Respuestas enviados
     if(!$rootScope.user.test_fs){ // Si el usuario aun no responde el test de FS, mostrar modal
-        var test_modal = M.Modal.init(document.getElementById("test_modal"), {dismissible:false});
-        
+        var test_modal = M.Modal.init(document.getElementById("test_modal"), {
+            dismissible: false
+        });
+
         $scope.loadTest = function () { // Mostrar preguntas
             $scope.test_FS = Cipressus.test_FS.questions;
             $scope.results = localStorageService.get("testFS");
-            if(!$scope.results)
+            if (!$scope.results)
                 $scope.results = {
                     startTime: Date.now(),
                     answers: [],
                     timeline: [],
                     changes: []
                 };
-            $scope.testComplete = false;
+            $scope.testStatus = 1; // Mostrar test
         };
-    
+
         $scope.putOption = function (quest, opt) {
             if ($scope.results.answers[quest] != undefined) { // Si ya existia la respuesta, registrar cambio
                 $scope.results.changes.push({
@@ -38,35 +40,58 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                 });
             }
             $scope.results.answers[quest] = opt; // Respuesta
-            $scope.results.timeline[quest] = (Date.now() - $scope.results.startTime)/1000; // Tiempo de respuesta en segundos
+            $scope.results.timeline[quest] = (Date.now() - $scope.results.startTime) / 1000; // Tiempo de respuesta en segundos
             localStorageService.set("testFS", $scope.results); // Actualizar en LS
-            $scope.testComplete = $scope.results.answers.filter(function(value) { return value !== undefined && value !== null }).length == 44; // Cantidad de preguntas contestadas
+            if ($scope.results.answers.filter(function (value) {
+                    return value !== undefined && value !== null
+                }).length == 44) // Cantidad de preguntas contestadas
+                $scope.testStatus = 2; // Habilitar boton "finalizar"
         };
-    
-        $scope.saveTestResults = function() { // Guardar los resultados del test
+
+        $scope.saveTestResults = function () { // Guardar los resultados del test y mostrar resultados
             $rootScope.loading = true;
-            console.log($scope.results);  
-            Cipressus.db.set($scope.results,"users_public/"+$rootScope.user.uid+"/test_fs")
-            .then(function(res){    
-                //console.log(res);
-                M.toast({
-                    html: "Gracias por tu tiempo!",
-                    classes: 'rounded green darken-3',
-                    displayLength: 2000
-                });
-                test_modal.close();
-                $rootScope.loading = false;
-                $scope.$apply();
-            })
-            .catch(function(err){
-                console.log(err);
-                M.toast({
-                    html: "Ocurrió un error al guardar resultados",
-                    classes: 'rounded red',
-                    displayLength: 2000
-                });
-            })
+            console.log($scope.results);
+            Cipressus.db.set($scope.results, "users_public/" + $rootScope.user.uid + "/test_fs")
+                .then(function (res) {
+                    //console.log(res);
+                    M.toast({
+                        html: "Gracias por tu tiempo!",
+                        classes: 'rounded green darken-3',
+                        displayLength: 2000
+                    });
+                    showResults();
+                    $rootScope.loading = false;
+                    $scope.$apply();
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    M.toast({
+                        html: "Ocurrió un error al guardar resultados",
+                        classes: 'rounded red',
+                        displayLength: 2000
+                    });
+                })
         };
+
+        var showResults = function () { // Mostrar los resultados en las barras de escala
+            var scales = Cipressus.test_FS.eval($scope.results.answers);
+
+            for (var k = 0; k < 4; k++) {
+                var elem = document.getElementById("scale_" + k);
+                var width = Math.abs(scales[k]) * 50 / 11;
+                elem.style.width = width + '%';
+                if (scales[k] < 0) {
+                    elem.style.marginLeft = 50 - width + '%';
+                    document.getElementById("prof_" + k).innerHTML = Cipressus.test_FS.profileDesc[k][0];
+                } else {
+                    elem.style.marginLeft = "50%";
+                    document.getElementById("prof_" + k).innerHTML = Cipressus.test_FS.profileDesc[k][1];
+                }
+                elem.innerHTML = Math.abs(scales[k]);
+            }
+
+            $scope.testStatus = 3; // Mostrar resultados
+        }
 
         test_modal.open();
     }

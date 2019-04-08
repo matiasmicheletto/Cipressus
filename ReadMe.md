@@ -190,6 +190,12 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     +-size              // Tamanio
     +-timestamp         // Fecha y hora de generado
     +-data              // Datos guardados de la simulacion
+  +-test_fs             // Resultados del test Felder-Silverman
+   |
+   +-answers            // Arreglo de respuestas
+   +-changes            // Arreglo de cambios en respuestas
+   +-starTime           // Fecha/hora de inicio del test
+   +-timeline           // Tiempos de respuesta de cada pregunta
 -metadata               // Informacion adicional que emplea la app
  |
  +-updates              // Estampas de tiempo de última actualizacion de los datos de cada vista
@@ -228,10 +234,6 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     "submissions":{
       ".read":"auth != null",
       ".write":"auth != null"
-    },
-    "polls":{
-      ".read" : "auth != null",
-      ".write" : "auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"  
     },
     "users_private":{
       ".read":"auth != null",
