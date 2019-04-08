@@ -13,7 +13,7 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
 
     ///// Cuestionario Felder-Silvermann
     $scope.testStatus = 0; // 0->Espera inicio, 1->Espera completar respuestas, 2->Respuestas completas, espera "Finalizar", 3->Respuestas enviados
-    if(!$rootScope.user.test_fs){ // Si el usuario aun no responde el test de FS, mostrar modal
+    if(!$rootScope.user.test_fs && !$rootScope.user.admin){ // Si el usuario no es admin y aun no responde el test de FS, mostrar modal
         var test_modal = M.Modal.init(document.getElementById("test_modal"), {
             dismissible: false
         });
