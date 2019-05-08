@@ -20,27 +20,6 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         $scope.$apply();
     };
 
-    $scope.evalTestFS = function (key) {
-        // Evaluar el test (se hace cada vez que se selecciona)
-        if ($scope.users[key].test_fs){
-            var scales = Cipressus.test_FS.eval($scope.users[key].test_fs.answers);
-
-            for (var k = 0; k < 4; k++) {
-                var elem = document.getElementById("scale_" + k);
-                var width = Math.abs(scales[k]) * 50 / 11;
-                elem.style.width = width + '%';
-                if (scales[k] < 0) {
-                    elem.style.marginLeft = 50 - width + '%';
-                    document.getElementById("prof_" + k).innerHTML = Cipressus.test_FS.profileDesc[k][0];
-                } else {
-                    elem.style.marginLeft = "50%";
-                    document.getElementById("prof_" + k).innerHTML = Cipressus.test_FS.profileDesc[k][1];
-                }
-                elem.innerHTML = Math.abs(scales[k]);
-            }
-        }
-    };
-
     $scope.select = function (key) { // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
     };

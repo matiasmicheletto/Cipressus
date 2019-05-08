@@ -59,7 +59,8 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                         classes: 'rounded green darken-3',
                         displayLength: 2000
                     });
-                    showResults();
+                    $scope.testFSAnswers = $scope.results.answers; // Copio en otra variable para que se ejecute la fc de la directiva
+                    $scope.testStatus = 3; // Para mostrar resultados, pasar al modo 3
                     $rootScope.loading = false;
                     $scope.$apply();
                 })
@@ -72,26 +73,6 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                     });
                 })
         };
-
-        var showResults = function () { // Mostrar los resultados en las barras de escala
-            var scales = Cipressus.test_FS.eval($scope.results.answers);
-
-            for (var k = 0; k < 4; k++) {
-                var elem = document.getElementById("scale_" + k);
-                var width = Math.abs(scales[k]) * 50 / 11;
-                elem.style.width = width + '%';
-                if (scales[k] < 0) {
-                    elem.style.marginLeft = 50 - width + '%';
-                    document.getElementById("prof_" + k).innerHTML = Cipressus.test_FS.profileDesc[k][0];
-                } else {
-                    elem.style.marginLeft = "50%";
-                    document.getElementById("prof_" + k).innerHTML = Cipressus.test_FS.profileDesc[k][1];
-                }
-                elem.innerHTML = Math.abs(scales[k]);
-            }
-
-            $scope.testStatus = 3; // Mostrar resultados
-        }
 
         test_modal.open();
     }

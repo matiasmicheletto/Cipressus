@@ -254,10 +254,12 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   - Hostear en servidor con certificado SSL para que funcionen los service workers.
 
 
-### TO DO
+### Backlog
 
+  - Entregas: Al abrir historial primero quedan atributos de angular en objeto (hashlink)
   - Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
   - Detalles de alumnos: notas, asistencia, actividad, etc.
   - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.
   - Notificaciones.
   - Configuración de árbol de actividades. 
+  - Modificar estado de entregas.

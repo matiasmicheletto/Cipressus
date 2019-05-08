@@ -14,6 +14,10 @@
 				<h5 class="truncate"><i>{{user.degree}}</i></h5>
 				<p><b>Usuario desde:</b> {{created}}</p>
 				<p><b>Compañeros de comisión:</b> {{getUserNames(user.partners)}}</p>
+				<div ng-show="user.test_fs.answers">
+					<div class="divider"></div>
+					<test-results answers="{{user.test_fs.answers}}"></test-results>
+				</div>
 			</div>
 
 		</div>
