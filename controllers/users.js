@@ -22,6 +22,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
 
     $scope.select = function (key) { // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
+        updatePolarPlot();
     };
 
     $scope.getUserNames = function (userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
@@ -72,6 +73,44 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                 $rootScope.loading = false;
                 $scope.$apply();
             })
+    };
+
+    var updatePolarPlot = function(){ // Actualizar grafico de notas        
+        var data = []; // Datos para mostrar en el grafico polar
+        // Buscar nodo de la actividad seleccionada
+        $scope.currentNode = Cipressus.utils.searchNode($scope.activitiesTree,"final");         
+        var value = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode)/$scope.currentNode.score*100;        
+        $scope.currentActivityScores = { // Para detallar textualmente
+            name: $scope.currentNode.name,
+            points: ($scope.currentNode.score*value/100).toFixed(2), 
+            score: value.toFixed(2),
+            children:[] // Asjuntar los nodos hijos
+        };
+        for(k in $scope.currentNode.children){ // Para cada sub actividad
+            // Calcular nota de las sub actividades
+            var subValue = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
+            // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
+            $scope.currentActivityScores.children.push({
+                name: $scope.currentNode.children[k].name, // Nombre de la actividad
+                points: ($scope.currentNode.children[k].score*subValue/100).toFixed(2), // Puntos obtenidos por la actividad
+                score: subValue.toFixed(2) // Nota en porcentaje
+            });
+            data.push({ // Agregar nota de esa actividad a los datos para el chart
+                y: $scope.currentNode.children[k].score,
+                z: parseInt(subValue.toFixed(2)),
+                name: $scope.currentNode.children[k].name
+            })
+        }
+        Highcharts.chart('variable_pie_container', {
+            chart: {type: 'variablepie',height: '100%'},
+            title: {text: 'Calificaciones'},
+            tooltip: {
+                headerFormat: '',
+                pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                    'Nota actividad: <b>{point.z}%</b><br/>'
+            },
+            series: [{minPointSize: 10,innerSize: '20%',zMin: 0,name: 'Notas',data: data}]
+        });
     };
 
     $scope.startScoresModal = function (key) { // Preparar para ingresar calificaciones al usuario seleccionado
@@ -198,8 +237,9 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                     // Descargar lista de actividades
                     Cipressus.db.get('activities')
                         .then(function (activities_data) {
+                            $scope.activitiesTree = activities_data;
                             $scope.activities = []; // Convertir el arbol en array (no lo uso como arbol aca)
-                            $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');
+                            $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');                            
                             $rootScope.loading = false;
                             $scope.$apply();
                         })

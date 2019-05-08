@@ -162,7 +162,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     obs: obs // Mensaje del evaluador
                 };
                 $scope.submissions[$scope.evaluatingKey].status.push(newStatus); // Agrego el estado al objeto local
-                Cipressus.db.update($scope.submissions[$scope.evaluatingKey],"submissions/"+$scope.evaluatingKey) // Registrar accion
+                Cipressus.db.update(JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey])),"submissions/"+$scope.evaluatingKey) // Registrar accion
                 .then(function (res) {
                     M.toast({
                         html: "Movimiento registrado",

@@ -256,7 +256,6 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ### Backlog
 
-  - Entregas: Al abrir historial primero quedan atributos de angular en objeto (hashlink)
   - Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
   - Detalles de alumnos: notas, asistencia, actividad, etc.
   - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.

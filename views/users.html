@@ -152,11 +152,15 @@
         <p><b>Último acceso:</b> <i>{{readableTime(users[selectedKey].activity.last_login)}}
             ({{relativeTime(users[selectedKey].activity.last_login)}})</i></p>
         <p><b>Compañeros de comisión:</b> {{getUserNames(users[selectedKey].partners)}}</p>
-        <div ng-show="users[selectedKey].test_fs">
-          <div class="divider"></div>
-          <test-results answers="{{users[selectedKey].test_fs.answers}}"></test-results>
-          <div class="divider"></div>
-        </div>
+      </div>      
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+      <div class="col s12 m6" ng-show="!users[selectedKey].admin">
+        <div id="variable_pie_container"></div>
+      </div>
+      <div class="col s12 m6" ng-show="users[selectedKey].test_fs">        
+        <test-results answers="{{users[selectedKey].test_fs.answers}}"></test-results>
       </div>
     </div>
   </div>
