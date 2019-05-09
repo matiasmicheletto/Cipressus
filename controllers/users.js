@@ -8,6 +8,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
     $rootScope.loading = true;
     $rootScope.sidenav.close();
     $scope.selectedKey = null;
+    var attendableEvents=0; // Contador de eventos para calcular asistencia
 
     // Los inputs date no funcionan con ng-change entonces la actualizacion
     // la hago programaticamente. Este es el callback de cambios
@@ -20,9 +21,68 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         $scope.$apply();
     };
 
-    $scope.select = function (key) { // Selecciona un usuario de la lista
+    $scope.viewUser = function (key) { // Selecciona un usuario de la lista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
+        evalAttendance();
         updatePolarPlot();
+    };
+
+    var evalAttendance = function(){ // Calcular asistencia del alumno seleccionado
+        if($scope.users[$scope.selectedKey].scores){
+            if($scope.users[$scope.selectedKey].attendance){ // Calcular asistencia aquí (solo se usa para mostrar pero no se guarda en db)
+                var userAttendedEvents = Object.getOwnPropertyNames($scope.users[$scope.selectedKey].attendance).length; // Cantidad de clases asistidas por el usuario
+                var att = attendableEvents > 0 ? userAttendedEvents/attendableEvents*100 : 0;
+                $scope.users[$scope.selectedKey].scores.asistencia = {
+                    score: parseInt(att.toFixed(2)), // Calcular porcentaje de asistencia
+                    evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                    timestamp: Date.now()
+                };                                
+            }else{ // Si no asistió a nada, entonces la asistencia queda en 0
+                $scope.users[$scope.selectedKey].scores.asistencia = {
+                    score: 0,
+                    evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                    timestamp: Date.now()
+                };
+            }   
+        }
+    };
+
+    var updatePolarPlot = function(){ // Actualizar grafico de notas del alumno seleccionado
+        var data = []; // Datos para mostrar en el grafico polar
+        // Buscar nodo de la actividad seleccionada
+        $scope.currentNode = Cipressus.utils.searchNode($scope.activitiesTree,"final");         
+        var value = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode)/$scope.currentNode.score*100;        
+        $scope.currentActivityScores = { // Para detallar textualmente
+            name: $scope.currentNode.name,
+            points: ($scope.currentNode.score*value/100).toFixed(2), 
+            score: value.toFixed(2),
+            children:[] // Asjuntar los nodos hijos
+        };
+        for(k in $scope.currentNode.children){ // Para cada sub actividad
+            // Calcular nota de las sub actividades
+            var subValue = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
+            // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
+            $scope.currentActivityScores.children.push({
+                name: $scope.currentNode.children[k].name, // Nombre de la actividad
+                points: ($scope.currentNode.children[k].score*subValue/100).toFixed(2), // Puntos obtenidos por la actividad
+                score: subValue.toFixed(2) // Nota en porcentaje
+            });
+            data.push({ // Agregar nota de esa actividad a los datos para el chart
+                y: $scope.currentNode.children[k].score,
+                z: parseInt(subValue.toFixed(2)),
+                name: $scope.currentNode.children[k].name
+            })
+        }
+        Highcharts.chart('variable_pie_container', {
+            chart: {type: 'variablepie',height: '100%'},
+            title: {text: 'Calificaciones'},
+            tooltip: {
+                headerFormat: '',
+                pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                    'Nota actividad: <b>{point.z}%</b><br/>'
+            },
+            series: [{minPointSize: 10,innerSize: '20%',zMin: 0,name: 'Notas',data: data}]
+        });
     };
 
     $scope.getUserNames = function (userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
@@ -75,46 +135,10 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             })
     };
 
-    var updatePolarPlot = function(){ // Actualizar grafico de notas        
-        var data = []; // Datos para mostrar en el grafico polar
-        // Buscar nodo de la actividad seleccionada
-        $scope.currentNode = Cipressus.utils.searchNode($scope.activitiesTree,"final");         
-        var value = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode)/$scope.currentNode.score*100;        
-        $scope.currentActivityScores = { // Para detallar textualmente
-            name: $scope.currentNode.name,
-            points: ($scope.currentNode.score*value/100).toFixed(2), 
-            score: value.toFixed(2),
-            children:[] // Asjuntar los nodos hijos
-        };
-        for(k in $scope.currentNode.children){ // Para cada sub actividad
-            // Calcular nota de las sub actividades
-            var subValue = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
-            // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
-            $scope.currentActivityScores.children.push({
-                name: $scope.currentNode.children[k].name, // Nombre de la actividad
-                points: ($scope.currentNode.children[k].score*subValue/100).toFixed(2), // Puntos obtenidos por la actividad
-                score: subValue.toFixed(2) // Nota en porcentaje
-            });
-            data.push({ // Agregar nota de esa actividad a los datos para el chart
-                y: $scope.currentNode.children[k].score,
-                z: parseInt(subValue.toFixed(2)),
-                name: $scope.currentNode.children[k].name
-            })
-        }
-        Highcharts.chart('variable_pie_container', {
-            chart: {type: 'variablepie',height: '100%'},
-            title: {text: 'Calificaciones'},
-            tooltip: {
-                headerFormat: '',
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
-                    'Nota actividad: <b>{point.z}%</b><br/>'
-            },
-            series: [{minPointSize: 10,innerSize: '20%',zMin: 0,name: 'Notas',data: data}]
-        });
-    };
+    $scope.evalUser = function (key) { // Preparar para ingresar calificaciones al usuario seleccionado
+        $scope.selectedKey = key;
 
-    $scope.startScoresModal = function (key) { // Preparar para ingresar calificaciones al usuario seleccionado
-        // Hay que pasar el key porque la funcion select(key) parece ejecutarse despues        
+        evalAttendance(); // Calcular asistencia automáticamente
 
         // Generar arreglos auxiliares para no sobreescribir el original
         $scope.auxiliaryScores = {};
@@ -240,8 +264,22 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                             $scope.activitiesTree = activities_data;
                             $scope.activities = []; // Convertir el arbol en array (no lo uso como arbol aca)
                             $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');                            
-                            $rootScope.loading = false;
-                            $scope.$apply();
+                            Cipressus.db.getSorted('events','start') // Lista de eventos ordenados por fecha de inicio
+                            .then(function(events_data){
+                                events_data.forEach(function(childSnapshot){
+                                    var ev = childSnapshot.val();                                    
+                                    if(ev.start <= Date.now() && ev.attendance) // Si es un evento pasado y con asistencia obligatoria
+                                        attendableEvents++; // Contar para calcular porcentaje de asistencia 
+                                });                                
+                                $rootScope.loading = false;
+                                $rootScope.$apply(); 
+                            })
+                            .catch(function(err){ // events
+                                console.log(err);
+                                M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+                                $rootScope.loading = false;
+                                $rootScope.$apply(); 
+                            });
                         })
                         .catch(function (err) {
                             console.log(err);

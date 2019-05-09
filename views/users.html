@@ -15,9 +15,9 @@
       </thead>
 
       <tbody>
-        <tr ng-repeat="(key,row) in users" ng-click="select(key)">
+        <tr ng-repeat="(key,row) in users">
           <td><img class="circle" src="{{row.avatar}}" height="50px" width="50px"></td>
-          <td data-target="view_modal" class="modal-trigger {{row.enrolled ? '':'red-text'}}" style="cursor: pointer">
+          <td data-target="view_modal" class="modal-trigger {{row.enrolled ? '':'red-text'}}" style="cursor: pointer" ng-click="viewUser(key)">
             {{row.name}} {{row.secondName}} <i class="material-icons" style="vertical-align:middle;"
               ng-if="row.admin">security</i>
           </td>
@@ -30,7 +30,7 @@
               class="waves-effect waves-light teal darken-3 btn-small btn-floating z-depth-3 modal-trigger"
               data-target="message_modal"><i class="material-icons">mail_outline</i></a>
             <a title="Calificaciones" class="waves-effect waves-light orange btn-floating btn-small z-depth-3"
-              ng-show="row.enrolled && !row.admin" ng-click="startScoresModal(key)"><i
+              ng-show="row.enrolled && !row.admin" ng-click="evalUser(key)"><i
                 class="material-icons">playlist_add_check</i></a>
             <a title="Aprobar" class="waves-effect waves-light red btn-floating btn-small z-depth-3 modal-trigger"
               data-target="confirm_enroll_modal" ng-hide="row.enrolled"><i class="material-icons">done_outline</i></a>
@@ -75,9 +75,13 @@
             </td>
             <td>{{row.value}}</td>
             <td title="Eliminar nota">
-              <div class="chip" ng-if="auxiliaryScores[row.id].evaluator" ng-click="auxiliaryScores[row.id]=null;">
+              <div class="chip" ng-if="auxiliaryScores[row.id].evaluator && auxiliaryScores[row.id].evaluator!='Cipressus'" ng-click="auxiliaryScores[row.id]=null;">
                 <img src="{{users[auxiliaryScores[row.id].evaluator].avatar}}">
                 {{users[auxiliaryScores[row.id].evaluator].name}}
+              </div>
+              <div class="chip" ng-if="auxiliaryScores[row.id].evaluator && auxiliaryScores[row.id].evaluator=='Cipressus'">
+                <img src="images/mainlogo.png">
+                Cipressus
               </div>
             </td>
             <td>

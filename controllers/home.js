@@ -11,6 +11,8 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
     // Las publicaciones se deshabilitan configurando la fecha en el futuro
     $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual y controlar visibilidad
 
+    $scope.testFSAnswers = []; // Objeto auxiliar para mostrar las respuestas del tests (esta con un watch dentro de la directiva)
+
     ///// Cuestionario Felder-Silvermann
     $scope.testStatus = 0; // 0->Espera inicio, 1->Espera completar respuestas, 2->Respuestas completas, espera "Finalizar", 3->Respuestas enviados
     if(!$rootScope.user.test_fs && !$rootScope.user.admin){ // Si el usuario no es admin y aun no responde el test de FS, mostrar modal
@@ -51,6 +53,7 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
         $scope.saveTestResults = function () { // Guardar los resultados del test y mostrar resultados
             $rootScope.loading = true;
             console.log($scope.results);
+            $scope.testFSAnswers = $scope.results.answers; // Copio en otra variable para que se ejecute la fc de la directiva
             Cipressus.db.set($scope.results, "users_public/" + $rootScope.user.uid + "/test_fs")
                 .then(function (res) {
                     //console.log(res);
@@ -58,8 +61,7 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                         html: "Gracias por tu tiempo!",
                         classes: 'rounded green darken-3',
                         displayLength: 2000
-                    });
-                    $scope.testFSAnswers = $scope.results.answers; // Copio en otra variable para que se ejecute la fc de la directiva
+                    });                    
                     $scope.testStatus = 3; // Para mostrar resultados, pasar al modo 3
                     $rootScope.loading = false;
                     $scope.$apply();
