@@ -141,7 +141,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
 
 
     // Inicializacion 
-    var totalEvents=0, futureEvents=0;
+    var totalEvents=0, futureEvents=0, attendableEvents=0;
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"dashboard").catch(function(err){console.log(err)});
     Cipressus.db.get('/activities') // Descargar arbol de actividades
@@ -170,7 +170,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     .then(function(events_data){
                         events_data.forEach(function(childSnapshot){
                             var ev = childSnapshot.val();
-                            totalEvents++; // Contar actividad
+                            totalEvents++; // Contar actividad (se usa para asistencia y avance del programa)
                             if(ev.start > Date.now()){ // Si es un evento futuro
                                 futureEvents++; // Contar los que faltan
                                 if($scope.events.length < 5){ // Agregar solamente 5
@@ -178,13 +178,17 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                                     ev.side = $scope.events.length%2 ? "tl-right" : "tl-left";
                                     $scope.events.push(ev); // Agregar evento al arreglo  
                                 }
+                            }else{ // Si es evento que ya paso
+                                if(ev.attendance) // Y si tiene asistencia habilitada
+                                    attendableEvents++; // Contar para calcular porcentaje de asistencia
                             }
                         });
                         if($scope.user){ // Si es alumno inscripto
                             if($scope.user.attendance){ // Calcular asistencia aquí (solo se usa para mostrar pero no se guarda en db)
                                 var userAttendedEvents = Object.getOwnPropertyNames($scope.user.attendance).length; // Cantidad de clases asistidas por el usuario
+                                var att = attendableEvents > 0 ? userAttendedEvents/attendableEvents*100 : 0;
                                 $scope.user.scores.asistencia = {
-                                    score: userAttendedEvents/(totalEvents-futureEvents)*100,
+                                    score: att, // Calcular porcentaje de asistencia
                                     evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
                                     timestamp: Date.now()
                                 };                                

@@ -89,6 +89,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
  | 
  +-(child_key)          // ID firebase del evento
   |
+  +-attendance          // Asistencia es obligatoria
   +-start               // Inicio ms unix
   +-end                 // Fin ms unix
   +-author              // ID del autor
