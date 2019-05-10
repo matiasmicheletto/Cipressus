@@ -11,6 +11,9 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             title: {
                 text: 'Proporción de calificaciones'
             },
+            credits: {
+                enabled: false
+            },
             plotOptions:{
                 series:{
                     events: {
@@ -65,6 +68,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             $scope.$apply();
             Highcharts.chart('variable_pie_container', {
                 chart: {type: 'variablepie',height: '100%'},
+                credits:{enabled:false},
                 title: {text: 'Mis calificaciones'},
                 tooltip: {
                     headerFormat: '',
@@ -119,6 +123,9 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                 type: "pie",
                 plotBorderWidth: 0
             },
+            credits: {
+                enabled: false
+            },
             title: {
                 text: 'Mi participación'
             },
@@ -139,17 +146,111 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         });        
     };
 
+    var updateBarPlot = function () { // Genera los arreglos de calificaciones
+
+        var seriesData = [];
+        var drillDownData = [];
+
+        for (var k in $scope.users) { // Para cada usuario
+            if(!$scope.users[k].admin && $scope.users[k].scores){ // Si tiene notas y no es admin
+                seriesData.push({ // Evaluar e insertar resultado en array
+                    name: k,
+                    y: Cipressus.utils.eval($scope.users[k],$scope.activities),
+                    color: k==$rootScope.user.uid ? "#FF0000":"#AAAAAA",                    
+                    drilldown: k
+                });
+
+                var tempData = []; // Arreglo temporal con notas del alumno
+                for(var j in $scope.activities.children){ // Evaluar tambien las principales actividades
+                    tempData.push([
+                        $scope.activities.children[j].id,
+                        Cipressus.utils.eval($scope.users[k],$scope.activities.children[j])/$scope.activities.children[j].score*100
+                    ]);
+                }
+
+                drillDownData.push({ // Poner arreglo completo de notas de las actividades de este alumno
+                    name: k==$rootScope.user.uid ? "Yo" : "#"+(seriesData.length+1),
+                    id: k,
+                    data:tempData
+                })
+            }
+        }
+
+        // Ordenar datos por nota
+        seriesData.sort((a,b) => (a.y < b.y) ? 1 : ((b.y < a.y) ? -1 : 0)); 
+        // Renombrar datos por sus ordenes excepto mi nota
+        for(var k in seriesData)
+            seriesData[k].name = seriesData[k].name == $rootScope.user.uid ? "Yo" : "#"+(parseInt(k)+1);
+
+        
+        Highcharts.setOptions({
+            lang: {
+                drillUpText: '<< Volver a {series.name}'
+            }
+        });
+
+        Highcharts.chart('barplot_container', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Calificaciones del curso'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Puntaje acumulado'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f} pts'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f} pts</b>'
+            },
+
+            series: [{
+                name: "Alumno",                
+                data:seriesData
+            }],
+            drilldown:{
+                series: drillDownData
+            }
+        });
+    };
+
+    $scope.drillUp = function () {
+        $("#barplot_container").highcharts().drillUp();
+    };
+
 
     // Inicializacion 
     var totalEvents=0, futureEvents=0, attendableEvents=0;
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"dashboard").catch(function(err){console.log(err)});
-    Cipressus.db.get('/activities') // Descargar arbol de actividades
+    Cipressus.db.get('activities') // Descargar arbol de actividades
         .then(function(activities_data){
             $scope.activities = activities_data; // Nodo root del arbol de notas
-            Cipressus.db.get('users_private/'+$rootScope.user.uid) // Descargar notas del usuario
+            Cipressus.db.get('users_private') // Descargar notas del usuario
                 .then(function(user_data){
-                    $scope.user = user_data;
+                    $scope.users = user_data;
+                    $scope.user = user_data[$rootScope.user.uid];
                     if($scope.user){ // Si ya fue aprobado por admin
                         // Si aun no fue evaluado en nada, dejar arreglos vacios (porque en DB no se guardan)
                         if(typeof($scope.user.scores) == 'undefined')
@@ -162,7 +263,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     arr = Cipressus.utils.getArray($scope.activities, arr, '');
                     $scope.$apply(); // Este es para que actualice la vista antes de graficar
                     updateSunburst(arr);                    
-                    updatePolarPlot($scope.activities.id);
+                    updatePolarPlot($scope.activities.id);                    
                     $rootScope.$apply(); 
                     // Descargar lista de eventos para linea del tiempo y para evaluar asistencia del usuario
                     $scope.events=[];                    
@@ -183,25 +284,40 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                                     attendableEvents++; // Contar para calcular porcentaje de asistencia
                             }
                         });
-                        if($scope.user){ // Si es alumno inscripto
-                            if($scope.user.attendance){ // Calcular asistencia aquí (solo se usa para mostrar pero no se guarda en db)
-                                var userAttendedEvents = Object.getOwnPropertyNames($scope.user.attendance).length; // Cantidad de clases asistidas por el usuario
-                                var att = attendableEvents > 0 ? userAttendedEvents/attendableEvents*100 : 0;
-                                $scope.user.scores.asistencia = {
-                                    score: att, // Calcular porcentaje de asistencia
-                                    evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
-                                    timestamp: Date.now()
-                                };                                
-                            }else{ // Si no asistió a nada, entonces la asistencia queda en 0
-                                $scope.user.scores.asistencia = {
-                                    score: 0,
-                                    evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
-                                    timestamp: Date.now()
-                                };
-                            }    
-                            updateProgressPlot(); // Actualizar el grafico de avance de la materia
-                            updatePolarPlot($scope.activities.id); // Actualizar nuevamente el grafico de notas ya que tiene asistencia
-                        }
+                        for(var k in $scope.users) // Calcular asistencia para todos
+                            if($scope.users[k]){ // Si es alumno inscripto, existe este objeto
+                                if($scope.users[k].scores){ // Si tiene alguna calificacion
+                                    if($scope.users[k].attendance){ // Si tiene asistencia a algun evento
+                                        var userAttendedEvents = Object.getOwnPropertyNames($scope.users[k].attendance).length; // Cantidad de clases asistidas por el usuario
+                                        var att = attendableEvents > 0 ? userAttendedEvents/attendableEvents*100 : 0; // Calcular porcentaje de asistencia
+                                        $scope.users[k].scores.asistencia = {
+                                            score: att, 
+                                            evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                                            timestamp: Date.now()
+                                        };  
+                                    }else{ // Si no asistio a nada, le dejo la asitencia en 0
+                                        $scope.users[k].scores.asistencia = {
+                                            score: 0,
+                                            evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                                            timestamp: Date.now()
+                                        };    
+                                    }
+                                }else{ // Si no tiene puntajes, crear al menos la asistencia para el progreso                             
+                                    $scope.users[k].scores = {
+                                        asistencia: {
+                                            score: 0,
+                                            evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
+                                            timestamp: Date.now()
+                                        }
+                                    };
+                                }            
+                            }
+                        if($scope.user)
+                            if($scope.user.scores)
+                                $scope.user.scores.asistencia = $scope.users[$rootScope.user.uid].scores.asistencia; // Copiar para el usuario actual
+                        updateProgressPlot(); // Actualizar el grafico de avance de la materia
+                        updatePolarPlot($scope.activities.id); // Actualizar nuevamente el grafico de notas ya que tiene asistencia
+                        updateBarPlot();
                         $rootScope.loading = false;
                         $rootScope.$apply(); 
                     })

@@ -349,12 +349,13 @@ window.Cipressus = (function () {
             for (var k in node.children) // Para cada hijo del nodo
                 sum += core.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
             if (node.deadline) // Si la actividad tiene fecha de vencimiento
-                if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
-                    if (student.submits[node.id].submitted > node.deadline.date) { // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
-                        var cost = core.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
-                        if (cost > node.score) cost = node.score; // Habria que considerar la nota puesta
-                        sum -= cost; // Restar costo
-                    }
+                if (student.submits) // Si el alumno tiene alguna entrega
+                    if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
+                        if (student.submits[node.id].submitted > node.deadline.date) { // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
+                            var cost = core.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
+                            if (cost > node.score) cost = node.score; // Habria que considerar la nota puesta
+                            sum -= cost; // Restar costo
+                        }
             return sum;
         } else { // Es hoja
             if (student.scores[node.id]) // Si ya esta evaluado este campo

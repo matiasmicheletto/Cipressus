@@ -37,10 +37,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                 })
             }
         }
-
-        console.log(seriesData);
-        console.log(drillDownData);
-
+        
         Highcharts.setOptions({
             lang: {
                 drillUpText: '<< Volver a {series.name}'
