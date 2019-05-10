@@ -258,7 +258,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 ### Backlog
 
   - Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
-  - Detalles de alumnos: notas, asistencia, actividad, etc.
+  - Para calcular asistencia hay que descargar eventos, actividades y lista de alumnos. Se deberia calcular al momento de evaluar.
   - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.
   - Notificaciones.
   - Configuración de árbol de actividades. 
