@@ -50,10 +50,12 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
     };
 
     socket.onmessage = function (message) { // Respuesta del server
-        if($scope.serialPorts){
-            leds=message.data;
+        if($scope.serialPorts){            
             //console.log("Mensaje recibido:" + message.data); 
-            //leds = message.data.substring(1, 9);            
+            var data = message.data; // String con datos que envia el websocketserver            
+            var bin = parseInt(data,16).toString(2); // Convertir el numero a base 2 (primeros 4)                
+            while(bin.length < 8) bin = "0"+bin;                
+            leds = bin;            
         }else{
             $scope.serialPorts = JSON.parse(message.data);
             $rootScope.loading = false;  
@@ -75,14 +77,21 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
     };
 
     var updateIO = function() { // Envia el estado de los swiches cada 200ms
-        for (var k in $scope.tester) {
+        for (var k in $scope.tester) { // Deben ser 8
             switches = replaceAt(switches,k,$scope.tester[k].switch ? "1" : "0"); // Actualizar string switches para enviar
             $scope.tester[k].led = (leds[k] == "1"); // Actualizar leds a partir del string leds
         }        
-        socket.send(switches);
-        setTimeout(function () {
-            updateIO();
-            $scope.$apply();
-        }, 200);
+        
+        if(socket.readyState != socket.CLOSED){ // Preguntar si el socket esta conectado antes de seguir
+            var bin = parseInt(switches,2).toString(16); // Convertir a 8 bit
+            if(bin.length == 1) bin = bin+"0"; // Agregar el 0 si los primeros switches estan en 0
+            socket.send(bin); // Convertir el valor binario en base 16 para mandar (dos byte)
+            setTimeout(function () {
+                updateIO();
+                $scope.$apply();
+            }, 200);    
+        }else{
+            $scope.serialPorts = null;            
+        }
     }
 }]);

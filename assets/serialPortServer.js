@@ -18,8 +18,8 @@ var openSerialPort = function(portName,baudrate){ // Cuando el cliente seleccion
 
     tester = new SerialPort(portName, baudrate); // Abrir puerto serie  
     var Readline = SerialPort.parsers.Readline;	// Instanciar el parser de la libreria
-    var parser = new Readline(); // Hacer nuevo parser para leer ACII hasta fin de linea
-    tester.pipe(parser);
+    //var parser = new Readline(); // Hacer nuevo parser para leer ACII hasta fin de linea
+    //tester.pipe(parser);
               
     tester.on('open', function () { // Al abrir puerto serie
         console.log('Conexión exitosa. Baudrate: ' + tester.baudRate);
@@ -35,9 +35,16 @@ var openSerialPort = function(portName,baudrate){ // Cuando el cliente seleccion
         console.log(error);
     });
 
+    /*
     parser.on('data', function (data) { // Al recibir nuevos datos    
         //console.log(data);
         if (client) client.send(data);
+    });
+    */
+
+    tester.on('data', function (data) { // Al recibir nuevos datos    
+        console.log("res: ",data);
+        if (client) client.send(data.toString('hex'));
     });
 };
 
@@ -49,8 +56,9 @@ wss.on('connection', function (cl) { // Callback de conexion con nuevo cliente
 
     client.on('message', function (data) { // Callback cuando el cliente envia datos
         if(tester){
-            //console.log(data);
-            tester.write(data+'\n');
+            var buf = Buffer.from(data,'hex');            
+            console.log("send: ",buf); 
+            tester.write(buf);
         }else{
             var objReceived = JSON.parse(data); // Contiene el indice de puerto
             console.log(objReceived);

@@ -257,9 +257,9 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ### Backlog
 
-  - Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
-  - Para calcular asistencia hay que descargar eventos, actividades y lista de alumnos. Se deberia calcular al momento de evaluar.
-  - Probador de circuitos: simulaciones y testeo automatico de tabla de verdad.
-  - Notificaciones.
-  - Configuración de árbol de actividades. 
-  - Modificar estado de entregas.
+  - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
+  - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez.
+  - [Feature] Probador de circuitos: implementar firmdata.
+  - [Impr] Mejorar sistema de entrega de trabajos.
+  - [Feature] Notificaciones de segundo plano (cuando la app esta instalada).
+  - [Feature] Configuración de árbol de actividades. 

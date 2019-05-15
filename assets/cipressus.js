@@ -1,11 +1,12 @@
 window.Cipressus = (function () {
-    // Libreria para el control de la base de datos y metodos propios de la app
+    // Libreria para el control de la base de datos, storage, metodos utiles de la app y de comunicacion con hardware
 
     var core = { // Instancia de la clase
         db: {}, // Operaciones de base de datos
         storage: {}, // Almacenamiento de archivos
         users: {}, // Operaciones de autenticacion
-        utils: {} // Utilidades
+        utils: {}, // Utilidades
+        hardware: {} // Metodos de control de hardware
     };
 
     //// BASE DE DATOS /////
@@ -16,7 +17,8 @@ window.Cipressus = (function () {
         databaseURL: "https://cipressus-0000.firebaseio.com",
         projectId: "cipressus-0000",
         storageBucket: "cipressus-0000.appspot.com",
-        messagingSenderId: "927588929794"
+        messagingSenderId: "927588929794",
+        publicvapidkey: "BF0sMjIt0y1H_3oyJzmkBmPkrG9UK7HL5ekgRXj50jEYc3MZSfpjCd051A0tNkNfEtLmmVlYILFvi8PQ0BDXRNM"
     };
 
     core.db.listen = function (path) { // Escuchar cambios
@@ -110,14 +112,6 @@ window.Cipressus = (function () {
 
 
     //// ALMACENAMIENTO ////
-
-    core.storage.randomFileName = function (len) { // Nombres aleatorios para archivos
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (var i = 0; i < len; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        return text;
-    };
 
     core.storage.put = function (file, path, filename) { // Subir archivo
         return new Promise(function (fulfill, reject) {
@@ -419,6 +413,32 @@ window.Cipressus = (function () {
         });
     };
 
+    core.utils.sendNotification = function(data){ // Enviar notificaciones por FCM
+        var xhr = new XMLHttpRequest();
+        var url = "https://fcm.googleapis.com/fcm/send";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Authorization", "key=AAAA1_ib0QI:APA91bHVFpFU4-CAibNhNmCriYbWcqbmhQuuCZa1sITD4BgF2wBBYZ8-WPc30NI0n_HfPFHEIzG1THqKgtWS8gd1bUROftZpW_o2OqBP64IgciaQMNnp4_nKU5vysZmAACjToKWFsPGe");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var json = JSON.parse(xhr.responseText);
+                console.log(json);
+            }
+        };
+
+        /*var data = {
+            "notification": {
+                "title": "Cipressus",
+                "body": "Hola mundo",
+                "icon": "images/mainlogo.png"
+            },
+            "to": "eY9vq-H4hws:APA91bHwMxWW5K6jEySnJGpkOEHc9RiY6aCjEUl1yK0xqf4LHeOmgGMUYlYlBYDiN7inFJjz1vMHeb3GGAg-yQPYJphveS_Q7q_i2JY1VKgSv7HqGMY3mUW4uKqph7NQt48b4KXyh5B-" // Token que devuelve
+        };*/
+
+        var msg = JSON.stringify(data);
+        xhr.send(msg);
+    };
+
     core.utils.generateFileName = function (len) { // Nombres aleatorios para archivos
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -677,6 +697,18 @@ window.Cipressus = (function () {
         }
     };
 
+    
+
+    ////// HARDWARE /////
+    core.hardware.initialize = function(){
+        var socket = new WebSocket("ws://localhost:8081");
+
+        // .......
+    };
+
+
+
+
     ///// PRINCIPAL /////
 
     core.initialize = function () { // Instrucciones de inicializacion de las utilidades        
@@ -686,7 +718,7 @@ window.Cipressus = (function () {
             // Configurar mensajeria y notificaciones push
             var messaging = firebase.messaging();
             
-            messaging.usePublicVapidKey("BF0sMjIt0y1H_3oyJzmkBmPkrG9UK7HL5ekgRXj50jEYc3MZSfpjCd051A0tNkNfEtLmmVlYILFvi8PQ0BDXRNM");
+            messaging.usePublicVapidKey(core.db.config.publicvapidkey);
             
             messaging.requestPermission()
                 .then(function () {
@@ -696,18 +728,29 @@ window.Cipressus = (function () {
                     console.log('No es posible habilitar notificaciones.', err);
                 });
 
-            messaging.onMessage(function (payload) {
-                console.log('Message received. ', payload);
+            /* Importar el script de notifications
+            firebase.notifications().onNotification((notification) => {
+                console.log('Notificacion: ',notification);
+                //firebase.notifications().displayNotification(notification);
+            });
+            */
+
+            messaging.onMessage(function(payload) {
+                console.log('Message received: ', payload);
+                // Mostrar notificacion popup
+                const opts = {
+                    body: 'Se actualizó tu calificación "Informe laboratorio 1"',
+                    icon: '/images/mainlogo.png',
+                    sound: '/sounds/notification.mp3' // No soportado
+                };
+                core.registration.showNotification("Cipressus", opts);
             });
 
             messaging.getToken().then(function (currentToken) {
-                if (currentToken) {
-                    console.log("Current token.");
-                } else {
-                    // Show permission request.
+                if (currentToken) 
+                    console.log("Current token", currentToken);
+                else 
                     console.log('No Instance ID token available. Request permission to generate one.');
-                    // Show permission UI.
-                }
             }).catch(function (err) {
                 console.log('An error occurred while retrieving token. ', err);
             });
@@ -717,14 +760,19 @@ window.Cipressus = (function () {
                     console.log('Token refreshed.');
                     // Indicate that the new Instance ID token has not yet been sent to the
                     // app server.
-                    setTokenSentToServer(false);
+                    //setTokenSentToServer(false);
                     // Send Instance ID token to app server.
-                    sendTokenToServer(refreshedToken);
+                    //sendTokenToServer(refreshedToken);
                     // ...
                 }).catch(function (err) {
                     console.log('Unable to retrieve refreshed token ', err);
                     showToken('Unable to retrieve refreshed token ', err);
                 });
+            });
+
+            navigator.serviceWorker.getRegistration().then(function(reg){
+                core.registration = reg; // Nuevo atributo
+                // messaging.useServiceWorker(reg); //
             });
 
             // Autenticacion

@@ -230,7 +230,6 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
                 
                 Cipressus.db.update(update_activity,'users_public/'+uid+'/activity').then(function(res){console.log("Actividad actualizada")}); // Actualizar logeo y dispositivo usado
 
-
                 if($location.path() == "/login") // Si se acaba de logear en la vista de login
                     $location.path("/"); // Ir a vista de home
                 $rootScope.userLogged = true;
