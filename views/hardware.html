@@ -8,21 +8,10 @@
 
 <center>
     <div class="row" ng-if="wssFound">
-        <div class="input-field col s3 offset-s3">
+        <div class="input-field col s3 offset-m4">
             <select id="portSelect">
                 <option value="" selected>Elija una opción</option>
                 <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
-            </select>
-        </div>
-        <div class="input-field col s2">
-            <select id="baudrateSelect">
-                <option value="1200">1200</option>                    
-                <option value="4800">4800</option>
-                <option value="9600" selected>9600</option>
-                <option value="14400">14400</option>
-                <option value="19200">19200</option>
-                <option value="57600">57600</option>
-                <option value="115200">115200</option>
             </select>
         </div>
         <div class="col s2">

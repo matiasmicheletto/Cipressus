@@ -6,8 +6,11 @@ window.Cipressus = (function () {
         storage: {}, // Almacenamiento de archivos
         users: {}, // Operaciones de autenticacion
         utils: {}, // Utilidades
-        hardware: {} // Metodos de control de hardware
+        hardware: {} // Metodos de control de hardware (probador de circuitos)
     };
+
+    var socket; // Objeto privado para comunicarse con el server
+    var serialPorts = []; // Lista de puertos serie disponibles (objeto privado)
 
     //// BASE DE DATOS /////
 
@@ -700,12 +703,55 @@ window.Cipressus = (function () {
     
 
     ////// HARDWARE /////
-    core.hardware.initialize = function(){
-        var socket = new WebSocket("ws://localhost:8081");
-
-        // .......
+    core.hardware.initialize = function(timeout){ // Inicializar conexion con WebSocketServer
+        //Cipressus.hardware.initialize(1500).then(function(list){console.log(list)}).catch(function(err){console.log(err)});
+        return new Promise(function(fulfill, reject){
+            // Inicializar websocket (el server debe estar iniciado)
+            socket = new WebSocket("ws://localhost:8081"); // Variable global privada
+            socket.onerror = function(error){
+                console.log(error);
+            };
+            socket.onopen = function () { // Puerto conectado
+                core.hardware.onSocketOpen(); // Ejecutar el callback
+            };
+            socket.onclose = function() { // Puerto no disponible
+                core.hardware.onSocketClose(); // Ejecutar el callback
+            };
+            socket.onmessage = function (message) { // Respuesta del server
+                serialPorts = JSON.parse(message.data);
+                socket.onmessage = function(message){ // Redefinir la funcion a partir de aqui                    
+                    core.hardware.onInputChange(message.data); // Llamar al callback
+                };                
+                return fulfill(serialPorts);
+            };
+            setTimeout(function(){
+                if(serialPorts.length == 0) // Todavía no se pudo conectar con websocket
+                    return reject("Server no disponible");
+            },timeout);
+        });
     };
 
+    core.hardware.onSocketOpen = function(){ // Overridable - al conectarse con server
+        console.log("Socket abierto.");
+    };
+
+    core.hardware.onSocketClose = function(){ // Overridable - cuando se detiene el server
+        console.log("Socket cerrado.");
+    };
+
+    core.hardware.onInputChange = function(data){ // Overridable - al recibir mensaje desde el server
+        console.log(data);
+    };
+
+    core.hardware.connectTo = function(portIndex){ // Conectarse con un puerto de la lista
+        if(serialPorts.length > 0)
+            socket.send(portIndex);
+    };
+
+    core.hardware.setOutput = function(data){ // Mandar datos al server
+        //if(socket.readyState != socket.CLOSED) // Si el server sigue conectado
+        socket.send(data);            
+    };
 
 
 
