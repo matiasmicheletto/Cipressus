@@ -5,22 +5,15 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
         return;
     }
 
-    const sample_period = 50;
-    $scope.wssFound = false;
+    const sample_period = 50;    
     $rootScope.loading = true;
+    $scope.wssFound = false;     
     $rootScope.sidenav.close();    
 
     M.Modal.init(document.getElementById("tutorial_modal"),{});
     Cipressus.utils.activityCntr($rootScope.user.uid, "hardware").catch(function (err) {console.log(err)});
 
-    setTimeout(function(){
-        if(!$scope.wssFound){ // Todavía no se pudo conectar con websocket
-            $rootScope.loading = false;
-            M.toast({html: "No se pudo acceder al Web Socket",classes: 'rounded red',displayLength: 2000});
-            $scope.$apply();
-        }
-    },2500);
-
+    
     $scope.tester = [ // Entrada/salida del probador
         {switch: false,led: false}, 
         {switch: true,led: false}, 
@@ -34,35 +27,35 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
 
     var leds = "00000000";
 
-    var socket = new WebSocket("ws://localhost:8081");
+    Cipressus.hardware.initialize(1500)
+    .then(function(serialPortList){
+        //console.log(serialPortList);
+        $scope.serialPorts = serialPortList;
+        $rootScope.loading = false;  
+        $scope.wssFound = true;      
+        $scope.$apply();        
+        M.FormSelect.init(document.querySelectorAll('select'), {});
+    })
+    .catch(function(err){
+        console.log(err);
+        $rootScope.loading = false;
+        M.toast({html: "No se pudo conectar con server",classes: 'rounded red',displayLength: 2000});
+        $scope.$apply();
+    });
 
-    socket.onerror = function(error){
-        console.log(error);
-    };
 
-    socket.onopen = function () { // Puerto conectado
-        console.log("Socket abierto.");
-    };
-
-    socket.onclose = function() {
+    Cipressus.hardware.onSocketClose = function(){
         console.log("Socket cerrado.");
         M.toast({html: "Se desconectó el Web Socket",classes: 'rounded red',displayLength: 2000});
     };
 
-    socket.onmessage = function (message) { // Respuesta del server
-        if($scope.serialPorts){                        
-            leds = message.data;            
-        }else{
-            $scope.serialPorts = JSON.parse(message.data);
-            $rootScope.loading = false;  
-            $scope.wssFound = true;      
-            $scope.$apply();        
-            M.FormSelect.init(document.querySelectorAll('select'), {});
-        }
+    Cipressus.hardware.onInputChange = function (data) { // Datos de lectura de pines
+        //console.log(data);
+        leds = data;        
     };
 
     $scope.connect = function(){ // Cuando se elige dispositivo y se presiona "conectar"
-        socket.send(document.getElementById("portSelect").value); // Port Connection Request        
+        Cipressus.hardware.connectTo(document.getElementById("portSelect").value); // Port Connection Request        
         updateIO(); // Iniciar actualizador de I/O
     };
 
@@ -73,14 +66,11 @@ app.controller("hardware", ['$scope', '$rootScope', '$location', function ($scop
             $scope.tester[k].led = (leds[k] == "1"); // Actualizar leds a partir del string leds
         }        
         
-        if(socket.readyState != socket.CLOSED){ // Preguntar si el socket esta conectado antes de seguir
-            socket.send(switches); // Convertir el valor binario en base 16 para mandar (dos byte)
-            setTimeout(function () {
-                updateIO();
-                $scope.$apply();
-            }, sample_period);    
-        }else{
-            $scope.serialPorts = null;            
-        }
+        //console.log(switches);
+        Cipressus.hardware.setOutput(switches); // Convertir el valor binario en base 16 para mandar (dos byte)
+        setTimeout(function () {
+            updateIO();
+            $scope.$apply();
+        }, sample_period);    
     }
 }]);

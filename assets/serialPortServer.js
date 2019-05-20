@@ -16,7 +16,7 @@ SerialPort.list(function (err, ports) {
     });
 });
 
-var openSerialPort = function(portName,baudrate){ // Cuando el cliente selecciona puerto, conectar
+var openSerialPort = function(portName){ // Cuando el cliente selecciona puerto, conectar
     
     console.log("Abriendo puerto serie: "+portName+" "+baudrate);
 
@@ -27,12 +27,14 @@ var openSerialPort = function(portName,baudrate){ // Cuando el cliente seleccion
     });
 
     tester.on('close', function () { // Al cerrar conexion
-        console.log('Puerto desconectado.');
+        console.log('Puerto serie desconectado.');
+        process.exit(2); // Terminar programa?
     });
 
     tester.on('error', function (error) {
         console.log('Error de puerto serie.');
         console.log(error);
+        process.exit(1); // Terminar programa?
     });
 
     tester.on('data', function (data) { // Al recibir nuevos datos    
@@ -60,14 +62,17 @@ wss.on('connection', function (cl) { // Callback de conexion con nuevo cliente
         }else{ // Si no hay puerto serie, los datos recibidos corresponden al puerto serie al que se quiere conectar
             //console.log(data);
             // El primer mensaje que envia el cliente es el puerto al que quiere conectarse
-            if (typeof(data) != null) // Si el objeto se parseo bien, conectar con puerto serie
-                openSerialPort(serialPorts[data].comName, baudrate);
+            if (typeof(data) != null && serialPorts[data]) // Si el objeto se parseo bien, conectar con puerto serie
+                openSerialPort(serialPorts[data].comName);
+            else
+                console.log("Error de comando recibido. Puerto serie desconectado");
         }
     });
 
     client.on('close', function () { // Callback cierre de conexion
         console.log("Conexión cerrada");
         client = null;
+        tester = null; // Borrar el objeto del puerto serie para volver a conectar
     });
 
     // Enviar al cliente conectado, la lista de puertos serie disponibles

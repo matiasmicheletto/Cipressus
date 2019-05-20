@@ -707,7 +707,7 @@ window.Cipressus = (function () {
         //Cipressus.hardware.initialize(1500).then(function(list){console.log(list)}).catch(function(err){console.log(err)});
         return new Promise(function(fulfill, reject){
             // Inicializar websocket (el server debe estar iniciado)
-            socket = new WebSocket("ws://localhost:8081"); // Variable global privada
+            socket = new WebSocket("ws://localhost:8081"); // Variable global privada            
             socket.onerror = function(error){
                 console.log(error);
             };
@@ -719,16 +719,21 @@ window.Cipressus = (function () {
             };
             socket.onmessage = function (message) { // Respuesta del server
                 serialPorts = JSON.parse(message.data);
-                socket.onmessage = function(message){ // Redefinir la funcion a partir de aqui                    
+                socket.onmessage = function(message){ // Redefinir la funcion a partir de aqui                                        
                     core.hardware.onInputChange(message.data); // Llamar al callback
-                };                
+                };  
                 return fulfill(serialPorts);
             };
             setTimeout(function(){
-                if(serialPorts.length == 0) // Todavía no se pudo conectar con websocket
+                if(serialPorts.length == 0){ // Todavía no se pudo conectar con websocket
                     return reject("Server no disponible");
+                }
             },timeout);
         });
+    };
+
+    core.hardware.getSerialPorts = function(){ // Si el estado es IDLE se puede volver a pedir lista de puertos
+        return serialPorts; // Puede que un puerto ya no este disponible
     };
 
     core.hardware.onSocketOpen = function(){ // Overridable - al conectarse con server
@@ -743,9 +748,11 @@ window.Cipressus = (function () {
         console.log(data);
     };
 
-    core.hardware.connectTo = function(portIndex){ // Conectarse con un puerto de la lista
+    core.hardware.connectTo = function(portIndex){ // Conectarse con un puerto de la lista    
         if(serialPorts.length > 0)
             socket.send(portIndex);
+        else
+            console.log("El listado de puertos no está disponible");
     };
 
     core.hardware.setOutput = function(data){ // Mandar datos al server
