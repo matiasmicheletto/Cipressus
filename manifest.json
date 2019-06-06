@@ -13,6 +13,7 @@
   "related_applications": [],
   "prefer_related_applications": false,
   "gcm_sender_id": "103953800507",
+  "permissions": ["serial"],
   "icons": [{
       "src": "images/platform/windows10/Square71x71Logo.scale-400.png",
       "type": "image/png",

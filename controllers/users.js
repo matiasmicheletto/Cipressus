@@ -90,7 +90,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             var names = [];
             for (var k in userUids)
                 names.push($scope.users[userUids[k]].secondName);
-            return names.join(); // Apellidos separados por coma
+            return names.join(", "); // Apellidos separados por coma
         }
     };
 

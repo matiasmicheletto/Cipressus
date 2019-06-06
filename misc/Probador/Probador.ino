@@ -1,5 +1,5 @@
 ///// Configuracion /////
-#define SAMPLE_PERIOD 20 // Periodo de muestreo pines de entrada
+#define SAMPLE_PERIOD 1000 // Periodo de muestreo pines de entrada
 #define BAUD 57600 // Baudrate de puertos serie
 //#define BTOOTH true // Usar bluetooth (comentar linea para deshabilitar)
 //#define BTOOTH_CONFIG true // Configurar modulo bluetooth (para la primera vez) (comentar linea para deshabilitar)

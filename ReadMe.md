@@ -14,14 +14,14 @@ Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y 
   - Publicación de comunicados y novedades.
   - Consulta de cronograma de actividades.
   - Calificaciones actualizadas en tiempo real.
-  - Tablero de calificaciones animado.
+  - Tablero de calificaciones animado con información de progreso de la materia, actividades entregadas, calificaciones generales del curso y lista de eventos próximos.
   - Entrega online de informes o archivos para evaluación.
-  - Interfaz gráfica para conectar el probador digital de circuitos lógicos.
-  - Simulador de circuitos lógicos embebido.
-  - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios. 
-  - Estadística y analíticos de usuarios.
-  - Evaluación de asistencia con cómputo automático.
-  - Notificaciones y mensajería instantánea.
+  - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento o simulación de situaciones.
+  - Simulador de circuitos lógicos embebido en la misma app.
+  - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios alumnos. 
+  - Estadística y analíticos de usuarios alumnos sobre uso de la app, origen y frecuencia de acceso, progreso de notas.
+  - Evaluación de asistencia ágil con cómputo automático.
+  - Notificaciones y mensajería instantánea [Próximamente].
   - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.
 
 
@@ -256,10 +256,19 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 
 ### Backlog
+[Impr] Optimizar o mejorar
+[Bug] Error para corregir
+[Feature] Agregar característica
 
+  - [Impr] Agregar funcion getUserNames como rootscope ya que se usa en profile, users y submissions
+  - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
   - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
+  - [Bug] En cálculo de costo por vencimiento, la nota no debe ser negativa.
+  - [Feature] Admitir calificaciones por encima del 100%.
   - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez.
-  - [Feature] Probador de circuitos: implementar firmdata.
+  - [Feature] En dashboard, poner accesos directos a las distintas secciones de la app. Detallar clases asistidas. En progreso, mostrar cantidad de actividades entregadas y por entregar.
+  - [Feature] Probador de circuitos: implementar verificacion de tabla de verdad.
   - [Impr] Mejorar sistema de entrega de trabajos.
-  - [Feature] Notificaciones de segundo plano (cuando la app esta instalada).
+  - [Feature] Notificaciones de segundo plano (cuando la app esta instalada y el usuario logeado).
   - [Feature] Configuración de árbol de actividades. 
+  - [Feature] Modelo de múltiples materias (con el mismo esquema).

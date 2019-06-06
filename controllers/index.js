@@ -71,6 +71,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     $rootScope.loading = true; // Preloader
     $rootScope.userLogged = false; // Indicador de usuario logeado para habilitar componentes de ventana
     $location.path("/login"); // Ir a vista de logeo
+    $rootScope.bodyClass = ""; // Clase del body (para poner fondos)
 
     // Configuracion de moment.js
     moment.locale('es', {
@@ -230,8 +231,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
                 
                 Cipressus.db.update(update_activity,'users_public/'+uid+'/activity').then(function(res){console.log("Actividad actualizada")}); // Actualizar logeo y dispositivo usado
 
-                if($location.path() == "/login") // Si se acaba de logear en la vista de login
+                if($location.path() == "/login"){ // Si se acaba de logear en la vista de login
                     $location.path("/"); // Ir a vista de home
+                    $rootScope.bodyClass = "";
+                }
                 $rootScope.userLogged = true;
                 $rootScope.loading = false;
                 $rootScope.$apply(); 

@@ -137,6 +137,7 @@ app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, 
 
     $scope.login_mode = 0; // 0->login; 1->registro; 2->recuperacion de clave
     $scope.updateButtons();
+    $rootScope.bodyClass = "body-login";
     M.FormSelect.init(document.querySelectorAll('select'), {});    
     setTimeout(function(){M.updateTextFields();},1500); // Esto no funciona 
 }]);

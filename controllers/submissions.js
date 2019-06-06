@@ -10,7 +10,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         var names = [];
         for(var k in userUids)
             names.push($scope.users[userUids[k]].secondName);
-        return names.join(); // Apellidos separados por coma
+        return names.join(", "); // Apellidos separados por coma
     };
 
     $scope.resetForm = function(){ // Restablecer el formulario
