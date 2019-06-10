@@ -21,15 +21,6 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
             if (file) reader.readAsDataURL(file);
         });
 
-    $scope.getUserNames = function (userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
-        if ($scope.users) { // Esperar a que se bajen de la db
-            var names = [];
-            for (var k in userUids)
-                names.push($scope.users[userUids[k]].secondName);
-            return names.join(", "); // Apellidos separados por coma
-        }
-    };
-
     $scope.uploadPic = function () { // Redirigir el evento al input para cargar una foto
         document.getElementById("imgInput").click();
     };

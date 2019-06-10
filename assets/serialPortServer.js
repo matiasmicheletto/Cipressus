@@ -20,7 +20,7 @@ var openSerialPort = function(portName){ // Cuando el cliente selecciona puerto,
     
     console.log("Abriendo puerto serie: "+portName+" "+baudrate);
 
-    tester = new SerialPort(portName, baudrate); // Abrir puerto serie  
+    tester = new SerialPort(portName, {baudRate:baudrate}); // Abrir puerto serie  
               
     tester.on('open', function () { // Al abrir puerto serie
         console.log('Conexión exitosa. Baudrate: ' + tester.baudRate);        
@@ -38,10 +38,10 @@ var openSerialPort = function(portName){ // Cuando el cliente selecciona puerto,
     });
 
     tester.on('data', function (data) { // Al recibir nuevos datos    
-        //console.log("res.: ",data);
         var bin = parseInt(data.toString('hex'),16).toString(2); // Convertir el numero a base 2 (primeros 4)                
         while(bin.length < 8) // Completar con 0s hasta tener la palabra de 8 bit
-            bin = "0"+bin;    
+            bin = "0"+bin; 
+        //console.log(bin);
         if (client) client.send(bin); // Enviar como string binario (8 caracteres)
     });
 };
@@ -73,6 +73,7 @@ wss.on('connection', function (cl) { // Callback de conexion con nuevo cliente
         console.log("Conexión cerrada");
         client = null;
         tester = null; // Borrar el objeto del puerto serie para volver a conectar
+        process.exit(3); // Terminar programa?
     });
 
     // Enviar al cliente conectado, la lista de puertos serie disponibles

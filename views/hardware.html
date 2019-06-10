@@ -29,13 +29,13 @@
                         <p><b>Entradas</b></p>
                     </div>
                 </div>
-                <div class="row" ng-repeat="(idx,item) in tester">
+                <div class="row" ng-repeat="item in tester">
                     <div class="switch col s6">
-                        <label>Off<input type="checkbox" ng-model="item.switch"><span class="lever"></span>On</label>
+                        <label>Off<input type="checkbox" ng-model="item.output"><span class="lever"></span>On</label>
                     </div>
                     <div class="led-box col s6">
                         <label>
-                            <div class="led-red {{item.led  ? 'led-on':'led-off'}}"></div>
+                            <div class="led-red {{item.input  ? 'led-on':'led-off'}}"></div>
                         </label>
                     </div>
                 </div>

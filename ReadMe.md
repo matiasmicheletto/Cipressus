@@ -4,7 +4,7 @@ CIPRESSUS es una plataforma online pensada inicialmente para implementar un sist
 
 Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, descargar archivos enviados por alumnos, entre muchas otras utilidades.
 
-Incluye GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos.
+Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos.
 
 
 ### Características
@@ -260,12 +260,10 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir
 [Feature] Agregar característica
 
-  - [Impr] Agregar funcion getUserNames como rootscope ya que se usa en profile, users y submissions
-  - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
-  - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
-  - [Bug] En cálculo de costo por vencimiento, la nota no debe ser negativa.
   - [Feature] Admitir calificaciones por encima del 100%.
   - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez.
+  - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
+  - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
   - [Feature] En dashboard, poner accesos directos a las distintas secciones de la app. Detallar clases asistidas. En progreso, mostrar cantidad de actividades entregadas y por entregar.
   - [Feature] Probador de circuitos: implementar verificacion de tabla de verdad.
   - [Impr] Mejorar sistema de entrega de trabajos.

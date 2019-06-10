@@ -311,7 +311,7 @@ window.Cipressus = (function () {
 
 
     //// UTILIDADES ////
-    core.utils.searchNode = function (node, id) { // Obtener el objeto de un nodo
+    core.utils.searchNode = function (node, id) { // Obtener el objeto de un nodo a partir del id
         // Entradas:
         //		- node: es el nodo del arbol a partir del cual se inicia la busqueda
         //      - id: es el identificador de la actividad que se desea buscar    
@@ -333,7 +333,7 @@ window.Cipressus = (function () {
         //		- submitMs: es la fecha de entrega expresada en unix time
         //		- deadlineMs: es la fecha de vencimiento (debe ser menor que submitMs)
         //		- param: contiene el o los parametros de la funcion de costo (extender a vector si hace falta)
-        return Math.ceil((submitMs - deadlineMs) / 86400000) * param; // Desgaste lineal
+        return Math.ceil((submitMs - deadlineMs) / 86400000) * param; // Desgaste lineal por dia
     };
 
     core.utils.eval = function (student, node) { // Computar nota de un alumno en puntaje absoluto
@@ -352,6 +352,7 @@ window.Cipressus = (function () {
                             var cost = core.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
                             if (cost > node.score) cost = node.score; // Habria que considerar la nota puesta
                             sum -= cost; // Restar costo
+                            if(sum < 0) sum = 0; // La nota no puede ser negativa
                         }
             return sum;
         } else { // Es hoja
@@ -703,7 +704,7 @@ window.Cipressus = (function () {
     
 
     ////// HARDWARE /////
-    core.hardware.initialize = function(timeout){ // Inicializar conexion con WebSocketServer
+    core.hardware.initialize = function(params){ // Inicializar conexion con WebSocketServer
         //Cipressus.hardware.initialize(1500).then(function(list){console.log(list)}).catch(function(err){console.log(err)});
         return new Promise(function(fulfill, reject){
             // Inicializar websocket (el server debe estar iniciado)
@@ -715,24 +716,48 @@ window.Cipressus = (function () {
                 core.hardware.onSocketOpen(); // Ejecutar el callback
             };
             socket.onclose = function() { // Puerto no disponible
+                core.hardware.status = "DISCONNECTED";
                 core.hardware.onSocketClose(); // Ejecutar el callback
             };
             socket.onmessage = function (message) { // Respuesta del server
-                serialPorts = JSON.parse(message.data);
+                serialPorts = JSON.parse(message.data); // El primer mensaje que manda el server es la lista de puertos
                 socket.onmessage = function(message){ // Redefinir la funcion a partir de aqui                                        
-                    core.hardware.onInputChange(message.data); // Llamar al callback
+                    for(var k = 0; k < 8; k++) // Debe mandar siempre un string de 8 caracteres 
+                        core.hardware.io[k].input = (message.data[k] == "1"); // Configurar inputs segun caracter sea 1 o 0
+                    params.onUpdate();
                 };  
                 return fulfill(serialPorts);
             };
+            core.hardware.status = "IDLE";
+            core.hardware.sample_period = params.sp; // Periodo de actualizacion de salidas
+            core.hardware.io = params.io; // Binding con view
             setTimeout(function(){
                 if(serialPorts.length == 0){ // Todavía no se pudo conectar con websocket
                     return reject("Server no disponible");
                 }
-            },timeout);
+            },params.timeout);
         });
     };
 
-    core.hardware.getSerialPorts = function(){ // Si el estado es IDLE se puede volver a pedir lista de puertos
+    core.hardware.ioUpdate = function(){
+        var outputs = "";
+        for (var k in core.hardware.io) 
+            outputs += core.hardware.io[k].output ? "1" : "0";            
+        socket.send(outputs);
+        if(core.hardware.status == "CONNECTED")
+            setTimeout(core.hardware.ioUpdate, core.hardware.sample_period);
+    };
+
+    core.hardware.connectTo = function(portIndex){ // Conectarse con un puerto de la lista    
+        if(serialPorts.length > 0){
+            socket.send(portIndex); // Esto solo funciona mientras no se haya iniciado el streaming con el probador
+            core.hardware.status = "CONNECTED";
+            setTimeout(core.hardware.ioUpdate,500); // Esperar 500ms e iniciar envio de comandos
+        }else
+            console.log("El listado de puertos no está disponible");
+    };
+
+    core.hardware.getSerialPorts = function(){ // Se puede pedir la lista de puertos en cualquier momento
         return serialPorts; // Puede que un puerto ya no este disponible
     };
 
@@ -744,22 +769,7 @@ window.Cipressus = (function () {
         console.log("Socket cerrado.");
     };
 
-    core.hardware.onInputChange = function(data){ // Overridable - al recibir mensaje desde el server
-        console.log(data);
-    };
-
-    core.hardware.connectTo = function(portIndex){ // Conectarse con un puerto de la lista    
-        if(serialPorts.length > 0)
-            socket.send(portIndex);
-        else
-            console.log("El listado de puertos no está disponible");
-    };
-
-    core.hardware.setOutput = function(data){ // Mandar datos al server
-        //if(socket.readyState != socket.CLOSED) // Si el server sigue conectado
-        socket.send(data);            
-    };
-
+    
 
 
     ///// PRINCIPAL /////

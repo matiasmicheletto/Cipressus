@@ -130,6 +130,15 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         return time;
     };
 
+    $rootScope.getUserNames = function (users, userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
+        if (users) { // Esperar a que se bajen de la db
+            var names = [];
+            for (var k in userUids)
+                names.push(users[userUids[k]].secondName);
+            return names.join(", "); // Apellidos separados por coma
+        }
+    };
+
     $rootScope.readableFileSize = function(bytes, si) { // Devuelve tamanio de archivo en formato legible
         var thresh = si ? 1000 : 1024;
         if(Math.abs(bytes) < thresh) {

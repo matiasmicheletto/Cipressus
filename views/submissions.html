@@ -19,7 +19,7 @@
     <tbody>
       <tr ng-repeat="(key,row) in submissions" class="{{row.status[row.status.length-1].action==2?'red-text':''}} {{row.status[row.status.length-1].action==0?'grey-text':''}}">
         <td>{{row.activityName}}</td>
-        <td>{{getUserNames(row.authors)}}</td>
+        <td>{{getUserNames(users, row.authors)}}</td>
         <td>{{row.status[row.status.length-1].display}}</td> 
         <td width="20%" style="white-space:nowrap;">
           <div class="chip">
@@ -104,7 +104,7 @@
       <h5>Resultado de la evaluación</h5>
       
       <p><b>Actividad:</b> {{submissions[evaluatingKey].activityName}}</p>
-      <p><b>Comisión:</b> {{getUserNames(submissions[evaluatingKey].authors)}}</p>
+      <p><b>Comisión:</b> {{getUserNames(users, submissions[evaluatingKey].authors)}}</p>
       <p><b>Nombre de archivo:</b> {{submissions[evaluatingKey].name}} [.{{submissions[evaluatingKey].format}}]</p>
       <p><b>Peso:</b> {{readableFileSize(submissions[evaluatingKey].size)}}</p>
       
@@ -136,7 +136,7 @@
     <div class="modal-content">
       <h4>Detalles de la entrega</h4>
       <p><b>Actividad:</b> {{submissions[submKeyView].activityName}}</p>
-      <p><b>Comisión:</b> {{getUserNames(submissions[submKeyView].authors)}}</p>
+      <p><b>Comisión:</b> {{getUserNames(users, submissions[submKeyView].authors)}}</p>
       <p><b>Nombre de archivo:</b> {{submissions[submKeyView].name}} [.{{submissions[submKeyView].format}}]</p>
       <p><b>Peso:</b> {{readableFileSize(submissions[submKeyView].size)}}</p>
       <h5>Historial:</h5>

@@ -5,14 +5,6 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         return;
     }
 
-    $scope.getUserNames = function(userUids){ // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
-        // Esta fc se usa tambien en profile.js pero no va en rootscope porque requiere lista de users
-        var names = [];
-        for(var k in userUids)
-            names.push($scope.users[userUids[k]].secondName);
-        return names.join(", "); // Apellidos separados por coma
-    };
-
     $scope.resetForm = function(){ // Restablecer el formulario
         $scope.selectedActivity = null;
     };

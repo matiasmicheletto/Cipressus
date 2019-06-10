@@ -155,7 +155,7 @@
           <i>{{users[selectedKey].enrolled?getTime(3,users[selectedKey].enrolled):"(Usuario no aprobado)"}}</i></p>
         <p><b>Último acceso:</b> <i>{{readableTime(users[selectedKey].activity.last_login)}}
             ({{relativeTime(users[selectedKey].activity.last_login)}})</i></p>
-        <p><b>Compañeros de comisión:</b> {{getUserNames(users[selectedKey].partners)}}</p>
+        <p><b>Compañeros de comisión:</b> {{getUserNames(users, users[selectedKey].partners)}}</p>
       </div>      
     </div>
     <div class="divider"></div>

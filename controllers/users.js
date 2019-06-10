@@ -85,15 +85,6 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         });
     };
 
-    $scope.getUserNames = function (userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
-        if ($scope.users) { // Esperar a que se bajen de la db
-            var names = [];
-            for (var k in userUids)
-                names.push($scope.users[userUids[k]].secondName);
-            return names.join(", "); // Apellidos separados por coma
-        }
-    };
-
     $scope.sendMessage = function () { // Enviar mensaje al usuario seleccionado
         console.log($scope.message);
         console.log($scope.selectedKey);
