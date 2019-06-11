@@ -4,7 +4,6 @@ body {
   flex-direction: column!important;
 }
 
-
 /* Preloader */
 .preloader-wrapper {
   margin: 0 auto; 
@@ -26,7 +25,6 @@ body {
   z-index: 2001;
 }
 
-
 /* Login */
 .login-box{
   display: inline-block; 
@@ -39,17 +37,9 @@ body {
   background-size:cover;
 }
 
-/* Ocultar boton de drillup de sunburst */
+/* Ocultar boton de drillup de sunburst (override de la libreria) */
 .highcharts-drillup-button {
   display: none
-}
-
-.overlay-img {
-  cursor: pointer; 
-  position: absolute; 
-  top:0; 
-  display:block; 
-  margin: auto; 
 }
 
 /* Modals de tamanio personalizado */
@@ -69,36 +59,4 @@ body {
   min-height: 98% !important;  
   top: 1% !important;
   border-radius: 10px;
-}
-
-/* Barras de resultados test */
-.progress-area {
-  width: 100%;
-  background-color: #ddd;
-}
-
-.progress-bar {
-  height: 30px;
-  text-align: center;
-  line-height: 30px;
-  color: white;
-}
-
-/* Leds probador */
-.led-box {
-  height: 20px;
-  width: 25%;
-}
-.led-red {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-}
-.led-off{
-	background-color: #AAAAAA;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #000000 0 -1px 9px, #FFFFFF 0 2px 12px;
-}
-.led-on{
-	background-color: #B91717;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #F75B5B 0 2px 12px;
 }

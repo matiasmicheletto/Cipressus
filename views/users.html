@@ -15,8 +15,8 @@
       </thead>
 
       <tbody>
-        <tr ng-repeat="(key,row) in users">
-          <td><img class="circle" src="{{row.avatar}}" height="50px" width="50px"></td>
+        <tr ng-repeat="(key,row) in users" ng-show="!row.admin">
+          <td><img class="circle" src="{{row.avatar}}" height="40px" width="40px"></td>
           <td data-target="view_modal" class="modal-trigger {{row.enrolled ? '':'red-text'}}" style="cursor: pointer" ng-click="viewUser(key)">
             {{row.name}} {{row.secondName}} <i class="material-icons" style="vertical-align:middle;"
               ng-if="row.admin">security</i>

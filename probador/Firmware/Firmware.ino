@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  *  Name        : Probador.ino
+  *  Name        : Firmware.ino
   *  Author      : Matias J. Micheletto
   *  Website     : www.cipressus.uns.edu.ar
   *  Version     : 1.0
@@ -27,7 +27,7 @@
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   *
   ******************************************************************************
-  */
+*/
 
 
 ///// Configuracion (leer) /////
@@ -59,10 +59,10 @@ const int outputPins[8] = {2,3,4,5,6,7,8,9}; // Pines de salida (Igual para UNO 
 
 
 void setup() {
-  Serial.begin(BAUD);
+  Serial.begin(BAUD_N);
 
   #ifdef BTOOTH
-    Btooth.begin(BAUD);  
+    Btooth.begin(BAUD_B);  
   #endif
 
   // Modos de pines

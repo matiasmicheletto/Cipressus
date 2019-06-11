@@ -160,9 +160,13 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         side: "left", 
         inDuration:400,  
     });
-    M.Collapsible.init(document.querySelector('.collapsible_1')).open();
+
+    M.Collapsible.init(document.querySelector('.collapsible_1'));
     M.Collapsible.init(document.querySelector('.collapsible_2')).open();
+    M.Collapsible.init(document.querySelector('.collapsible_3')).open();
+    
     M.Modal.init(document.getElementById("about_modal"),{});
+    var usb_modal = M.Modal.init(document.getElementById("usb_modal"),{});
     var help_modal = M.Modal.init(document.getElementById("help_modal"),{});
 
     window.addEventListener("resize", function(){
@@ -278,6 +282,67 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         $rootScope.loading = false;
         $rootScope.$apply();
     });  
+
+
+
+    /////// Conexion con server para usar probador
+    // TODO:
+    Cipressus.hardware.status = "DISCONNECTED";
+    $rootScope.wssIconColor = 'red-text'; // Color del icono
+
+    var hardwareConfig = { // Configuracion de la interface con probador        
+        io:[
+            {output: false, input: false}, 
+            {output: true, input: false}, 
+            {output: false, input: true}, 
+            {output: false, input: true}, 
+            {output: false, input: false}, 
+            {output: false, input: false}, 
+            {output: true, input: false}, 
+            {output: false, input: true},
+        ],
+        ci: 5000, // Tiempo maximo de espera de coneccion con wss
+        sp: 50, // Intervalo de actualizacion de salidas
+        onUpdate:function(){} // Funcion a ejecutar cuando se actualizan las entradas
+    };
+
+    Cipressus.hardware.onSocketClose = function(){ // Definir funcion a ejecutar si se cierra la conexion con el server
+        console.log("Socket cerrado.");
+        //M.toast({html: "Reconectando con Web Socket...",classes: 'rounded red',displayLength: 2000});        
+        $rootScope.wssIconColor = 'red-text'; // Color del icono    
+        $rootScope.$apply();        
+    };
+
+    Cipressus.hardware.onSocketOpen = function(){
+        setTimeout(function(){            
+            $rootScope.serialPorts = Cipressus.hardware.getSerialPorts();        
+            $rootScope.wssIconColor = 'blue-text'; // Color del icono
+            $rootScope.$apply();        
+            M.FormSelect.init(document.querySelectorAll('select'), {});            
+            M.toast({html: "Server conectado",classes: 'rounded green darken-3',displayLength: 2000});
+        },500);
+    };
+
+    $rootScope.getPortList = function(){
+        console.log(Cipressus.hardware.status);
+        if(Cipressus.hardware.status == "DISCONNECTED") 
+            Cipressus.hardware.initialize(hardwareConfig); 
+        else{
+            $rootScope.serialPorts = Cipressus.hardware.getSerialPorts();    
+            M.FormSelect.init(document.querySelectorAll('select'), {});            
+        }
+        usb_modal.open();
+    };
+
+    $rootScope.connectToSerialPort = function(){ // Cuando se elige dispositivo y se presiona "conectar"
+        Cipressus.hardware.connectTo(document.getElementById("portSelect").value); // Port Connection Request                
+    }; 
+    
+    ///////////
+
+
+
+
     
     var isInStandaloneMode = function() { return ('standalone' in window.navigator) && (window.navigator.standalone); };
     

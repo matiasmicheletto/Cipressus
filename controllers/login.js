@@ -1,4 +1,4 @@
-app.controller("login", ['$scope', '$rootScope', '$location', function ($scope, $rootScope) {
+app.controller("login", ['$scope', '$rootScope', function ($scope, $rootScope) {
 
     $scope.keypressed = function (code) { // Al oprimir enter hacer login con los datos de autenticacion
         if (code === 13) // Verificar codigo de tecla

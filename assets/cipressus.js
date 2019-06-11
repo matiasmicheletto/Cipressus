@@ -9,9 +9,6 @@ window.Cipressus = (function () {
         hardware: {} // Metodos de control de hardware (probador de circuitos)
     };
 
-    var socket; // Objeto privado para comunicarse con el server
-    var serialPorts = []; // Lista de puertos serie disponibles (objeto privado)
-
     //// BASE DE DATOS /////
 
     core.db.config = { // Configuracion de la base de datos
@@ -704,42 +701,61 @@ window.Cipressus = (function () {
     
 
     ////// HARDWARE /////
-    core.hardware.initialize = function(params){ // Inicializar conexion con WebSocketServer
-        //Cipressus.hardware.initialize(1500).then(function(list){console.log(list)}).catch(function(err){console.log(err)});
-        return new Promise(function(fulfill, reject){
-            // Inicializar websocket (el server debe estar iniciado)
-            socket = new WebSocket("ws://localhost:8081"); // Variable global privada            
-            socket.onerror = function(error){
-                console.log(error);
-            };
-            socket.onopen = function () { // Puerto conectado
-                core.hardware.onSocketOpen(); // Ejecutar el callback
-            };
-            socket.onclose = function() { // Puerto no disponible
-                core.hardware.status = "DISCONNECTED";
-                core.hardware.onSocketClose(); // Ejecutar el callback
-            };
-            socket.onmessage = function (message) { // Respuesta del server
-                serialPorts = JSON.parse(message.data); // El primer mensaje que manda el server es la lista de puertos
-                socket.onmessage = function(message){ // Redefinir la funcion a partir de aqui                                        
-                    for(var k = 0; k < 8; k++) // Debe mandar siempre un string de 8 caracteres 
-                        core.hardware.io[k].input = (message.data[k] == "1"); // Configurar inputs segun caracter sea 1 o 0
-                    params.onUpdate();
-                };  
-                return fulfill(serialPorts);
-            };
-            core.hardware.status = "IDLE";
-            core.hardware.sample_period = params.sp; // Periodo de actualizacion de salidas
-            core.hardware.io = params.io; // Binding con view
-            setTimeout(function(){
-                if(serialPorts.length == 0){ // Todavía no se pudo conectar con websocket
-                    return reject("Server no disponible");
-                }
-            },params.timeout);
-        });
+    var socket; // Objeto privado para comunicarse con el server
+    var timerId = null; // Timer para temporizar los llamados al socket
+    var serialPorts = []; // Lista de puertos serie disponibles (objeto privado)
+
+    core.hardware.initialize = function(params){ // Inicializar conexion con WebSocketServer      
+        /*
+            params: {
+                io: array con estados de entradas/salidas (para hacer binding con objetos de controllers)
+                sp: periodo de muestreo (ms) de envio de salidas
+                ci: periodo de intento de reconexion con server (ms)
+                onUpdate(): funcion que se llama en cada actualizacion de la entrada (para hacer apply por ej)
+            }
+        */
+
+        core.hardware.status = "DISCONNECTED"; // Inicialmente, el estado es desconectado
+        core.hardware.sample_period = params.sp; // Periodo de actualizacion de salidas
+        core.hardware.io = params.io; // Binding con view
+        core.hardware.onUpdate = params.onUpdate;
+
+        socket = new WebSocket("ws://localhost:8081"); // Conectarse al server por web socket
+        
+        socket.onerror = function(error){
+            console.log(error);        
+        };
+
+        socket.onopen = function () { // Puerto conectado
+            if(timerId){
+                clearInterval(timerId);
+                timerId = null;
+            }
+            core.hardware.onSocketOpen(); // Ejecutar el callback
+        };
+
+        socket.onclose = function() { // Puerto no disponible
+            core.hardware.status = "DISCONNECTED";
+            if(!timerId)
+                timerId = setInterval(function(){
+                    socket = null;
+                    core.hardware.initialize(params);
+                },params.ci);
+            core.hardware.onSocketClose(); // Ejecutar el callback
+        };
+
+        socket.onmessage = function (message) { // Respuesta del server
+            serialPorts = JSON.parse(message.data); // El primer mensaje que manda el server es la lista de puertos
+            core.hardware.status = "IDLE"; // Una vez que recibe la lista de puertos, espera conexion
+            socket.onmessage = function(message){ // Redefinir la funcion a partir de aqui                                        
+                for(var k = 0; k < 8; k++) // Debe mandar siempre un string de 8 caracteres 
+                    core.hardware.io[k].input = (message.data[k] == "1"); // Configurar inputs segun caracter sea 1 o 0
+                core.hardware.onUpdate();
+            };  
+        };
     };
 
-    core.hardware.ioUpdate = function(){
+    core.hardware.ioUpdate = function(){ // Envio de string al server para actualizar salidas
         var outputs = "";
         for (var k in core.hardware.io) 
             outputs += core.hardware.io[k].output ? "1" : "0";            

@@ -106,23 +106,15 @@
                     <a id="menu" data-target="slide-out" class="sidenav-trigger" ng-show="userLogged"
                         style="cursor: pointer;"><i class="material-icons small">menu</i></a>
                     <a class="brand-logo"><img width="100px" src="images/navbarlogo.png"></a>
-                    <ul id="nav-mobile" class="right">
-                        <li>
-                            <a id="mensajes" class="dropdown-trigger" data-target="msgs_dropdown">
-                                <i class="material-icons">mail_outline arrow_drop_down</i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-trigger" data-target="notifs_dropdown">
-                                <i class="material-icons">notifications_none arrow_drop_down</i>
-                            </a>
-                        </li>
+                    <ul id="nav-mobile" class="right">                        
+                        <li><a title="Probador (BT)" class="red-text hide-on-med-and-up"><i class="material-icons">bluetooth</i></a></li>
+                        <li><a title="Probador (USB)" class="{{wssIconColor}} hide-on-med-and-down" ng-click="getPortList()"><i class="material-icons">usb</i></a></li>
+                        <li><a title="Salir" ng-click="signOut()"><i class="material-icons">power_settings_new</i></a></li>
                     </ul>
                 </div>
             </nav>
         </div>
     </div>
-
 
 
     <!-- ##################### SIDENAV ##################### -->
@@ -151,20 +143,31 @@
         </li>
         <li class="no-padding" ng-show="user.enrolled">
             <a href="#/submissions" class="collapsible-header">Entregas<i class="material-icons">open_in_browser</i></a>
-        </li>
-        <li class="no-padding" ng-show="user.enrolled">
-            <a href="#/hardware" class="collapsible-header">Probador<i class="material-icons">usb</i></a>
-        </li>
+        </li>        
         <li class="no-padding" ng-show="user.enrolled">
             <a href="#/simulator" class="collapsible-header">Simulador<i class="material-icons">developer_board</i></a>
         </li>
-        <li class="no-padding" ng-show="user.admin">
+        <li class="no-padding hide-on-med-and-down">
             <ul class="collapsible_1 collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">Hardware<i class="material-icons">arrow_drop_down</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="#/hardware">Tester<i class="material-icons">memory</i></a></li>
+                            <li><a href="">Analizador lógico<i class="material-icons">broken_image</i></a></li>
+                            <li><a href="">Verificador<i class="material-icons">check_box</i></a></li>                            
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="no-padding" ng-show="user.admin">
+            <ul class="collapsible_2 collapsible collapsible-accordion">
                 <li>
                     <a class="collapsible-header">Administrar<i class="material-icons">arrow_drop_down</i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="#/users">Usuarios<i class="material-icons">group</i></a></li>
+                            <li><a href="#/users">Alumnos<i class="material-icons">group</i></a></li>
                             <li><a href="#/stats">Estadísticas<i class="material-icons">insert_chart</i></a></li>
                             <li><a href="#/attendance">Asistencia<i class="material-icons">how_to_reg</i></a></li>
                             <li><a href="#/activities">Actividades<i class="material-icons">build</i></a></li>
@@ -175,7 +178,7 @@
             </ul>
         </li>
         <li class="no-padding">
-            <ul class="collapsible_2 collapsible collapsible-accordion">
+            <ul class="collapsible_3 collapsible collapsible-accordion">
                 <li>
                     <a class="collapsible-header">Usuario<i class="material-icons">arrow_drop_down</i></a>
                     <div class="collapsible-body">
@@ -259,6 +262,33 @@
                         <label for="textarea">Consulta</label>
                     </div>
                     <a class="waves-effect waves-white btn green darken-4" ng-disabled = "!helpMessage || helpMessage.length < 1" ng-click="sendHelp()">Enviar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="usb_modal" class="modal wide-modal">
+        <div class="modal-content">
+            <h3>Probador de circuitos lógicos</h3>
+            <p>Instrucciones de uso:</p>
+            <ol>
+                <li><a href="https://nodejs.org/es/download/">Descargar</a> e instalar NodeJS</li>
+                <li>Conectar el probador al puerto USB.</li>
+                <li>Asegúrese de que el <a href="https://www.cipressus.uns.edu.ar/probador/Firmware/Firmware.ino">firmware</a> del probador está actualizado.</li>
+                <li>Descargar <a href="https://www.cipressus.uns.edu.ar/assets/serialPortServer.js">serialPortServer.js</a> y ejecutar con NodeJS</li>
+                <li>Seleccionar el puerto serie del probador y la velocidad.</li>
+                <li>Click en "Conectar".</li>
+            </ol>
+
+            <div class="row">
+                <div class="col s4">
+                    <select id="portSelect">
+                        <option value="" selected>Elija una opción</option>
+                        <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
+                    </select>
+                </div>
+                <div class="col s4">
+                    <a class="waves-effect waves-white btn green darken-4" ng-click="connectToSerialPort()">Conectar</a>
                 </div>
             </div>
         </div>

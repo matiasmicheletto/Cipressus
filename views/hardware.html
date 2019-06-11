@@ -1,3 +1,23 @@
+<style>
+    .led-box {
+    height: 20px;
+    width: 25%;
+    }
+    .led-red {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    }
+    .led-off{
+        background-color: #AAAAAA;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #000000 0 -1px 9px, #FFFFFF 0 2px 12px;
+    }
+    .led-on{
+        background-color: #B91717;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #F75B5B 0 2px 12px;
+    }
+</style>
+
 <div class="container">
     <h4>Probador de circuitos lógicos
         <sup class="modal-trigger" style="cursor: pointer" data-target="tutorial_modal">
@@ -7,17 +27,6 @@
 </div>
 
 <center>
-    <div class="row" ng-if="wssFound">
-        <div class="input-field col s3 offset-m4">
-            <select id="portSelect">
-                <option value="" selected>Elija una opción</option>
-                <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
-            </select>
-        </div>
-        <div class="col s2">
-            <a class="waves-effect waves-white btn green darken-4" ng-click="connect()">Conectar</a>
-        </div>
-    </div>
     <div class="row">
         <div class="card hoverable z-depth-1 col s12 m4 offset-m4">
             <div class="card-content">
@@ -43,21 +52,3 @@
         </div>
     </div>
 </center>
-
-<div id="tutorial_modal" class="modal">
-
-    <div class="modal-content">
-        <h3>Probador de circuitos lógicos</h3>
-
-        <p>Instrucciones de uso:</p>
-
-        <ol>
-            <li><a href="https://nodejs.org/es/download/">Descargar</a> e instalar NodeJS</li>
-            <li>Conectar el probador al puerto USB.</li>
-            <li>Descargar <a href="https://www.cipressus.uns.edu.ar/assets/serialPortServer.js">serialPortServer.js</a> y ejecutar con NodeJS</li>
-            <li>Refrescar esta página.</li>
-            <li>Seleccionar el puerto serie del probador y la velocidad.</li>
-            <li>Click en "Conectar".</li>
-        </ol>
-    </div>
-</div>

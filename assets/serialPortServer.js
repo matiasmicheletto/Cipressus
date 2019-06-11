@@ -1,3 +1,30 @@
+/**
+    *  Name        : serialPortServer.js
+    *  Author      : Matias J. Micheletto
+    *  Website     : www.cipressus.uns.edu.ar
+    *  Version     : 1.0
+    *  Copyright   : GPLv3
+    *  Description : Server para probador de circuitos digitales - Cipressus    
+    *
+    *  Copyright (c) 2019
+    *  Matias Micheletto <matias.micheletto@uns.edu.ar>
+    *  Departamento de Ingeniería Eléctrica - Universidad Nacional del Sur
+    *  Cátedra de Diseño de Circuitos Logicos (2559)
+    *
+    *
+    *  This program is free software: you can redistribute it and/or modify
+    *  it under the terms of the GNU General Public License as published by
+    *  the Free Software Foundation, either version 3 of the License.
+    *
+    *  This program is distributed in the hope that it will be useful,
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    *  GNU General Public License for more details.
+    *
+    *  You should have received a copy of the GNU General Public License
+    *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 var SerialPort = require('serialport');
 var WebSocketServer = require('ws').Server;
 
@@ -28,7 +55,6 @@ var openSerialPort = function(portName){ // Cuando el cliente selecciona puerto,
 
     tester.on('close', function () { // Al cerrar conexion
         console.log('Puerto serie desconectado.');
-        process.exit(2); // Terminar programa?
     });
 
     tester.on('error', function (error) {
@@ -71,9 +97,10 @@ wss.on('connection', function (cl) { // Callback de conexion con nuevo cliente
 
     client.on('close', function () { // Callback cierre de conexion
         console.log("Conexión cerrada");
-        client = null;
-        tester = null; // Borrar el objeto del puerto serie para volver a conectar
-        process.exit(3); // Terminar programa?
+        client = null; // Borrar cliente (siempre puede ser uno por vez)
+        if(tester) // Puede que aun no se haya conectado
+            tester.close(); // Cerrar el puerto serie para reconectar luego
+        tester = null; // Borrar el objeto del puerto serie (por si hay que elegir otro)
     });
 
     // Enviar al cliente conectado, la lista de puertos serie disponibles
