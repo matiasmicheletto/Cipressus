@@ -286,7 +286,6 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
 
 
     /////// Conexion con server para usar probador
-    // TODO:
     Cipressus.hardware.status = "DISCONNECTED";
     $rootScope.usbStatus = "DISCONNECTED"; // Esto es copia del status anterior, pero para no hacer binding
     $rootScope.wssIconColor = 'red-text'; // Color del icono
