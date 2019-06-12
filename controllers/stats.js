@@ -37,6 +37,8 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                 })
             }
         }
+
+        seriesData.sort((a,b) => (a.y < b.y) ? 1 : ((b.y < a.y) ? -1 : 0)); 
         
         Highcharts.setOptions({
             lang: {
@@ -98,6 +100,56 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
         $("#barplot_container").highcharts().drillUp();
     };
 
+    var updateAttendancePlot = function(){
+        var seriesData = [];
+        var categories = []; // Lista de fechas de los eventos
+
+        var first = true; // En la primera pasada por la lista de eventos, genero el arreglo categories
+        for (var j in $scope.users) { // Para cada usuario, calcular progreso de asistencia
+            if($scope.users[j].attendance){
+                var data = []; // Asistencia acumulada por clase
+                var evCnt = 0; // Contador de eventos
+                var evAtt = 0; // Contador de eventos asistidos
+                for(var k in $scope.events){
+                    if($scope.events[k].start < Date.now()){
+                        if($scope.events[k].attendance) // Si tiene asistencia controlada
+                            evCnt++; // Contar evento
+                        if($scope.users[j].attendance[k]) // Si asistio a esta clase
+                            evAtt++; 
+                        if(evAtt != 0)
+                            data.push(evAtt/evCnt*100);
+                        else 
+                            data.push(0);
+                        if(first) // Primera pasada
+                            categories.push($rootScope.readableTime($scope.events[k].start)); // Agregar evento a la lista
+                    }
+                }
+                first = false;
+                seriesData.push({
+                    data: data,  
+                    name: $scope.users[j].secondName
+                })
+            }
+        }
+
+        Highcharts.chart('attendance_container', {
+            chart: {
+                type: 'spline',
+                height: '90%'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: 'Asistencia a clases'
+            },
+            xAxis: {
+                categories: categories
+            },
+            series: seriesData
+        });
+    };
+
 
     Cipressus.db.get('users_public') // Descargar lista de usuarios
         .then(function (users_public_data) {
@@ -114,7 +166,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                             $scope.activities = activities_data;
                             updateBarPlot(); // Cargar los datos al grafico de barras                    
                             $rootScope.loading = false;
-                            $rootScope.$apply();
+                            $scope.$apply();
                         })
                         .catch(function (err) { // activities
                             console.log(err);
@@ -124,7 +176,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                                 displayLength: 2000
                             });
                             $rootScope.loading = false;
-                            $rootScope.$apply();
+                            $scope.$apply();
                         });
                 })
                 .catch(function (err) { // users_private
@@ -135,8 +187,24 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                         displayLength: 2000
                     });
                     $rootScope.loading = false;
-                    $rootScope.$apply();
+                    $scope.$apply();
                 });
+            Cipressus.db.get('events') // Descargar la lista de clases
+            .then(function(events_data){
+                $scope.events = events_data;
+                updateAttendancePlot();
+                $scope.$apply();
+            })
+            .catch(function(err){
+                console.log(err);
+                    M.toast({
+                        html: "Ocurrió un error al acceder a la base de datos",
+                        classes: 'rounded red',
+                        displayLength: 2000
+                    });
+                    $rootScope.loading = false;
+                    $scope.$apply();
+            })
         })
         .catch(function (err) { // users_public
             console.log(err);
@@ -146,6 +214,6 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                 displayLength: 2000
             });
             $rootScope.loading = false;
-            $rootScope.$apply();
+            $scope.$apply();
         });
 }]);

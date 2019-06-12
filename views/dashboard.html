@@ -45,10 +45,20 @@
     </div>
 </div>
 
+<!-- Historial de asistencia a clase -->
+<div class="row">
+    <div class="card hoverable z-depth-1" style="max-height: 350px">
+        <div class="card-content">
+            <div id="attendance_container"></div>            
+        </div>
+    </div>    
+</div>
+
 <div class="row">    
     <!-- Proximos eventos -->
     <div class="col {{user ? 's12 m6 l6':'s12'}}">    
         <div class="card hoverable z-depth-1" ng-show="events">
+            <a title="Ver cronograma" class="right green-text text-darken-4" href="#/calendar"><i class="small material-icons">add</i></a>
             <div class="card-content">
                 <h5>Próximas actividades</h5>               
                 <div class="timeline">

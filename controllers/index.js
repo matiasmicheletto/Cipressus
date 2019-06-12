@@ -285,14 +285,14 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
 
 
 
-    /////// Conexion con server para usar probador
+    /////// Funciones para conexion con websocket server ///////
     Cipressus.hardware.status = "DISCONNECTED";
     $rootScope.usbStatus = "DISCONNECTED"; // Esto es copia del status anterior, pero para no hacer binding
     $rootScope.wssIconColor = 'red-text'; // Color del icono
 
     // Callbacks de estado de conexion con probador para que las vistas ejecuten acciones
     $rootScope.onWssConnect = function(){};
-    $rootScope.onWssDisonnect = function(){};
+    $rootScope.onWssDisconnect = function(){};
 
     var hardwareConfig = { // Configuracion de la interface con probador        
         io:[ // Se redefine en cada vista que use el probador
@@ -354,7 +354,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         M.toast({html: "Server desconectado",classes: 'rounded green darken-3',displayLength: 2000});
         $rootScope.usbStatus = "DISCONNECTED";
         $rootScope.wssIconColor = 'red-text'; // Color del icono
-        $rootScope.onWssDisconnect();
+        $rootScope.onWssDisconnect(); // Ejecutar callback que despues emplean las vistas
         usb_modal.close();
     };
 
@@ -362,7 +362,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         Cipressus.hardware.connectTo(document.getElementById("portSelect").value); // Port Connection Request                
         $rootScope.usbStatus = "CONNECTED";
         $rootScope.wssIconColor = 'green-text'; // Color del icono
-        $rootScope.onWssConnect();
+        $rootScope.onWssConnect(); // Ejecutar callback que despues emplean las vistas
         M.toast({html: "Probador conectado!",classes: 'rounded green darken-3',displayLength: 2000});
         usb_modal.close();
     }; 
@@ -372,7 +372,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
 
 
 
-    
+    /////// PWA ///////
     var isInStandaloneMode = function() { return ('standalone' in window.navigator) && (window.navigator.standalone); };
     
     if (is.ios() && !isInStandaloneMode()) {

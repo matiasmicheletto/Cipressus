@@ -239,6 +239,53 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         $("#barplot_container").highcharts().drillUp();
     };
 
+    var updateAttendancePlot = function(){
+        var seriesData = [];
+        var categories = []; // Lista de fechas de los eventos
+
+        var first = true; // En la primera pasada por la lista de eventos, genero el arreglo categories
+
+        if($scope.user.attendance){
+            var data = []; // Asistencia acumulada por clase
+            var evCnt = 0; // Contador de eventos
+            var evAtt = 0; // Contador de eventos asistidos
+            for(var k in $scope.eventsAll){
+                if($scope.eventsAll[k].start < Date.now()){
+                    if($scope.eventsAll[k].attendance) // Si tiene asistencia controlada
+                        evCnt++; // Contar evento
+                    if($scope.user.attendance[k]) // Si asistio a esta clase
+                        evAtt++; 
+                    if(evAtt != 0)
+                        data.push(evAtt/evCnt*100);
+                    else 
+                        data.push(0);
+                    if(first) // Primera pasada
+                        categories.push($rootScope.readableTime($scope.eventsAll[k].start)); // Agregar evento a la lista
+                }
+            }
+            first = false;
+            seriesData.push({
+                data: data
+            })
+        }
+
+        Highcharts.chart('attendance_container', {
+            chart: {
+                type: 'spline'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: 'Asistencia a clases'
+            },
+            xAxis: {
+                categories: categories
+            },
+            series: seriesData
+        });
+    };
+
 
     // Inicializacion 
     var totalEvents=0, futureEvents=0, attendableEvents=0;
@@ -269,7 +316,9 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     $scope.events=[];                    
                     Cipressus.db.getSorted('events','start') // Lista de eventos ordenados por fecha de inicio
                     .then(function(events_data){
+                        $scope.eventsAll = {};
                         events_data.forEach(function(childSnapshot){
+                            $scope.eventsAll[childSnapshot.key] = childSnapshot.val();
                             var ev = childSnapshot.val();
                             totalEvents++; // Contar actividad (se usa para asistencia y avance del programa)
                             if(ev.start > Date.now()){ // Si es un evento futuro
@@ -318,6 +367,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                         updateProgressPlot(); // Actualizar el grafico de avance de la materia
                         updatePolarPlot($scope.activities.id); // Actualizar nuevamente el grafico de notas ya que tiene asistencia
                         updateBarPlot();
+                        updateAttendancePlot();
                         $rootScope.loading = false;
                         $rootScope.$apply(); 
                     })

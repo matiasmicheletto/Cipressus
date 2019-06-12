@@ -256,9 +256,9 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 
 ### Backlog
-[Impr] Optimizar o mejorar
-[Bug] Error para corregir
-[Feature] Agregar característica
+[Impr] Optimizar o mejorar  
+[Bug] Error para corregir  
+[Feature] Agregar característica  
 
   - [Feature] Admitir calificaciones por encima del 100%.
   - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez.
