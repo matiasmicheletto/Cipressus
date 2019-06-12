@@ -107,8 +107,8 @@
                         style="cursor: pointer;"><i class="material-icons small">menu</i></a>
                     <a class="brand-logo"><img width="100px" src="images/navbarlogo.png"></a>
                     <ul id="nav-mobile" class="right">                        
-                        <li><a title="Probador (BT)" class="red-text hide-on-med-and-up"><i class="material-icons">bluetooth</i></a></li>
-                        <li><a title="Probador (USB)" class="{{wssIconColor}} hide-on-med-and-down" ng-click="getPortList()"><i class="material-icons">usb</i></a></li>
+                        <li><a title="Probador (Desc.)" class="red-text hide-on-med-and-up"><i class="material-icons">bluetooth</i></a></li>
+                        <li><a title="Probador ({{usbStatus}})" class="{{wssIconColor}} hide-on-med-and-down" ng-click="openUSBModal()"><i class="material-icons">usb</i></a></li>
                         <li><a title="Salir" ng-click="signOut()"><i class="material-icons">power_settings_new</i></a></li>
                     </ul>
                 </div>
@@ -267,7 +267,7 @@
         </div>
     </div>
 
-    <div id="usb_modal" class="modal wide-modal">
+    <div id="usb_modal" class="modal">
         <div class="modal-content">
             <h3>Probador de circuitos lógicos</h3>
             <p>Instrucciones de uso:</p>
@@ -275,20 +275,31 @@
                 <li><a href="https://nodejs.org/es/download/">Descargar</a> e instalar NodeJS</li>
                 <li>Conectar el probador al puerto USB.</li>
                 <li>Asegúrese de que el <a href="https://www.cipressus.uns.edu.ar/probador/Firmware/Firmware.ino">firmware</a> del probador está actualizado.</li>
-                <li>Descargar <a href="https://www.cipressus.uns.edu.ar/assets/serialPortServer.js">serialPortServer.js</a> y ejecutar con NodeJS</li>
-                <li>Seleccionar el puerto serie del probador y la velocidad.</li>
-                <li>Click en "Conectar".</li>
+                <li>Descargar <a href="https://www.cipressus.uns.edu.ar/assets/serialPortServer.js">serialPortServer.js</a> y ejecutar con NodeJS.</li>
+                <li>Presionar el botón "CONECTAR" para establecer conexión con el server. Si el server no se está ejecutando, igualmente puede iniciarlo luego de haber presionado "CONECTAR".</li>
+                <li>Seleccionar el puerto serie correspondiente al probador en la lista que aparece y presionar "INICIAR".</li>
+                <li>Para desconectar el probador, presione "DESCONECTAR" y finalice el server con "Ctrl+C".</li>
+                <li>Finalmente, desconecte el probador del cable USB.</li>
             </ol>
 
             <div class="row">
+                <div class="col s4 offset-s2">
+                    <a class="waves-effect waves-white btn blue darken-3 {{usbStatus == 'DISCONNECTED' ? '' : 'disabled'}}" ng-click="connectToServer()">Conectar</a>
+                </div>
                 <div class="col s4">
-                    <select id="portSelect">
+                    <a class="waves-effect waves-white btn red darken-3 {{usbStatus == 'CONNECTED' || usbStatus == 'IDLE' || usbStatus == 'CONNECTING' ? '' : 'disabled'}}" ng-click="disconnectFromServer()">Desconectar</a>
+                </div>
+            </div>
+
+            <div class="row" ng-show="usbStatus == 'IDLE'">
+                <div class="col s4 offset-s2">
+                    <select class="browser-default" id="portSelect">
                         <option value="" selected>Elija una opción</option>
                         <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
                     </select>
                 </div>
                 <div class="col s4">
-                    <a class="waves-effect waves-white btn green darken-4" ng-click="connectToSerialPort()">Conectar</a>
+                    <a class="waves-effect waves-white btn green darken-4 {{usbStatus == 'IDLE' ? '' : 'disabled'}}" ng-click="connectToSerialPort()">Iniciar</a>
                 </div>
             </div>
         </div>

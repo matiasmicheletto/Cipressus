@@ -705,7 +705,7 @@ window.Cipressus = (function () {
     var timerId = null; // Timer para temporizar los llamados al socket
     var serialPorts = []; // Lista de puertos serie disponibles (objeto privado)
 
-    core.hardware.initialize = function(params){ // Inicializar conexion con WebSocketServer      
+    core.hardware.initServer = function(params){ // Inicializar conexion con WebSocketServer      
         /*
             params: {
                 io: array con estados de entradas/salidas (para hacer binding con objetos de controllers)
@@ -715,7 +715,7 @@ window.Cipressus = (function () {
             }
         */
 
-        core.hardware.status = "DISCONNECTED"; // Inicialmente, el estado es desconectado
+        core.hardware.status = "CONNECTING"; // Inicialmente, el estado es de conectando (intenta cada tanto volver a abrir la conexion)
         core.hardware.sample_period = params.sp; // Periodo de actualizacion de salidas
         core.hardware.io = params.io; // Binding con view
         core.hardware.onUpdate = params.onUpdate;
@@ -734,13 +734,15 @@ window.Cipressus = (function () {
             core.hardware.onSocketOpen(); // Ejecutar el callback
         };
 
-        socket.onclose = function() { // Puerto no disponible
-            core.hardware.status = "DISCONNECTED";
-            if(!timerId)
+        socket.onclose = function() { // Server no disponible (seguir intentando conectar)
+            if(core.hardware.status ==  "CONNECTED" || core.hardware.status == "IDLE") // Si la conexion con server estaba abierta significa que se cerro el server
+                core.hardware.status = "CONNECTING"; // Pasar a estado conectando
+            if(!timerId){                
                 timerId = setInterval(function(){
                     socket = null;
-                    core.hardware.initialize(params);
+                    core.hardware.initServer(params);
                 },params.ci);
+            }
             core.hardware.onSocketClose(); // Ejecutar el callback
         };
 
@@ -753,6 +755,17 @@ window.Cipressus = (function () {
                 core.hardware.onUpdate();
             };  
         };
+    };
+
+    core.hardware.stopServer = function(){ // Desconectarse del server (para liberar el uso de recursos)
+        core.hardware.status = "DISCONNECTED";
+        if(timerId){
+            clearInterval(timerId);
+            timerId = null;
+        }
+        socket.onclose = function(){}; // Borrar la funcion para que no se vuelva a conectar
+        socket.close();
+        socket = null;
     };
 
     core.hardware.ioUpdate = function(){ // Envio de string al server para actualizar salidas

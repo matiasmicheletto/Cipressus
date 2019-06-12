@@ -18,37 +18,39 @@
     }
 </style>
 
-<div class="container">
-    <h4>Probador de circuitos lógicos
-        <sup class="modal-trigger" style="cursor: pointer" data-target="tutorial_modal">
-            <i class="small material-icons">help</i>
-        </sup>
-    </h4>
+<div class="container valign-wrapper" ng-hide="tester" style="height: 100vh;">
+    <h5 class="center-align grey-text text-lighten-1"><i>Siga las instrucciones para conectarse al probador presionando en <i class="material-icons">usb</i></i></h5>
 </div>
 
-<center>
-    <div class="row">
-        <div class="card hoverable z-depth-1 col s12 m4 offset-m4">
-            <div class="card-content">
-                <div clas="row">
-                    <div class="col s6">
-                        <p><b>Salidas</b></p>
+<div ng-show="tester">
+    <div class="container">
+        <h4>Probador de circuitos lógicos</h4>
+    </div>
+
+    <center>
+        <div class="row">
+            <div class="card hoverable z-depth-1 col s12 m4 offset-m4">
+                <div class="card-content">
+                    <div clas="row">
+                        <div class="col s6">
+                            <p><b>Salidas</b></p>
+                        </div>
+                        <div class="col s6">
+                            <p><b>Entradas</b></p>
+                        </div>
                     </div>
-                    <div class="col s6">
-                        <p><b>Entradas</b></p>
-                    </div>
-                </div>
-                <div class="row" ng-repeat="item in tester">
-                    <div class="switch col s6">
-                        <label>Off<input type="checkbox" ng-model="item.output"><span class="lever"></span>On</label>
-                    </div>
-                    <div class="led-box col s6">
-                        <label>
-                            <div class="led-red {{item.input  ? 'led-on':'led-off'}}"></div>
-                        </label>
+                    <div class="row" ng-repeat="item in tester">
+                        <div class="switch col s6">
+                            <label>Off<input type="checkbox" ng-model="item.output"><span class="lever"></span>On</label>
+                        </div>
+                        <div class="led-box col s6">
+                            <label>
+                                <div class="led-red {{item.input  ? 'led-on':'led-off'}}"></div>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</center>
+    </center>
+</div>

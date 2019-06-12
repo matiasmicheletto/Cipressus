@@ -288,10 +288,15 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     /////// Conexion con server para usar probador
     // TODO:
     Cipressus.hardware.status = "DISCONNECTED";
+    $rootScope.usbStatus = "DISCONNECTED"; // Esto es copia del status anterior, pero para no hacer binding
     $rootScope.wssIconColor = 'red-text'; // Color del icono
 
+    // Callbacks de estado de conexion con probador para que las vistas ejecuten acciones
+    $rootScope.onWssConnect = function(){};
+    $rootScope.onWssDisonnect = function(){};
+
     var hardwareConfig = { // Configuracion de la interface con probador        
-        io:[
+        io:[ // Se redefine en cada vista que use el probador
             {output: false, input: false}, 
             {output: true, input: false}, 
             {output: false, input: true}, 
@@ -301,41 +306,66 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             {output: true, input: false}, 
             {output: false, input: true},
         ],
-        ci: 5000, // Tiempo maximo de espera de coneccion con wss
+        ci: 5000, // Tiempo de espera para reconexion con server
         sp: 50, // Intervalo de actualizacion de salidas
         onUpdate:function(){} // Funcion a ejecutar cuando se actualizan las entradas
     };
 
-    Cipressus.hardware.onSocketClose = function(){ // Definir funcion a ejecutar si se cierra la conexion con el server
-        console.log("Socket cerrado.");
+    Cipressus.hardware.onSocketClose = function(){ // Definir funcion a ejecutar si se cierra la conexion con el server (cuando se cierra el server de node)
+        // Este callback no se ejecuta si se desconecta el server desde esta misma app (con disconnectFromServer())
+        console.log("Socket cerrado. Reconectando...");
         //M.toast({html: "Reconectando con Web Socket...",classes: 'rounded red',displayLength: 2000});        
-        $rootScope.wssIconColor = 'red-text'; // Color del icono    
+        M.toast({html: "Reconectando con server...",classes: 'rounded blue darken-3',displayLength: 2000});
+        $rootScope.usbStatus = "CONNECTING";
+        $rootScope.wssIconColor = 'blue-text'; // Color del icono    
         $rootScope.$apply();        
     };
 
-    Cipressus.hardware.onSocketOpen = function(){
-        setTimeout(function(){            
+    Cipressus.hardware.onSocketOpen = function(){ // Esto se ejecuta al iniciarse la conexion con el server
+        console.log("Socket abierto.");
+        $rootScope.usbStatus = 'IDLE'; // Habilitar boton de conectar
+        $rootScope.wssIconColor = 'yellow-text'; // Color del icono
+        $rootScope.$apply();        
+        
+        M.toast({html: "Server conectado",classes: 'rounded blue darken-3',displayLength: 2000});
+        setTimeout(function(){ // Espera a que se envie la lista de puertos serie
             $rootScope.serialPorts = Cipressus.hardware.getSerialPorts();        
-            $rootScope.wssIconColor = 'blue-text'; // Color del icono
-            $rootScope.$apply();        
+            $rootScope.$apply();
             M.FormSelect.init(document.querySelectorAll('select'), {});            
-            M.toast({html: "Server conectado",classes: 'rounded green darken-3',displayLength: 2000});
+            M.toast({html: "Puertos disponibles",classes: 'rounded green darken-3',displayLength: 2000});
         },500);
     };
 
-    $rootScope.getPortList = function(){
-        console.log(Cipressus.hardware.status);
-        if(Cipressus.hardware.status == "DISCONNECTED") 
-            Cipressus.hardware.initialize(hardwareConfig); 
-        else{
+    $rootScope.openUSBModal = function(){
+        if(Cipressus.hardware.status == "IDLE"){ // Si esta esperando puerto, actualizar lista de puertos
             $rootScope.serialPorts = Cipressus.hardware.getSerialPorts();    
-            M.FormSelect.init(document.querySelectorAll('select'), {});            
-        }
+            M.FormSelect.init(document.querySelectorAll('select'), {}); // Si es default-browser no se si hace falta correr esto           
+        }   
         usb_modal.open();
+    };
+
+    $rootScope.connectToServer = function(){ // Abrir conexion con server
+        if(Cipressus.hardware.status == "DISCONNECTED") // Solo si esta desconectado
+            Cipressus.hardware.initServer(hardwareConfig); 
+    };
+
+    $rootScope.disconnectFromServer = function(){ // Cerrar la conexion con el server
+        Cipressus.hardware.stopServer();
+        $rootScope.enableConnect = false; // Habilitar boton de conectar
+        M.toast({html: "Server desconectado",classes: 'rounded green darken-3',displayLength: 2000});
+        $rootScope.usbStatus = "DISCONNECTED";
+        $rootScope.wssIconColor = 'red-text'; // Color del icono
+        $rootScope.onWssDisconnect();
+        usb_modal.close();
     };
 
     $rootScope.connectToSerialPort = function(){ // Cuando se elige dispositivo y se presiona "conectar"
         Cipressus.hardware.connectTo(document.getElementById("portSelect").value); // Port Connection Request                
+        $rootScope.usbStatus = "CONNECTED";
+        $rootScope.wssIconColor = 'green-text'; // Color del icono
+        $rootScope.onWssConnect();
+        M.toast({html: "Probador conectado!",classes: 'rounded green darken-3',displayLength: 2000});
+        usb_modal.close();
     }; 
     
     ///////////
