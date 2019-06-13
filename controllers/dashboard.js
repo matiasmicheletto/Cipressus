@@ -240,7 +240,6 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
     };
 
     var updateAttendancePlot = function(){
-        var seriesData = [];
         var categories = []; // Lista de fechas de los eventos
 
         var first = true; // En la primera pasada por la lista de eventos, genero el arreglo categories
@@ -250,9 +249,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             var evCnt = 0; // Contador de eventos
             var evAtt = 0; // Contador de eventos asistidos
             for(var k in $scope.eventsAll){
-                if($scope.eventsAll[k].start < Date.now()){
-                    if($scope.eventsAll[k].attendance) // Si tiene asistencia controlada
-                        evCnt++; // Contar evento
+                if($scope.eventsAll[k].start < Date.now() && $scope.eventsAll[k].attendance){
+                    evCnt++; // Contar evento
                     if($scope.user.attendance[k]) // Si asistio a esta clase
                         evAtt++; 
                     if(evAtt != 0)
@@ -264,26 +262,26 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                 }
             }
             first = false;
-            seriesData.push({
-                data: data
-            })
-        }
 
-        Highcharts.chart('attendance_container', {
-            chart: {
-                type: 'spline'
-            },
-            credits: {
-                enabled: false
-            },
-            title: {
-                text: 'Asistencia a clases'
-            },
-            xAxis: {
-                categories: categories
-            },
-            series: seriesData
-        });
+            Highcharts.chart('attendance_container', {
+                chart: {
+                    type: 'spline'
+                },
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: 'Asistencia a clases'
+                },
+                xAxis: {
+                    categories: categories
+                },
+                series: [{
+                    name:'Mi asistencia',
+                    data: data
+                }]
+            });
+        }
     };
 
 
