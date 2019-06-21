@@ -8,7 +8,7 @@ app.controller("analizer", ['$scope', '$rootScope', '$location', function ($scop
     $rootScope.sidenav.close();        
     Cipressus.utils.activityCntr($rootScope.user.uid, "analizer").catch(function (err) {console.log(err)});
 
-    $scope.running = false; // Controlar encendido/apagado del analizador
+    $scope.running = false; // Controlar encendido/apagado del analizador (inicialmente apagado)
 
     var chart = Highcharts.chart('chart_container', {
         chart: {
@@ -85,26 +85,23 @@ app.controller("analizer", ['$scope', '$rootScope', '$location', function ($scop
             Cipressus.hardware.onUpdate = function(){ // En actualizacion de io, refrescar el grafico   
                 var timestamp = Date.now(); 
                 for(var k = 0; k < 8; k++)
-                    series[k].addPoint([timestamp, $scope.tester[k].input ? 5:0], false, series[k].data.length>150);
+                    series[k].addPoint([timestamp, $scope.tester[k].input ? 5:0], false, series[k].data.length>300);
             };
         }
     };
 
-    var startChartUpdater = function(){
-        chart.redraw();
-        if($scope.running)
-            setTimeout(startChartUpdater,100); // Hacer el refresco del grafico cada 100ms fijo
-    }
+    var startChartUpdater = function(){ // Esta funcion dispara el refresco continuo del grafico
+        chart.redraw(); // Redibujar
+        if($scope.running) // Si esta corriendo, disparar el timeout
+            setTimeout(startChartUpdater,100); // El periodo es de 100ms fijo
+    };
 
     $scope.toggleStartStop = function(){// Iniciar-detener el analizador
         $scope.running = !$scope.running;
         if($scope.running)
-            startChartUpdater();
+            startChartUpdater(); // Al iniciar, hay que disparar el evento por primera vez
     };
     
-    // Inicializar analizador logico
-    initAnalizer();
-
     // Conectar callbacks
     $rootScope.onWssDisconnect = function(){
         if($scope.tester) $scope.tester = null;
@@ -113,5 +110,8 @@ app.controller("analizer", ['$scope', '$rootScope', '$location', function ($scop
     $rootScope.onWssConnect = function(){
         initAnalizer();
     };
+
+    // Inicializar analizador logico
+    initAnalizer();
     
 }]);
