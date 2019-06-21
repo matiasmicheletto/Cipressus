@@ -8,10 +8,13 @@ app.controller("analizer", ['$scope', '$rootScope', '$location', function ($scop
     $rootScope.sidenav.close();        
     Cipressus.utils.activityCntr($rootScope.user.uid, "analizer").catch(function (err) {console.log(err)});
 
+    $scope.running = false; // Controlar encendido/apagado del analizador
+
     var chart = Highcharts.chart('chart_container', {
         chart: {
             type: 'line',
-            animation: false
+            animation: false,
+            height: "50%"
         },
         credits: {
             enabled: false
@@ -35,22 +38,33 @@ app.controller("analizer", ['$scope', '$rootScope', '$location', function ($scop
             enabled: false
         },
         series: [{
-            name: 'Canal 1',
+            name: 'Entrada 1',
             data: [[Date.now(),0]]
         },{
-            name: 'Canal 2',
+            name: 'Entrada 2',
+            data: [[Date.now(),0]]
+        },{
+            name: 'Entrada 3',
+            data: [[Date.now(),0]]
+        },{
+            name: 'Entrada 4',
+            data: [[Date.now(),0]]
+        },{
+            name: 'Entrada 5',
+            data: [[Date.now(),0]]
+        },{
+            name: 'Entrada 6',
+            data: [[Date.now(),0]]
+        },{
+            name: 'Entrada 7',
+            data: [[Date.now(),0]]
+        },{
+            name: 'Entrada 8',
             data: [[Date.now(),0]]
         }]
     });
 
-    var series = chart.series;                    
-    setInterval(function () {
-        var x = Date.now(); 
-        series[0].addPoint([x, Math.random()/3+Math.sin((x-1561148606901)/1000)], false, series[0].data.length>150);
-        series[1].addPoint([x, Math.random()/3+Math.cos((x-1561148606901)/1000)], true, series[1].data.length>150);        
-        //chart.redraw();
-    }, 100);
-    
+    var series = chart.series; // Series de datos (inicialmente todo en 0 con un solo dato)
 
     var initAnalizer = function(){ // Inicializar controladores de la vista
         if(Cipressus.hardware.status == "CONNECTED"){
@@ -68,9 +82,24 @@ app.controller("analizer", ['$scope', '$rootScope', '$location', function ($scop
 
             Cipressus.hardware.io = $scope.tester; // Hacer binding con esta variable
 
-            //Cipressus.hardware.onUpdate = function(){ // En actualizacion de io, refrescar la vista    
-            //};
+            Cipressus.hardware.onUpdate = function(){ // En actualizacion de io, refrescar el grafico   
+                var timestamp = Date.now(); 
+                for(var k = 0; k < 8; k++)
+                    series[k].addPoint([timestamp, $scope.tester[k].input ? 5:0], false, series[k].data.length>150);
+            };
         }
+    };
+
+    var startChartUpdater = function(){
+        chart.redraw();
+        if($scope.running)
+            setTimeout(startChartUpdater,100); // Hacer el refresco del grafico cada 100ms fijo
+    }
+
+    $scope.toggleStartStop = function(){// Iniciar-detener el analizador
+        $scope.running = !$scope.running;
+        if($scope.running)
+            startChartUpdater();
     };
     
     // Inicializar analizador logico
