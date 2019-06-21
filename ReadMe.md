@@ -1,10 +1,10 @@
 # Cipressus
 
-CIPRESSUS es una plataforma online pensada inicialmente para implementar un sistema de cómputo automático de calificaciones para actividades educativas y permitir la consulta en tiempo real de resultados de evaluaciones. 
+CIPRESSUS es un sistema de gestión de contenidos para el aprendizaje (LCMS). 
 
-Actualmente permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, descargar archivos enviados por alumnos, entre muchas otras utilidades.
+Permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio y realizar entrega de informes. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, descargar y calificar archivos enviados por alumnos.
 
-Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos.
+Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales.
 
 
 ### Características
@@ -260,13 +260,14 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
-  - [Feature] Admitir calificaciones por encima del 100%.
-  - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez.
-  - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
+  - [Feature] Admitir calificaciones por encima del 100% (chequear si el modelo lo soporta).
+  - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez (hay que modificar varios controllers).
   - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
-  - [Feature] En dashboard, poner accesos directos a las distintas secciones de la app. Detallar clases asistidas. En progreso, mostrar cantidad de actividades entregadas y por entregar.
+  - [Feature] Separar los grupos de usuarios en cursos.
   - [Feature] Probador de circuitos: implementar verificacion de tabla de verdad.
-  - [Impr] Mejorar sistema de entrega de trabajos.
+  - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
+  - [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
+  - [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo (salvo que este rebotado para reenviar)
   - [Feature] Notificaciones de segundo plano (cuando la app esta instalada y el usuario logeado).
   - [Feature] Configuración de árbol de actividades. 
   - [Feature] Modelo de múltiples materias (con el mismo esquema).

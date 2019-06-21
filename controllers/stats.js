@@ -104,7 +104,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
 
 
     $scope.drillUp = function () {
-        $("#barplot_container").highcharts().drillUp();
+        $("#score_barplot_container").highcharts().drillUp();
     };
 
     var updateAttendancePlot = function () {
