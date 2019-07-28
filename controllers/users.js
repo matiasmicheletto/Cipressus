@@ -246,16 +246,17 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             Cipressus.db.get('users_private') // Descargar lista de usuarios aceptados
                 .then(function (users_private_data) {
                     // Mezclar los atributos
+                    // #TODO: listar solo usuarios del curso actual
                     for (var k in users_private_data)
-                        for (var j in users_private_data[k])
+                        for (var j in users_private_data[k]) // Dos niveles de entrada
                             $scope.users[k][j] = users_private_data[k][j];
                     // Descargar lista de actividades
-                    Cipressus.db.get('activities')
+                    Cipressus.db.get('activities/'+$rootScope.user.course)
                         .then(function (activities_data) {
                             $scope.activitiesTree = activities_data;
                             $scope.activities = []; // Convertir el arbol en array (no lo uso como arbol aca)
                             $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');                            
-                            Cipressus.db.getSorted('events','start') // Lista de eventos ordenados por fecha de inicio
+                            Cipressus.db.getSorted('events/'+$rootScope.user.course,'start') // Lista de eventos ordenados por fecha de inicio
                             .then(function(events_data){
                                 events_data.forEach(function(childSnapshot){
                                     var ev = childSnapshot.val();                                    

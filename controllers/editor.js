@@ -53,7 +53,8 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
     };
 
     var updateTimestamp = function(){ // Actualizar fecha de actualizacion de notiricas en db
-        Cipressus.db.update({news:Date.now()},"metadata/updates")
+        var ts = {}; ts[$rootScope.user.course] = Date.now(); // Siempre se actualizan los datos como objetos
+        Cipressus.db.update(ts,"metadata/updates/news")
         .then(function(res){
             console.log("Actualizacion de metadata");
             console.log(res);
@@ -65,7 +66,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
 
     $scope.deleteSelected = function(){ // Borrar noticia seleccionada
         $rootScope.loading = true;
-        Cipressus.db.set(null,"news/"+$scope.selected.key)
+        Cipressus.db.set(null,"news/"+$rootScope.user.course+"/"+$scope.selected.key)
         .then(function(snapshot){
             $scope.news.splice($scope.selected.order,1); // Quitar del view
             // Actualizar orden de cada elemento
@@ -73,7 +74,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
             for(k in $scope.news){ 
                 $scope.news[k].order = parseInt(k);
                 var updates = {};
-                updates["news/"+$scope.news[k].key+"/order"] = parseInt(k);
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[k].key+"/order"] = parseInt(k);
             }
             Cipressus.db.update(updates)
             .then(function(snapshot){
@@ -104,8 +105,8 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                 console.log($scope.news[key-1].key);
                 $rootScope.loading = true;
                 var updates = {};
-                updates["news/"+$scope.news[key].key+"/order"] = $scope.news[key].order-1;
-                updates["news/"+$scope.news[key-1].key+"/order"] = $scope.news[key].order;
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[key].key+"/order"] = $scope.news[key].order-1;
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[key-1].key+"/order"] = $scope.news[key].order;
                 Cipressus.db.update(updates)
                 .then(function(snapshot){
                     // Luego de actualizar en DB, cambiar orden de los arreglos que se muestra en la tabla
@@ -130,8 +131,8 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                 console.log($scope.news[key+1].key);
                 $rootScope.loading = true;
                 var updates = {};
-                updates["news/"+$scope.news[key].key+"/order"] = $scope.news[key].order+1;
-                updates["news/"+$scope.news[key+1].key+"/order"] = $scope.news[key].order;
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[key].key+"/order"] = $scope.news[key].order+1;
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[key+1].key+"/order"] = $scope.news[key].order;
                 Cipressus.db.update(updates).then(function(snapshot){
                     // Luego de actualizar en DB, cambiar orden de los arreglos que se muestra en la tabla
                     $scope.news[key].order = $scope.news[key].order + 1;
@@ -176,7 +177,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
 
             var key = $scope.selected.key;            
             $scope.selected.key = null; // Borro la clave para que no quede en la db
-            Cipressus.db.update($scope.selected,'news/'+key)
+            Cipressus.db.update($scope.selected,'news/'+$rootScope.user.course+"/"+key)
             .then(function(snapshot){
                 $scope.selected.key = key; // Volver a poner la clave para que no se pierda
                 $scope.news[key] = $rootScope.clone($scope.selected); // Actualizar local
@@ -193,7 +194,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
             });
         }else{ // Si no tiene key, hacer push
             $rootScope.loading = true;
-            Cipressus.db.push($scope.selected,'news')
+            Cipressus.db.push($scope.selected,'news/'+$rootScope.user.course)
             .then(function(snapshot){
                 $scope.selected.key = snapshot.key;
                 $scope.news.push($scope.selected);
@@ -224,7 +225,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
     var downloadNews = function(){ // Descargar noticias y usuarios de la db
         $scope.news = []; // Para que las noticias aparezcan en orden, se guardan en array
         var authors = []; // Uids de usuarios que hicieron publicaciones
-        Cipressus.db.getSorted('news','order') // Descargar lista de novedades
+        Cipressus.db.getSorted('news/'+$rootScope.user.course,'order') // Descargar lista de novedades
         .then(function(snapshot){
             snapshot.forEach(function(childSnapshot){ // Lista ordenada
                 var child = childSnapshot.val();
@@ -271,7 +272,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
     if(newsData){ // Si hay datos en local storage
         $scope.news = newsData.news;
         $scope.users = newsData.authors;
-        Cipressus.db.get("metadata/updates/news") // Descargar estampa de tiempo de ultima actualizacion de esta seccion
+        Cipressus.db.get("metadata/updates/news/"+$rootScope.user.course) // Descargar estampa de tiempo de ultima actualizacion de esta seccion
         .then(function(updateTimestamp){
             if(newsData.last_update < updateTimestamp) // Hay cambios en la base de datos
                 downloadNews(); // Descargar

@@ -89,7 +89,7 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
         $scope.updateLists();
     });
     
-    Cipressus.db.getSorted("events","start") // Descargar todos los eventos ordenados por fecha
+    Cipressus.db.getSorted("events/"+$rootScope.user.course,"start") // Descargar todos los eventos ordenados por fecha
     .then(function(events_data){
         $scope.events = {}; // Lista de eventos que completo dentro del iterator
         // Tengo que buscar el evento que acaba de empezar (para usar en la clase actual por ejemplo)

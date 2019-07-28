@@ -22,7 +22,7 @@
               <td class="truncate">{{row.name}}</td>
               <td>{{readableFileSize(row.size,true)}}</td>
               <td>{{row.format | lowercase }}</td>
-              <td>{{readableTime(row.uploaded)}}</td>
+              <td>{{getTime(3,row.uploaded)}}</td>
               <td width="1%" style="white-space:nowrap;">
                 <a title="Descargar" class="waves-effect waves-light green darken-3 btn-small btn-floating z-depth-3"
                   target="_blank" rel="noopener noreferrer" href="{{row.link}}"><i class="material-icons">get_app</i></a>
@@ -78,7 +78,7 @@
     <p>¿Está seguro que desea eliminar el archivo?</p>
     <p><b>Nombre: </b>{{fileToDelete.name}}</p>
     <p><b>Formato: </b>{{fileToDelete.format}}</p>
-    <p><b>Subido: </b>{{readableTime(fileToDelete.uploaded)}}</p>
+    <p><b>Subido: </b>{{getTime(3,fileToDelete.uploaded)}}</p>
     <br>
     <p>Esta operación no se puede deshacer.</p>
   </div>

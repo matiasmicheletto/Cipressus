@@ -153,8 +153,8 @@
         <h5 class="truncate"><i>{{users[selectedKey].degree}}</i></h5>
         <p><b>Usuario desde:</b>
           <i>{{users[selectedKey].enrolled?getTime(3,users[selectedKey].enrolled):"(Usuario no aprobado)"}}</i></p>
-        <p><b>Último acceso:</b> <i>{{readableTime(users[selectedKey].activity.last_login)}}
-            ({{relativeTime(users[selectedKey].activity.last_login)}})</i></p>
+        <p><b>Último acceso:</b> <i>{{getTime(3,users[selectedKey].activity.last_login)}}
+            ({{getTime(5,users[selectedKey].activity.last_login)}})</i></p>
         <p><b>Compañeros de comisión:</b> {{getUserNames(users, users[selectedKey].partners)}}</p>
       </div>      
     </div>

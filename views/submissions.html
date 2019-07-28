@@ -58,7 +58,7 @@
     </div>
 
     <div ng-show="selectedActivity">
-      <p><b>Vencimiento:</b> {{readableTime(selectedActivity.deadline)}}</p>
+      <p><b>Vencimiento:</b> {{getTime(3,selectedActivity.deadline)}}</p>
     </div>
 
     <div ng-show="selectedActivity" class="file-field input-field">
@@ -88,7 +88,7 @@
     <h5>Confirme la operación</h5>
     <p>¿Está seguro que desea eliminar esta entrega?</p>
     <p><b>Nombre de archivo: </b>{{submissions[fileKeyToDelete].name}}</p>
-    <p><b>Subido: </b>{{readableTime(submissions[fileKeyToDelete].status[0].timestamp)}}</p>
+    <p><b>Subido: </b>{{getTime(3,submissions[fileKeyToDelete].status[0].timestamp)}}</p>
     <br>
     <p>Esta operación no se puede deshacer.</p>
   </div>
@@ -152,7 +152,7 @@
       
           <tbody>
             <tr ng-repeat="(key,row) in submissions[submKeyView].status">
-              <td>{{readableTime(row.timestamp)}}</td>
+              <td>{{getTime(3,row.timestamp)}}</td>
               <td>
                 <div class="chip">
                   <img src="{{users[row.user].avatar}}">

@@ -258,7 +258,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     else 
                         data.push(0);
                     if(first) // Primera pasada
-                        categories.push($rootScope.readableTime($scope.eventsAll[k].start)); // Agregar evento a la lista
+                        categories.push($rootScope.getTime(3,$scope.eventsAll[k].start)); // Agregar evento a la lista
                 }
             }
             first = false;
@@ -289,7 +289,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
     var totalEvents=0, futureEvents=0, attendableEvents=0;
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"dashboard").catch(function(err){console.log(err)});
-    Cipressus.db.get('activities') // Descargar arbol de actividades
+
+    Cipressus.db.get('activities/'+$rootScope.user.course) // Descargar arbol de actividades del curso actual
         .then(function(activities_data){
             $scope.activities = activities_data; // Nodo root del arbol de notas
             Cipressus.db.get('users_private') // Descargar notas del usuario
@@ -312,7 +313,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     $rootScope.$apply(); 
                     // Descargar lista de eventos para linea del tiempo y para evaluar asistencia del usuario
                     $scope.events=[];                    
-                    Cipressus.db.getSorted('events','start') // Lista de eventos ordenados por fecha de inicio
+                    Cipressus.db.getSorted('events/'+$rootScope.user.course,'start') // Lista de eventos ordenados por fecha de inicio
                     .then(function(events_data){
                         $scope.eventsAll = {};
                         events_data.forEach(function(childSnapshot){

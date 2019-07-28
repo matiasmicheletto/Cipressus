@@ -162,7 +162,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
         }
         // Si todo esta bien, guardar
         if($scope.selectedEventExtras) // Si esta este objeto, hay que actualizar
-            Cipressus.db.update($scope.selectedEvent,"events/"+$scope.selectedEventExtras.id)
+            Cipressus.db.update($scope.selectedEvent,"events/"+$rootScope.user.course+"/"+$scope.selectedEventExtras.id)
             .then(function(snapshot){
                 // Poner el formato de calendar
                 $scope.selectedEvent.start = moment($scope.selectedEvent.start).format();
@@ -186,7 +186,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
                 $scope.$apply();
             });
         else // Si es nuevo evento, insertar en DB
-            Cipressus.db.push($scope.selectedEvent,"events")
+            Cipressus.db.push($scope.selectedEvent,"events/"+$rootScope.user.course)
             .then(function(snapshot){
                 // Poner el formato de calendar
                 $scope.selectedEvent.start = moment($scope.selectedEvent.start).format();
@@ -212,7 +212,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
 
     $scope.deleteEvent = function(){ // Borrar el ultimo evento clickeado (luego de confirmar)
         $rootScope.loading = true;
-        Cipressus.db.set(null,"events/"+$scope.selectedEventExtras.id)
+        Cipressus.db.set(null,"events/"+$rootScope.user.course+"/"+$scope.selectedEventExtras.id)
         .then(function(snapshot){
             $scope.events.splice($scope.selectedEventExtras.idx,1); // Quitar del arreglo
             $scope.refreshCalendar();
@@ -232,7 +232,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
 
     $scope.moveEvent = function(){ // Mover el elemento arrastrado (luego de confirmar)
         $rootScope.loading = true;
-        Cipressus.db.update($scope.selectedEvent,"events/"+$scope.selectedEventExtras.id)
+        Cipressus.db.update($scope.selectedEvent,"events/"+$rootScope.user.course+"/"+$scope.selectedEventExtras.id)
         .then(function(snapshot){
             // Agregarle los atributos de indice e identificador para que quede en local
             $scope.selectedEvent.id = $scope.selectedEventExtras.id;
@@ -257,7 +257,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
     
     Cipressus.utils.activityCntr($rootScope.user.uid,"calendar").catch(function(err){console.log(err)});
 
-    Cipressus.db.get("events") // Descargar todos los eventos y renderizar en calendar
+    Cipressus.db.get("events/"+$rootScope.user.course) // Descargar todos los eventos del curso y renderizar en calendar
     .then(function(events_data){
         var idx = 0; // Guardo los indices del arreglo
         for(k in events_data){ // Convertir las actividades en eventos de calendar

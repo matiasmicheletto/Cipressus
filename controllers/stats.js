@@ -127,7 +127,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                         else
                             data.push(0);
                         if (first) // Primera pasada
-                            categories.push($rootScope.readableTime($scope.events[k].start)); // Agregar evento a la lista
+                            categories.push($rootScope.getTime(3,$scope.events[k].start)); // Agregar evento a la lista
                     }
                 }
                 first = false;
@@ -585,14 +585,15 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
             Cipressus.db.get('users_private') // Descargar lista de usuarios aceptados
                 .then(function (users_private_data) {
                     // Mezclar los atributos
-                    for (var k in users_private_data)
-                        for (var j in users_private_data[k])
+                    // #TODO listar solo usuarios del curso actual
+                    for (var k in users_private_data) // Para cada usuario
+                        for (var j in users_private_data[k]) // Para cada atributo del usuario actual
                             $scope.users[k][j] = users_private_data[k][j];
                     // Descargar lista de actividades
-                    Cipressus.db.get('activities')
+                    Cipressus.db.get('activities/'+$rootScope.user.course)
                         .then(function (activities_data) {
                             $scope.activities = activities_data;
-                            Cipressus.db.get('events') // Descargar la lista de clases
+                            Cipressus.db.get('events/'+$rootScope.user.course) // Descargar la lista de clases
                                 .then(function (events_data) {
                                     $scope.events = events_data;
                                     updateScoreBarPlot(); // Cargar los datos al grafico de barras                    

@@ -78,7 +78,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
 
     $rootScope.loading = true; // Preloader
     $rootScope.userLogged = false; // Indicador de usuario logeado para habilitar componentes de ventana
-    $location.path("/login"); // Ir a vista de logeo
+    $location.path("/login"); // Ir a vista de logeo #TODO: cambiar modelo por uno que admita acceso sin login
     $rootScope.bodyClass = ""; // Clase del body (para poner fondos)
 
     // Configuracion de moment.js
@@ -90,8 +90,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     });
 
     //// Utilidades ////
-    
-    $rootScope.greetings = function(){ // Saludo de bienvenida
+    $rootScope.greetings = function(){ // Retorna saludo de bienvenida
         var split_afternoon = 12;
         var split_evening = 19; 
         var currentHour = parseFloat(moment().format("HH"));
@@ -103,33 +102,25 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             return "Buenos días";
     };
 
-    $rootScope.readableTime = function(timestamp){ // Fecha y hora formal
-        return moment(timestamp).format("DD/MM/YYYY HH:mm");
-    };
-
-    $rootScope.relativeTime = function(timestamp){ // Tiempo relativo al actual
-        return moment(timestamp).fromNow();
-    };
-
     $rootScope.getTime = function(code,stamp){ // Para ejecutar moment en view
         var time;
         switch(code){
-            case 0:
+            case 0: // Estampa de tiempo en view
                 time = Date.now();
                 break;
-            case 1:
-                time = moment(Date.now()).format("DD/MM/YYYY HH:mm"); // readableTime()?
+            case 1: // Fecha y hora actual
+                time = moment(Date.now()).format("DD/MM/YYYY HH:mm");
                 break;
-            case 2:
+            case 2: // Solo fecha actual
                 time = moment(Date.now()).format("DD/MM/YYYY");
                 break;
-            case 3:
+            case 3: // Fecha y hora de argumento
                 time = moment(stamp).format("DD/MM/YYYY HH:mm");
                 break;
-            case 4:
+            case 4: // Solo fecha de argumento
                 time = moment(stamp).format("DD/MM/YYYY");
                 break;
-            case 5:
+            case 5: // Relativo al actual
                 time = moment(stamp).fromNow();
                 break;
             default:
@@ -139,7 +130,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     };
 
     $rootScope.getUserNames = function (users, userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
-        if (users) { // Esperar a que se bajen de la db
+        if (users) { // Se puede llamar a esta funcion cuando aun no hay datos porque se ejecuta en view
             var names = [];
             for (var k in userUids)
                 names.push(users[userUids[k]].secondName);
@@ -183,7 +174,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     });
 
     $rootScope.signOut = function(){ // Callback para el boton de salir
-        $location.path("/login");
+        $location.path("/login"); // #TODO: navigation no debe forzar ir a login
         $rootScope.userLogged = false;
         Cipressus.users.signOut()
         .then(function(res){
@@ -198,7 +189,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     };
 
     $rootScope.sendHelp = function(){ // Enviar mensaje de ayuda a los usuarios administradores
-        // TODO: enviar email
+        // #TODO: enviar email con el mensaje de auyda
         console.log($rootScope.helpMessage);
         M.toast({html: "Listo! Te enviaremos una respuesta",classes: 'rounded green darken-3',displayLength: 2500});
         help_modal.close();
@@ -210,14 +201,17 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         .then(function(public_data){
             $rootScope.user = public_data;
             $rootScope.user.uid = uid;
-            Cipressus.db.get('users_private/'+uid) // Descargar datos privados de usuario
+            Cipressus.db.get('users_private/'+uid) // Descargar informacion dde usuario para el sistema
             .then(function(private_data){
                 if(private_data){ // Usuario aceptado por admin
                     $rootScope.user.admin = private_data.admin;
+                    // #TODO: enrolled y course deberia ser lo mismo
                     $rootScope.user.enrolled = private_data.enrolled;
-                }else{ // Usuario no aceptado aun
+                    $rootScope.user.course = private_data.course;
+                }else{ // Usuario visitante
                     $rootScope.user.admin = false;
                     $rootScope.user.enrolled = null;
+                    $rootScope.user.course = null;
                 }
 
                 // Monitoreo de actividad
@@ -274,7 +268,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     Cipressus.users.onUserSignedOut = function(){ // Cuando cierra la sesion (puede ser desde otro lugar)
         $rootScope.sidenav.close();
         $rootScope.userLogged = false;
-        $location.path("/login"); // Ir a vista de logeo
+        $location.path("/login"); // #TODO: Ir a vista de login?
         $rootScope.loading = false; // Preloader
         $rootScope.$apply();
     };
@@ -381,6 +375,9 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
 
 
     /////// PWA ///////
+
+    // #TODO: agregar boton para permitir instalar aunque haya cancelado la primera vez
+
     var isInStandaloneMode = function() { return ('standalone' in window.navigator) && (window.navigator.standalone); };
     
     if (is.ios() && !isInStandaloneMode()) {

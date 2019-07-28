@@ -65,7 +65,7 @@
                     <div class="tl-container {{ev.side}}" ng-repeat="(key,ev) in events track by $index">
                         <div class="tl-content">
                         <p><b>{{ev.title}}</b></p>
-                        <p style="font-size: 75%"><i>{{relativeTime(ev.start)}}</i></p>
+                        <p style="font-size: 75%"><i>{{getTime(5,ev.start)}}</i></p>
                         <p ng-bind-html="ev.info" class="truncate"></p>
                         </div>
                     </div>

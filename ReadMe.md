@@ -8,8 +8,8 @@ Incluye una GUI para controlar un tester de circuitos digitales basado en Arduin
 
 
 ### Características
-  - Registro con email y contraseña.
-  - Usuarios con roles de alumnos o docentes.
+  - Acceso mediante registro con email y contraseña.
+  - Usuarios con roles de alumnos, docentes o visitante.
   - Perfil de usuario personalizable.
   - Publicación de comunicados y novedades.
   - Consulta de cronograma de actividades.
@@ -85,7 +85,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 -activities             // Contiene la estructura de actividades, puntajes, vencimientos, etc
  |
  + ... (arbol)
--events                 // Lista de eventos de calendario
+-events/courseID        // Lista de eventos de calendario
  | 
  +-(child_key)          // ID firebase del evento
   |
@@ -97,7 +97,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-info                // Detalles del evento formato html
   +-timestamp           // Fecha de publicacion/edicion
   +-color               // Color de la etiqueta
--news                   // Lista de comunicados a mostrar en home
+-news/courseID          // Lista de comunicados a mostrar en home
  |
  +-(child_key)          // ID firebase de la noticia
   |
@@ -106,7 +106,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-order               // Numero para ordenar el listado
   +-timestamp           // Fecha de publicacion/edicion
   +-title               // Titulo del post
--sources                // Listas de archivos
+-sources/courseID       // Listas de archivos
  |
  +-(child_key)          // Subcategoria de directorio
   |
@@ -121,7 +121,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     +-size              // Tamanio en storage
     +-format            // Formato del archivo
     +-uploaded          // Fecha de carga
--submissions            // Lista de entregas realizadas por alumnos
+-submissions/courseID   // Lista de entregas realizadas por alumnos
  |
  +-(child_key)          // Identificador de la entrega
   |
@@ -260,10 +260,16 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
+  - [Feature] Definir un modelo de múltiples árboles de actividades. Esto permite tener distintos cursos a la vez. Cada usuario debe linkearse a un arbol por medio de su rol. Si no tiene arbol asignado, es un usuario 'invitado' y tambien se puede definir un arbol 'root' para usuarios admins.
+    Entradas que deben reorganizarse:
+      - activities
+      - events
+      - news
+      - sources
+      - submissions
   - [Feature] Admitir calificaciones por encima del 100% (chequear si el modelo lo soporta).
   - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez (hay que modificar varios controllers).
   - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
-  - [Feature] Separar los grupos de usuarios en cursos.
   - [Feature] Probador de circuitos: implementar verificacion de tabla de verdad.
   - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
   - [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.

@@ -5,7 +5,7 @@
     <div class="card hoverable z-depth-1" ng-repeat="entry in news" ng-show="entry.timestamp < now">
         <div class="right chip">
             <img src="{{users[entry.author].avatar}}">
-            Publicado {{relativeTime(entry.timestamp)}} por {{users[entry.author].name}}
+            Publicado {{getTime(5,entry.timestamp)}} por {{users[entry.author].name}}
         </div>
         <div class="card-content">
             <h5><b>{{entry.title}}</b></h5>

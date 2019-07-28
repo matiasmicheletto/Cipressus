@@ -21,7 +21,7 @@
               {{users[row.author].name}}
             </div>
           </td>
-          <td>{{readableTime(row.timestamp)}}</td>
+          <td>{{getTime(3,row.timestamp)}}</td>
           <td width="1%" style="white-space:nowrap;">
             <a title="Editar" class="waves-effect waves-light blue darken-4 btn-small btn-floating z-depth-3 modal-trigger" data-target="edit_modal" ng-click="select(key)"><i class="material-icons">edit</i></a>
             <a title="Ver" class="waves-effect waves-light green darken-4 btn-floating btn-small z-depth-3 modal-trigger" data-target="view_modal" ng-click="select(key)"><i class="material-icons">visibility</i></a>
@@ -84,7 +84,7 @@
     <div class="card hoverable z-depth-1">
         <div class="right chip">
             <img src="{{users[selected.author].avatar}}">
-            Publicado {{relativeTime(selected.timestamp)}} por {{users[selected.author].name}}
+            Publicado {{getTime(5,selected.timestamp)}} por {{users[selected.author].name}}
         </div>
         <div class="card-content">                         
             <h5><b>{{selected.title}}</b></h5>

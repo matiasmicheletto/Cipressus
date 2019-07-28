@@ -38,7 +38,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                             obs: observs // Cada status lleva un mensaje opcional
                         }]
                     };
-                    Cipressus.db.push(reference,"submissions")
+                    Cipressus.db.push(reference,"submissions/"+$rootScope.user.course)
                     .then(function (res2) {
                         console.log(res2);
                         $scope.submissions[res2.key] = reference;
@@ -103,7 +103,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                 obs: $scope.submissions[key].status[$scope.submissions[key].status.length-1].obs // Copiar original
             };
             $scope.submissions[key].status.push(newStatus); // Agrego el estado al objeto local
-            Cipressus.db.update($scope.submissions[key],"submissions/"+key) // Registrar accion
+            Cipressus.db.update($scope.submissions[key],"submissions/"+$rootScope.user.course+"/"+key) // Registrar accion
             .then(function (res) {
                 M.toast({
                     html: "Movimiento registrado",
@@ -154,7 +154,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     obs: obs // Mensaje del evaluador
                 };
                 $scope.submissions[$scope.evaluatingKey].status.push(newStatus); // Agrego el estado al objeto local
-                Cipressus.db.update(JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey])),"submissions/"+$scope.evaluatingKey) // Registrar accion
+                Cipressus.db.update(JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey])),"submissions/"+$rootScope.user.course+"/"+$scope.evaluatingKey) // Registrar accion
                 .then(function (res) {
                     M.toast({
                         html: "Movimiento registrado",
@@ -204,7 +204,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         Cipressus.storage.delete($scope.submissions[$scope.fileKeyToDelete].filename, "Submissions")
             .then(function (res) {
                 // Ahora hay que borrar la referencia de la db
-                Cipressus.db.set(null, "submissions/"+$scope.fileKeyToDelete) 
+                Cipressus.db.set(null, "submissions/"+$rootScope.user.course+"/"+$scope.fileKeyToDelete) 
                     .then(function (res2) {
                         // Eliminar entrada de la tabla y decrementar contador de elementos
                         delete $scope.submissions[$scope.fileKeyToDelete];
@@ -253,7 +253,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"submissions").catch(function(err){console.log(err)});
 
-    Cipressus.db.get('submissions') // Descargar lista de archivos entregados por todos los alumnos
+    Cipressus.db.get('submissions/'+$rootScope.user.course) // Descargar lista de archivos entregados por todos los alumnos
         .then(function (submissions_data) { // Nota: No hay filtrado de archivos descargados -> usuarios pueden leer entregas de otros alumnos
             $scope.submissions = {};
             $scope.submCnt = 0; // Contador de entregas
@@ -270,7 +270,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
             Cipressus.db.get('users_public') // Descargar lista de usuarios para tener info de las comisiones
             .then(function (users_data) {
                 $scope.users = users_data; // Lista de usuarios
-                Cipressus.db.get('activities')
+                Cipressus.db.get('activities/'+$rootScope.user.course) // Descargar datos de la materia para tener info de vencimientos
                 .then(function (activities_data) {
                     $scope.activities = []; // Convertir el arbol en array (no lo uso como arbol aca)
                     $scope.activities = Cipressus.utils.getArray(activities_data, $scope.activities, '');          
