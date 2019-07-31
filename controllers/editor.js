@@ -248,7 +248,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                             authors: $scope.users,
                             last_update: Date.now()
                         };
-                        localStorageService.set("newsData",newsData);
+                        localStorageService.set("newsData_"+$rootScope.user.course,newsData);
                         $rootScope.loading = false;
                         $rootScope.$apply(); 
                     }
@@ -268,7 +268,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
     // Monitoreo de actividad
     Cipressus.utils.activityCntr($rootScope.user.uid,"editor").catch(function(err){console.log(err)});
 
-    var newsData = localStorageService.get("newsData"); // Localmente se guarda news, authors y last_update
+    var newsData = localStorageService.get("newsData_"+$rootScope.user.course); // Localmente se guarda news, authors y last_update
     if(newsData){ // Si hay datos en local storage
         $scope.news = newsData.news;
         $scope.users = newsData.authors;

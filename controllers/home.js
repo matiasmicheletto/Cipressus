@@ -8,14 +8,11 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
     $rootScope.loading = true;
     $rootScope.sidenav.close();
 
-    // Las publicaciones se deshabilitan configurando la fecha en el futuro
-    $scope.now = Date.now(); // Se usa para comparar la fecha de publicacion con actual y controlar visibilidad
-
     $scope.testFSAnswers = []; // Objeto auxiliar para mostrar las respuestas del tests (esta con un watch dentro de la directiva)
 
     ///// Cuestionario Felder-Silvermann
     $scope.testStatus = 0; // 0->Espera inicio, 1->Espera completar respuestas, 2->Respuestas completas, espera "Finalizar", 3->Respuestas enviados
-    if(!$rootScope.user.test_fs && !$rootScope.user.admin){ // Si el usuario no es admin y aun no responde el test de FS, mostrar modal
+    if(!$rootScope.user.test_fs && !$rootScope.user.admin && $rootScope.user.enrolled){ // Si el usuario no es admin y aun no responde el test de FS, mostrar modal
         var test_modal = M.Modal.init(document.getElementById("test_modal"), {
             dismissible: false
         });
@@ -82,7 +79,7 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
     var downloadNews = function () { // Descargar noticias y usuarios de la db
         $scope.news = []; // Para que las noticias aparezcan en orden, se guardan en array
         var authors = []; // Uids de usuarios que hicieron publicaciones
-        if($rootScope.user.course) // Si tiene asignado un curso, descargar noticias
+        if($rootScope.user.course){ // Si tiene asignado un curso, descargar noticias
             Cipressus.db.getSorted('news/'+$rootScope.user.course, 'order') // Descargar lista de novedades
                 .then(function (snapshot) {
                     snapshot.forEach(function (childSnapshot) { // Lista ordenada
@@ -105,7 +102,7 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                                         authors: $scope.users,
                                         last_update: Date.now()
                                     };
-                                    localStorageService.set("newsData", newsData);
+                                    localStorageService.set("newsData_"+$rootScope.user.course, newsData);
                                     $rootScope.loading = false;
                                     $rootScope.$apply();
                                 }
@@ -128,6 +125,9 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                         displayLength: 2000
                     });
                 });
+        }else{ // Si el usuario no tiene curso asignado
+            $rootScope.loading = false;
+        }
     };
 
 
@@ -136,7 +136,7 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
         console.log(err);
     });
 
-    var newsData = localStorageService.get("newsData"); // Localmente se guarda news, authors y last_update
+    var newsData = localStorageService.get("newsData_"+$rootScope.user.course); // Localmente se guarda news, authors y last_update
     if (newsData) { // Si hay datos en local storage
         $scope.news = newsData.news;
         $scope.users = newsData.authors;

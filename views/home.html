@@ -2,7 +2,12 @@
 
     <h3>Novedades</h3>
 
-    <div class="card hoverable z-depth-1" ng-repeat="entry in news" ng-show="entry.timestamp < now">
+    <h5 class="grey-text text-lighten-1" ng-hide="news.length > 0">
+        <br><br>
+        <i>Aún no tiene un curso asignado</i>
+    </h5>
+
+    <div class="card hoverable z-depth-1" ng-repeat="entry in news" ng-show="entry.timestamp < getTime(0)">
         <div class="right chip">
             <img src="{{users[entry.author].avatar}}">
             Publicado {{getTime(5,entry.timestamp)}} por {{users[entry.author].name}}
