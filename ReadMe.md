@@ -1,11 +1,11 @@
 # Cipressus
 
-CIPRESSUS es un sistema de gestión de contenidos para el aprendizaje (LCMS). 
-
-Permite registrarse con correo electrónico, configurar el perfil del usuario, consultar el cronograma de actividades de la materia, enviar y recibir mensajes, descargar material de estudio y realizar entrega de informes. Los usuarios con rol de docentes pueden crear y editar publicaciones, configurar la lista de actividades, agregar o quitar eventos como clases, consultas o exámenes, gestionar la lista de usuarios y alumnos, descargar y calificar archivos enviados por alumnos.
+Sistema de gestión de contenidos para el aprendizaje (LCMS). 
 
 Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales.
 
+
+![Screenshot1](images/screenshots/scrshot1lr.png "Simulador") ![Screenshot2](images/screenshots/scrshot2lr.png "Perfil")
 
 ### Características
   - Acceso mediante registro con email y contraseña.
@@ -16,7 +16,7 @@ Incluye una GUI para controlar un tester de circuitos digitales basado en Arduin
   - Calificaciones actualizadas en tiempo real.
   - Tablero de calificaciones animado con información de progreso de la materia, actividades entregadas, calificaciones generales del curso y lista de eventos próximos.
   - Entrega online de informes o archivos para evaluación.
-  - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento o simulación de situaciones.
+  - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento y simulación de sistemas.
   - Simulador de circuitos lógicos embebido en la misma app.
   - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios alumnos. 
   - Estadística y analíticos de usuarios alumnos sobre uso de la app, origen y frecuencia de acceso, progreso de notas.
@@ -38,8 +38,6 @@ Website: http://www.diec.uns.edu.ar/rts
 #### Diseño e implementación
 Ing. Matías J. Micheletto  
 Email: matias.micheletto@uns.edu.ar  
-Documentación: https://github.com/matiasmicheletto/cipressus  
-
 
 
 ## Librerías importadas
