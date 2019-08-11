@@ -34,7 +34,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
                                 downloads: 0
                             });
                         }
-                        Cipressus.db.pushMultiple($scope.fileListQueue, "sources/" + $rootScope.user.course + "/" + folderKey + "/files")
+                        Cipressus.db.pushMultiple($scope.fileListQueue, "sources/" + folderKey + "/files")
                             .then(function (res2) {
                                 // Actualizar tablas (carpetas) de archivos
                                 var idx = 0; // Contador para items de carpeta o directorio
@@ -112,7 +112,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
                     folderKey = k; // Identificador a donde van los archivos subidos
 
             if(folderKey == ""){ // Si no se encontro, crear nueva entrada                
-                Cipressus.db.push({name:folderName},"sources/"+$rootScope.user.course)
+                Cipressus.db.push({name:folderName},"sources")
                 .then(function(res){
                     folderKey = res.key;
                     uploadFiles(folderKey); // Continuar con la carga de archivos
@@ -143,7 +143,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
         Cipressus.storage.delete($scope.fileToDelete.filename, "Files")
             .then(function (res) {
                 // Ahora hay que borrar la referencia de la db
-                Cipressus.db.set(null, "sources/"+$rootScope.user.course+"/"+fileKeyToDelete[0]+"/files/"+fileKeyToDelete[1]) // #TODO: indicar path de la referencia
+                Cipressus.db.set(null, "sources/"+fileKeyToDelete[0]+"/files/"+fileKeyToDelete[1]) // #TODO: indicar path de la referencia
                     .then(function (res2) {
                         // Eliminar los elementos de la vista                                        
                         delete $scope.sources[fileKeyToDelete[0]].files[fileKeyToDelete[1]];
@@ -205,7 +205,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"sources").catch(function(err){console.log(err)});
 
-    Cipressus.db.get('sources/'+$rootScope.user.course) // Descargar lista de novedades
+    Cipressus.db.get('sources') // Descargar lista de novedades
         .then(function (snapshot) {
             //console.log(snapshot);
             $scope.sources = snapshot;

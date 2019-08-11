@@ -104,7 +104,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-order               // Numero para ordenar el listado
   +-timestamp           // Fecha de publicacion/edicion
   +-title               // Titulo del post
--sources/courseID       // Listas de archivos
+-sources                // Listas de archivos
  |
  +-(child_key)          // Subcategoria de directorio
   |
@@ -258,20 +258,14 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
-  - [Feature] Definir un modelo de múltiples árboles de actividades. Esto permite tener distintos cursos a la vez. Cada usuario debe linkearse a un arbol por medio de su rol. Si no tiene arbol asignado, es un usuario 'invitado' y tambien se puede definir un arbol 'root' para usuarios admins.
-    Entradas que deben reorganizarse:
-      - activities
-      - events
-      - news
-      - sources
-      - submissions
-  - [Feature] Admitir calificaciones por encima del 100% (chequear si el modelo lo soporta).
-  - [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez (hay que modificar varios controllers).
-  - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
-  - [Feature] Probador de circuitos: implementar verificacion de tabla de verdad.
-  - [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
-  - [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
-  - [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo (salvo que este rebotado para reenviar)
-  - [Feature] Notificaciones de segundo plano (cuando la app esta instalada y el usuario logeado).
-  - [Feature] Configuración de árbol de actividades. 
-  - [Feature] Modelo de múltiples materias (con el mismo esquema).
+- [Feature] Esquema de múltiples cursos. Queda implementar varios filtros para no leer datos de usuarios ajenos al curso actual.  
+- [Feature] Admitir calificaciones por encima del 100% (chequear si el modelo lo soporta).
+- [Impr] Calcular asistencia de todo el curso al momento de evaluar asistencia y guardar junto con notas para evitar calcular cada vez (hay que modificar varios controllers).
+- [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db.
+- [Feature] Probador de circuitos: implementar verificacion de tabla de verdad.
+- [Feature] Dialogo inicial de guia para el usuario (agregar foto de perfil, indicar compañeros de comision, etc)
+- [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
+- [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo (salvo que este rebotado para reenviar)
+- [Feature] Notificaciones de segundo plano (cuando la app esta instalada y el usuario logeado).
+- [Feature] Configuración de árbol de actividades. 
+- [Feature] Modelo de múltiples materias (con el mismo esquema).

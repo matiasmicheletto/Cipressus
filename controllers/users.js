@@ -8,6 +8,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
     $rootScope.loading = true;
     $rootScope.sidenav.close();
     $scope.selectedKey = null;
+    $scope.showAll = true;
     var attendableEvents=0; // Contador de eventos para calcular asistencia
 
     // Los inputs date no funcionan con ng-change entonces la actualizacion
@@ -21,10 +22,16 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         $scope.$apply();
     };
 
-    $scope.viewUser = function (key) { // Selecciona un usuario de la lista
+    $scope.viewUser = function (key) { // Selecciona un usuario de la lista para ver detalles
+        // Tambien se abre el modal con detalles desde la vista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
         evalAttendance();
         updatePolarPlot();
+    };
+
+    $scope.selectUser = function(key) { // Seleccionar usuario para aprobar inscripcion a un curso
+        $scope.selectedKey = key;
+        confirmEnrollModal.open();
     };
 
     var evalAttendance = function(){ // Calcular asistencia del alumno seleccionado
@@ -93,37 +100,40 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
     };
 
     $scope.enrollUser = function () { // Aprobar usuario como alumno
-        $rootScope.loading = true;
         var user_private = { // Objeto a subir
             admin: false,
+            course: $rootScope.user.course, // El ID del curso del admin que esta dando de alta
             enrolled: Date.now()
             // scores y submits se completan a medida que apruebe actividades
         };
-        Cipressus.db.update(user_private, "users_private/" + $scope.selectedKey)
-            .then(function (snapshot) {
-                // Copiar atributos para actualizar vista
-                $scope.users[$scope.selectedKey].admin = false;
-                $scope.users[$scope.selectedKey].enrolled = user_private.enrolled;
-                M.toast({
-                    html: "Listo!",
-                    classes: 'rounded green darken-3',
-                    displayLength: 2000
-                });
-                confirmEnrollModal.close();
-                $scope.selectedKey = null; // Deseleccionar user
-                $rootScope.loading = false;
-                $scope.$apply();
-            })
-            .catch(function (err) {
-                console.log(err);
-                M.toast({
-                    html: "Ocurrió un error al acceder a la base de datos",
-                    classes: 'rounded red',
-                    displayLength: 2000
-                });
-                $rootScope.loading = false;
-                $scope.$apply();
-            })
+        if($scope.selectedKey){ // Habria que agrega un mejor control de la key que se esta escribiendo
+            $rootScope.loading = true;
+            Cipressus.db.update(user_private, "users_private/" + $scope.selectedKey)
+                .then(function (snapshot) {
+                    // Copiar atributos para actualizar vista
+                    $scope.users[$scope.selectedKey].admin = false;
+                    $scope.users[$scope.selectedKey].enrolled = user_private.enrolled;
+                    M.toast({
+                        html: "Listo!",
+                        classes: 'rounded green darken-3',
+                        displayLength: 2000
+                    });
+                    confirmEnrollModal.close();
+                    $scope.selectedKey = null; // Deseleccionar user
+                    $rootScope.loading = false;
+                    $scope.$apply();
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    M.toast({
+                        html: "Ocurrió un error al acceder a la base de datos",
+                        classes: 'rounded red',
+                        displayLength: 2000
+                    });
+                    $rootScope.loading = false;
+                    $scope.$apply();
+                })
+        }
     };
 
     $scope.evalUser = function (key) { // Preparar para ingresar calificaciones al usuario seleccionado

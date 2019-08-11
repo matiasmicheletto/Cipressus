@@ -173,7 +173,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
         $scope.selected.content = quill.container.firstChild.innerHTML.replace(new RegExp("<img src=", 'g'), "<img class='responsive-img' src="); // Agregar clase responsive a las imagenes
         if($scope.selected.key){ // Si ya tiene una clave, hay que sobreescribir noticia en DB
 
-            /// TODO: hay errores en esta parte
+            /// #TODO: hay errores en esta parte
 
             var key = $scope.selected.key;            
             $scope.selected.key = null; // Borro la clave para que no quede en la db
@@ -237,26 +237,31 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
             });  
             var ready = authors.length; // Cantidad de descargas que hay que hacer
             $scope.users = {};
-            for(var k in authors){
-                Cipressus.db.get('users_public/'+authors[k]) // Descargar datos de los autores de publicaciones solamente
-                .then(function(user_data){
-                    $scope.users[authors[k]] = user_data; 
-                    ready--; // Contar descarga
-                    if(ready == 0){ // Si no quedan mas, terminar
-                        newsData = { // Objeto a guardar en localStorage
-                            news: $scope.news,
-                            authors: $scope.users,
-                            last_update: Date.now()
-                        };
-                        localStorageService.set("newsData_"+$rootScope.user.course,newsData);
-                        $rootScope.loading = false;
-                        $rootScope.$apply(); 
-                    }
-                })
-                .catch(function(err){
-                    console.log(err);
-                    M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
-                });
+            if(authors.length > 0){
+                for(var k in authors){
+                    Cipressus.db.get('users_public/'+authors[k]) // Descargar datos de los autores de publicaciones solamente
+                    .then(function(user_data){
+                        $scope.users[authors[k]] = user_data; 
+                        ready--; // Contar descarga
+                        if(ready == 0){ // Si no quedan mas, terminar
+                            newsData = { // Objeto a guardar en localStorage
+                                news: $scope.news,
+                                authors: $scope.users,
+                                last_update: Date.now()
+                            };
+                            localStorageService.set("newsData_"+$rootScope.user.course,newsData);
+                            $rootScope.loading = false;
+                            $rootScope.$apply(); 
+                        }
+                    })
+                    .catch(function(err){
+                        console.log(err);
+                        M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+                    });
+                }
+            }else{
+                $rootScope.loading = false;
+                $rootScope.$apply(); 
             }
         })
         .catch(function(err){

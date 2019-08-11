@@ -91,30 +91,35 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                     });
                     var ready = authors.length; // Cantidad de descargas que hay que hacer
                     $scope.users = {};
-                    for (var k in authors) {
-                        Cipressus.db.get('users_public/' + authors[k]) // Descargar datos de los autores de publicaciones solamente
-                            .then(function (user_data) {
-                                $scope.users[authors[k]] = user_data;
-                                ready--; // Contar descarga
-                                if (ready == 0) { // Si no quedan mas, terminar
-                                    newsData = { // Objeto a guardar en localStorage
-                                        news: $scope.news,
-                                        authors: $scope.users,
-                                        last_update: Date.now()
-                                    };
-                                    localStorageService.set("newsData_"+$rootScope.user.course, newsData);
-                                    $rootScope.loading = false;
-                                    $rootScope.$apply();
-                                }
-                            })
-                            .catch(function (err) {
-                                console.log(err);
-                                M.toast({
-                                    html: "Ocurrió un error al acceder a la base de datos",
-                                    classes: 'rounded red',
-                                    displayLength: 2000
+                    if(authors.length > 0){
+                        for (var k in authors) {
+                            Cipressus.db.get('users_public/' + authors[k]) // Descargar datos de los autores de publicaciones solamente
+                                .then(function (user_data) {
+                                    $scope.users[authors[k]] = user_data;
+                                    ready--; // Contar descarga
+                                    if (ready == 0) { // Si no quedan mas, terminar
+                                        newsData = { // Objeto a guardar en localStorage
+                                            news: $scope.news,
+                                            authors: $scope.users,
+                                            last_update: Date.now()
+                                        };
+                                        localStorageService.set("newsData_"+$rootScope.user.course, newsData);
+                                        $rootScope.loading = false;
+                                        $rootScope.$apply();
+                                    }
+                                })
+                                .catch(function (err) {
+                                    console.log(err);
+                                    M.toast({
+                                        html: "Ocurrió un error al acceder a la base de datos",
+                                        classes: 'rounded red',
+                                        displayLength: 2000
+                                    });
                                 });
-                            });
+                            }
+                    }else{
+                        $rootScope.loading = false;
+                        $rootScope.$apply();
                     }
                 })
                 .catch(function (err) {

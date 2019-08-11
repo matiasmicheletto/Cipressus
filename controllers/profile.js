@@ -197,7 +197,7 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
             $scope.users = users_public_data;
             // Lista de usuarios para autocompletador
             var userList = {};
-            for (var k in $scope.users) // Para excluir admins hay que bajar users_private
+            for (var k in $scope.users) // Para excluir admins o usuarios de otros cursos hay que bajar users_private
                 userList[$scope.users[k].name + " " + $scope.users[k].secondName] = $scope.users[k].avatar; // Lista de nombres y fotos
             M.Autocomplete.init(document.querySelectorAll('.autocomplete'), {
                 data: userList

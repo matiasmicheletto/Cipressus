@@ -152,7 +152,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         var drillDownData = [];
 
         for (var k in $scope.users) { // Para cada usuario
-            if(!$scope.users[k].admin && $scope.users[k].scores){ // Si tiene notas y no es admin
+            if(!$scope.users[k].admin && $scope.users[k].scores && $scope.users[k].course == $rootScope.user.course){ // Si tiene notas, no es admin y coincide con el curso
                 seriesData.push({ // Evaluar e insertar resultado en array
                     name: k,
                     y: Cipressus.utils.eval($scope.users[k],$scope.activities),
@@ -284,7 +284,6 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         }
     };
 
-
     // Inicializacion 
     var totalEvents=0, futureEvents=0, attendableEvents=0;
 
@@ -293,7 +292,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
     Cipressus.db.get('activities/'+$rootScope.user.course) // Descargar arbol de actividades del curso actual
         .then(function(activities_data){
             $scope.activities = activities_data; // Nodo root del arbol de notas
-            Cipressus.db.get('users_private') // Descargar notas del usuario
+            Cipressus.db.get('users_private') // Descargar datos de todos los usuarios #TODO: filtrar a los del curso actual
                 .then(function(user_data){
                     $scope.users = user_data;
                     $scope.user = user_data[$rootScope.user.uid];
