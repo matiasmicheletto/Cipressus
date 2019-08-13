@@ -79,7 +79,7 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
 
     };
     
-    //// Inicializacion ////
+    //// Inicializacion //// 
 
     Cipressus.utils.activityCntr($rootScope.user.uid,"attendance").catch(function(err){console.log(err)});
 
@@ -94,24 +94,28 @@ app.controller("attendance", ['$scope','$rootScope','$location', function ($scop
         $scope.events = {}; // Lista de eventos que completo dentro del iterator
         // Tengo que buscar el evento que acaba de empezar (para usar en la clase actual por ejemplo)
         var today = Date.now(); // Ahora
-        var nextKey = ""; // En esta variable dejo el key del evento que pongo por defecto
-        events_data.forEach(function(childSnapshot){ // Lista ordenada de menor a mayor (esto no es asincrono)
-            key = childSnapshot.ref_.path.pieces_[1]; // Esto seria el key (buscar metodo que lo devuelva)
+        var nextKey = ""; // En esta variable dejo el key del evento que pongo por defecto        
+        events_data.forEach(function(childSnapshot){ // Lista ordenada de menor a mayor (esto no es asincrono)            
+            key = childSnapshot.ref_.path.pieces_[2]; // Esto seria el key (#HARDCODED el 2 es porque son dos niveles de keys dentro del arbol
             $scope.events[key] = childSnapshot.val(); // Hago push del evento (no se puede mandar todos de una)
             if($scope.events[key].start < today) // Los eventos futuros ya no los guardo
                 nextKey = key; // Guardo el key del evento
-        });  
+            
+        });        
         $scope.$apply(); // Hay que actualizar dom antes de inicializar el select
         document.getElementById("event_select").value = nextKey; // Seleccionar el valor defecto del select
         $scope.selectedEventKey = nextKey; // Para actualizar la tabla una vez que tenga los usuarios
         M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
         Cipressus.db.get("users_private") // Descargar lista de usuarios
         .then(function(users_private_data){
-            $scope.users = users_private_data;
+            $scope.users = {};
+            for(var k in users_private_data) 
+                if(users_private_data[k].course == $rootScope.user.course) // Solo tomo los del curso actual
+                    $scope.users[k] = users_private_data[k];
             Cipressus.db.get("users_public") // Descargar datos de usuario
             .then(function(users_public_data){
                 for(var k in users_public_data) // Los datos de usuario para listar
-                    if($scope.users[k]) // Si es usuario esta en lista de habilitados
+                    if($scope.users[k]) // Si este usuario esta en lista de habilitados
                         $scope.users[k].data = users_public_data[k]; 
                 $scope.updateLists(); // Como ya tengo el selectedEventKey, puedo generar las listas para ese dia
                 $rootScope.loading = false;

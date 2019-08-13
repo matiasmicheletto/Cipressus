@@ -154,6 +154,25 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         return bytes.toFixed(1)+' '+units[u];
     };
 
+    $rootScope.clone = function(obj) { // Para copiar atributos de objetos sin que queden referenciados
+        var copy;
+        if (null == obj || "object" != typeof obj) return obj;
+        if (obj instanceof Array) {
+            copy = [];
+            for (var i = 0, len = obj.length; i < len; i++)
+                copy[i] = $rootScope.clone(obj[i]);
+            return copy;
+        }
+        if (obj instanceof Object) {
+            copy = {};
+            for (var attr in obj) 
+                if (obj.hasOwnProperty(attr) && attr != "$$hashKey") 
+                    copy[attr] = $rootScope.clone(obj[attr]);
+            return copy;
+        }
+        throw new Error("Unable to copy obj! Its type isn't supported.");
+    };
+
     // Inicializacion componentes de materialize
     $rootScope.sidenav = M.Sidenav.init(document.querySelector('.sidenav'), {
         side: "left", 

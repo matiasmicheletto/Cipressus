@@ -45,6 +45,8 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
                                     if(!$scope.sources[folderKey]){ // Si se creo el directorio por primera vez
                                         $scope.sources[folderKey] = {name: folderName, files:{}}; // Crear el arreglo de archivos
                                     }
+                                    if(!$scope.sources[folderKey].files) // Puede existir el directorio pero no tener archivos (En caso de que se hayan borrado todos)
+                                    $scope.sources[folderKey].files = {}; // Crear solo el objeto vacio
                                 }
                                 for(var k in res2){ // Para cada key   
                                     $scope.sources[folderKey].files[res2[k].key]=$scope.fileListQueue[idx];
@@ -143,7 +145,7 @@ app.controller("sources", ['$scope', '$rootScope', '$location', function ($scope
         Cipressus.storage.delete($scope.fileToDelete.filename, "Files")
             .then(function (res) {
                 // Ahora hay que borrar la referencia de la db
-                Cipressus.db.set(null, "sources/"+fileKeyToDelete[0]+"/files/"+fileKeyToDelete[1]) // #TODO: indicar path de la referencia
+                Cipressus.db.set(null, "sources/"+fileKeyToDelete[0]+"/files/"+fileKeyToDelete[1]) // #TODO: Eliminar carpeta si ya no quedan mas archivos en la entrada
                     .then(function (res2) {
                         // Eliminar los elementos de la vista                                        
                         delete $scope.sources[fileKeyToDelete[0]].files[fileKeyToDelete[1]];
