@@ -24,6 +24,10 @@ Incluye una GUI para controlar un tester de circuitos digitales basado en Arduin
   - Notificaciones y mensajería instantánea [Próximamente].
   - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.
 
+### Hardware adjunto
+
+![Probador](images/screenshots/probador2.jpg "Probador") 
+
 
 ### Contacto
 LSD | Laboratorio de Sistemas Digitales  
