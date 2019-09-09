@@ -27,6 +27,7 @@ body {
 
 /* Login */
 .login-box{
+  border-radius: 10px;
   display: inline-block; 
   padding: 32px 35px 0px 35px; 
   background: rgba(210, 210, 210, 0.83)!important;
