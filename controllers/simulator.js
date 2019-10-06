@@ -77,7 +77,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
           {"type":"4bitAdder"},
           {"type":"2to4BinaryDecoder"},
           {"type":"3to8BinaryDecoder"},
-          {"type":"4to16BinaryDecoder"}
+          {"type":"4to16BinaryDecoder"},
+          {"type":"Virtual-In"},
+          {"type":"Virtual-Out"}
         ];
         simcir.setupSimcir($('#simcir'), data);
         currentSim = {
@@ -155,6 +157,20 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
             }
         }
     };
+
+
+    /*
+    // 
+    // Manejo externo de componentes 
+    // Ver simcir-virtual-ports.js
+    //
+
+    var h = $('#simcir').find('.simcir-device');
+    var idx = 5; // Buscar idx
+    simcir.controller([h[idx]]).getOutputs()[0].setValue(1); // Encender
+    simcir.controller([h[idx]]).getOutputs()[0].setValue(null); // Apagar
+
+    */
 
     ///// Inicializacion del controller
     $scope.circuitFileName = "";
