@@ -79,7 +79,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
           {"type":"3to8BinaryDecoder"},
           {"type":"4to16BinaryDecoder"},
           {"type":"Virtual-In"},
-          {"type":"Virtual-Out"}
+          {"type":"Virtual-Out"},
+          {"type":"Test-In"},
+          {"type":"Test-Out"}
         ];
         simcir.setupSimcir($('#simcir'), data);
         currentSim = {
@@ -159,18 +161,64 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
     };
 
 
-    /*
-    // 
-    // Manejo externo de componentes 
-    // Ver simcir-virtual-ports.js
-    //
+    $scope.analizeCircuit = function(){ // Analisis combinacional del circuito
 
-    var h = $('#simcir').find('.simcir-device');
-    var idx = 5; // Buscar idx
-    simcir.controller([h[idx]]).getOutputs()[0].setValue(1); // Encender
-    simcir.controller([h[idx]]).getOutputs()[0].setValue(null); // Apagar
+        // Obtener nombres de las entradas y salidas
+        var inputs = simcir.getExternalLabels("input");
+        var outputs = simcir.getExternalLabels("output");
 
-    */
+        // Si no hay, retornar
+        if(inputs.length == 0){
+            M.toast({html: "El circuito no tiene entradas de testeo!",classes: 'rounded red',displayLength: 2000});
+            return;
+        }
+        if(outputs.length == 0){
+            M.toast({html: "El circuito no tiene salidas de testeo!",classes: 'rounded red',displayLength: 2000});
+            return;
+        }
+
+        // Iniciar
+        $rootScope.loading = true;
+        inputs = inputs.filter((value, index, self) => self.indexOf(value) === index); // Eliminar nombres repetidos
+
+        // Objeto para mostrar resultados en modal
+        $scope.truthTable = {
+            header:{ // Nombres de las variables de entrada y salida
+                inputs:inputs,
+                outputs:outputs
+            },
+            rows:[] // Combinaciones de entrada
+        };
+
+        var N = Math.pow(2,inputs.length); // Cantidad de combinaciones
+  
+        var evalInput = function(k){ // Evaluar entrada k-esima (en binario)
+            var inputBin = k.toString(2).padStart(inputs.length,"0"); // Convertir numero de combinacion a binario
+            $scope.truthTable.rows[k] = { 
+                inputs: inputBin.split(""), // Separar bits en arreglo
+                outputs: [] // Completar salidas despues
+            }
+            for(var j in $scope.truthTable.rows[k].inputs) // Escribir entrada en el circuito del simulador
+                simcir.setInputStatus(inputs[j], $scope.truthTable.rows[k].inputs[j] == "1");
+
+            // Esperar un poco antes de leer la salida
+            setTimeout(function(){
+                // Leer la salida
+                for(var n in outputs)
+                    $scope.truthTable.rows[k].outputs[n] = simcir.getOutputStatus(outputs[n]) == 1 ? "1":"0";
+                k++; // Siguiente combinacion
+                if(k < N){ // Si quedan, pasar a la siguiente
+                    evalInput(k);
+                }else{ // Sino, terminar
+                    $rootScope.loading = false;
+                    results_modal.open();
+                    $scope.$apply();
+                }
+            },100);    
+        };
+        evalInput(0);
+    };
+
 
     ///// Inicializacion del controller
     $scope.circuitFileName = "";
@@ -178,6 +226,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
     M.Modal.init(document.getElementById("tutorial_modal"), {});
     var load_modal = M.Modal.init(document.getElementById("load_modal"), {preventScrolling: false});
     var save_modal = M.Modal.init(document.getElementById("save_modal"), {preventScrolling: false});
+    var results_modal = M.Modal.init(document.getElementById("results_modal"), {preventScrolling: false});
 
     // Inicializar simulador
     simcir.setupSimcir($('#simcir'), {

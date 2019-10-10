@@ -8,8 +8,12 @@
     <div class="card hoverable z-depth-1" id="simcir" style="width: 100%;height: 75vh;"></div>
 
     <div>
-        <a class="right waves-effect waves-white btn green darken-3 modal-trigger" data-target="save_modal" ng-click="updateFields()">Guardar</a>
-        <a class="right waves-effect waves-white btn green darken-1" ng-click="getSimulations()">Abrir</a>
+        <a class="right waves-effect waves-white btn blue darken-3" ng-click="analizeCircuit()"
+            style="margin:2px">Analizar</a>
+        <a class="right waves-effect waves-white btn green darken-3 modal-trigger" data-target="save_modal"
+            ng-click="updateFields()" style="margin:2px">Guardar</a>
+        <a class="right waves-effect waves-white btn green darken-1" ng-click="getSimulations()"
+            style="margin:2px">Abrir</a>
     </div>
 </div>
 
@@ -27,7 +31,8 @@
             <li>Para borrar un componente, arrastre hacia la barra de herramientas.</li>
             <li>Ctrl+Click (command+Click en Mac) para alternar la vista de circuito o código.</li>
             <li>Doble click en una etiqueta para renombrar dispositivo.</li>
-            <li>Doble click en una librería para abrir el circuito que contiene.</li>
+            <li>Doble click en un componente de mediana escala para abrir el circuito que contiene.</li>
+            <li>Use "Test-In" y "Test-Out" para obtener la tabla de verdad del circuito combinacional.</li>
         </ol>
 
         <p><a href="https://github.com/kazuhikoarase/simcirjs">Documentación</a></p>
@@ -39,23 +44,24 @@
         <h5>Abrir simulación</h5>
         <table class="highlight">
             <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Modificado</th>
-                <th>Componentes</th>
-              </tr>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Modificado</th>
+                    <th>Componentes</th>
+                </tr>
             </thead>
-      
+
             <tbody>
-              <tr ng-repeat="(key,row) in simulations track by $index" style="cursor:pointer" ng-click="loadCircuit(key)">
-                <td>{{row.name}}</td>
-                <td>{{getTime(3,row.timestamp)}}</td>
-                <td>{{row.size}}</td>
-              </tr>      
+                <tr ng-repeat="(key,row) in simulations track by $index" style="cursor:pointer"
+                    ng-click="loadCircuit(key)">
+                    <td>{{row.name}}</td>
+                    <td>{{getTime(3,row.timestamp)}}</td>
+                    <td>{{row.size}}</td>
+                </tr>
             </tbody>
-          </table>
+        </table>
     </div>
-    <div class="modal-footer">      
+    <div class="modal-footer">
         <a class="modal-close waves-effect waves-white btn green darken-3">Cancelar</a>
     </div>
 </div>
@@ -68,8 +74,35 @@
             <label for="filename">Nombre</label>
         </div>
     </div>
-    <div class="modal-footer">      
+    <div class="modal-footer">
         <a class="modal-close waves-effect waves-white btn red darken-3">Cancelar</a>
         <a class="waves-effect waves-white btn green darken-3" ng-click="saveCircuit()">Guardar</a>
-      </div>
+    </div>
+</div>
+
+<div id="results_modal" class="modal">
+    <div class="modal-content">
+        <h5>Análisis combinacional del circuito</h5>
+        <div class="row">
+            <div class="col s12 m6">
+                <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="(key,input) in truthTable.header.inputs track by $index" style="background-color:rgb(214, 214, 214)">{{input}}</th>
+                            <th ng-repeat="(key,output) in truthTable.header.outputs track by $index" style="background-color:rgb(163, 163, 163)">{{output}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="padding: 1px 1px;" ng-repeat="(key,row) in truthTable.rows track by $index">
+                            <td ng-repeat="(key2, col) in truthTable.rows[key].inputs track by $index" style="background-color:rgb(214, 214, 214)">{{col}}</td>
+                            <td ng-repeat="(key2, col) in truthTable.rows[key].outputs track by $index" style="background-color:rgb(163, 163, 163)">{{col}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-white btn green darken-3">Volver</a>
+    </div>
 </div>

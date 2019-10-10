@@ -63,7 +63,7 @@
         };
     }();
 
-    $s.registerDevice('External-Out', function (device) {
+    $s.registerDevice('Test-Out', function (device) {
         externalPortManager.register(device);
         var in1 = device.addInput();
         var lastLabel = device.getLabel();
@@ -88,7 +88,7 @@
         });
     });
 
-    $s.registerDevice('External-In', function (device) {
+    $s.registerDevice('Test-In', function (device) {
         externalPortManager.register(device);
         var out1 = device.addOutput();
         var size = device.getSize();
