@@ -199,12 +199,14 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
                     outputs:outputs
                 },
                 rows:[] // Combinaciones de entrada
-            }
+            },
+            minterms:[], // Miniterminos de cada salida
+            maxterms:[] // Maxiterminos de cada salida
         };
 
         var combMax = Math.pow(2,inputs.length); // Cantidad de combinaciones
   
-        var evalInput = function(k){ // Evaluar entrada k-esima (en binario)
+        var evalInput = function(k){ // Evaluar entrada k-esima (en binario) (esta es una funcion recursiva)
             var inputBin = k.toString(2).padStart(inputs.length,"0"); // Convertir numero de combinacion a binario
             $scope.circuitDetails.truthTable.rows[k] = { 
                 inputs: inputBin.split(""), // Separar bits en arreglo
@@ -215,20 +217,33 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
             // Esperar un poco antes de leer la salida
             setTimeout(function(){
-                // Leer la salida
-                for(var n in outputs)
+                // Leer cada una de las salida
+                for(var n in outputs){
                     $scope.circuitDetails.truthTable.rows[k].outputs[n] = simcir.getOutputStatus(outputs[n]) == 1 ? "1":"0";
+                    if($scope.circuitDetails.truthTable.rows[k].outputs[n] == "1"){ // Si la salida es H (alto), agregar minitermino
+                        if($scope.circuitDetails.minterms[n])
+                            $scope.circuitDetails.minterms[n].push(inputBin);
+                        else
+                            $scope.circuitDetails.minterms[n] = [inputBin];
+                    }else{
+                        if($scope.circuitDetails.maxterms[n])
+                            $scope.circuitDetails.maxterms[n].push(inputBin);
+                        else
+                            $scope.circuitDetails.maxterms[n] = [inputBin];
+                    }
+                }
                 k++; // Siguiente combinacion
                 if(k < combMax){ // Si quedan, pasar a la siguiente
                     evalInput(k);
                 }else{ // Sino, terminar
+                    //console.log($scope.circuitDetails);
                     $rootScope.loading = false;
                     results_modal.open();
                     $scope.$apply();
                 }
             },50);    
         };
-        evalInput(0);
+        evalInput(0); // Empezar por la primera
     };
 
 
@@ -246,15 +261,14 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         height: document.getElementById("simcir").clientHeight
     });
 
-    
     window.onresize = function(ev){ // Simulador responsive
         // Dimensiones del card (que es responsive)
         var w = document.getElementById('simcir').clientWidth;
         var h = document.getElementById('simcir').clientHeight;
         //console.log(h,w);
         var el = document.getElementsByClassName("simcir-workspace")[0]; // Div contenedor (generado por simcir)
-        el.setAttribute("viewBox", "0 0 "+w+" "+h); 
-        el.setAttribute("width", w);
+        el.setAttribute("viewBox", "0 0 "+w+" "+h); // Dimensiones del svg
+        el.setAttribute("width", w); // Escala
         el.setAttribute("height", h); 
     };
 
