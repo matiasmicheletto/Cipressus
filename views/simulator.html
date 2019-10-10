@@ -106,6 +106,10 @@
                 <h5>Detalles</h5>
                 <p><b>Componentes utilizados:</b> {{circuitDetails.deviceCnt}}</p>
                 <p><b>Conectores: {{circuitDetails.connectorCnt}}</b></p>
+                <p><b>Expresiones de salida:</b></p>
+                <ul>
+                    <li ng-repeat="(key,exp) in circuitDetails.expressions track by $index">{{exp}}</li>
+                </ul>
             </div>
         </div>
     </div>

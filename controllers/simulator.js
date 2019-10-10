@@ -200,11 +200,53 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
                 },
                 rows:[] // Combinaciones de entrada
             },
-            minterms:[], // Miniterminos de cada salida
-            maxterms:[] // Maxiterminos de cada salida
+            expressions: [] // Funciones de salida
         };
 
         var combMax = Math.pow(2,inputs.length); // Cantidad de combinaciones
+        var minterms = []; // Miniterminos de cada salida
+        var maxterms = []; // Maxiterminos de cada salida
+        var primeImplicants = [];
+        var minifiedExpresions = [];
+
+        var getBooleanExpressions = function(){ // A partir de miniterminos y maxiterminos, devuelve las expresiones logicas
+            for(var k in outputs){
+                primeImplicants[k] = Cipressus.utils.getPrimeImplicants(minterms[k]);
+                for(var j in primeImplicants[k]){ // Para cada implicante
+                    for(var t in primeImplicants[k][j]){ // Para cada variable del implicante
+                        switch(primeImplicants[k][j][t]){
+                            case "1":
+                                if(minifiedExpresions[k])
+                                    minifiedExpresions[k] += inputs[t];
+                                else
+                                    minifiedExpresions[k] = inputs[t];
+                                break;
+                            case "0":
+                                if(minifiedExpresions[k])
+                                    minifiedExpresions[k] += inputs[t]+"'";
+                                else
+                                    minifiedExpresions[k] = inputs[t]+"'";
+                                break;
+                            case "-":
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    minifiedExpresions[k] += " + ";
+                }
+                // Remover el ultimo "+"
+                var l = minifiedExpresions[k].length;
+                minifiedExpresions[k] = minifiedExpresions[k].substring(0,l-3);
+            }
+            //console.log($scope.circuitDetails);
+            for(var k in minifiedExpresions) // Generar expresiones para mostrar en vista de analisis
+                $scope.circuitDetails.expressions[k] = outputs[k] + "= " + minifiedExpresions[k];
+            
+            $rootScope.loading = false;
+            results_modal.open();
+            $scope.$apply();
+        };
   
         var evalInput = function(k){ // Evaluar entrada k-esima (en binario) (esta es una funcion recursiva)
             var inputBin = k.toString(2).padStart(inputs.length,"0"); // Convertir numero de combinacion a binario
@@ -217,30 +259,26 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
             // Esperar un poco antes de leer la salida
             setTimeout(function(){
-                // Leer cada una de las salida
+                // Leer cada una de las salidas de la simulacion
                 for(var n in outputs){
                     $scope.circuitDetails.truthTable.rows[k].outputs[n] = simcir.getOutputStatus(outputs[n]) == 1 ? "1":"0";
                     if($scope.circuitDetails.truthTable.rows[k].outputs[n] == "1"){ // Si la salida es H (alto), agregar minitermino
-                        if($scope.circuitDetails.minterms[n])
-                            $scope.circuitDetails.minterms[n].push(inputBin);
+                        if(minterms[n])
+                            minterms[n].push(inputBin);
                         else
-                            $scope.circuitDetails.minterms[n] = [inputBin];
+                            minterms[n] = [inputBin];
                     }else{
-                        if($scope.circuitDetails.maxterms[n])
-                            $scope.circuitDetails.maxterms[n].push(inputBin);
+                        if(maxterms[n])
+                            maxterms[n].push(inputBin);
                         else
-                            $scope.circuitDetails.maxterms[n] = [inputBin];
+                            maxterms[n] = [inputBin];
                     }
                 }
                 k++; // Siguiente combinacion
-                if(k < combMax){ // Si quedan, pasar a la siguiente
+                if(k < combMax) // Si quedan, pasar a la siguiente
                     evalInput(k);
-                }else{ // Sino, terminar
-                    //console.log($scope.circuitDetails);
-                    $rootScope.loading = false;
-                    results_modal.open();
-                    $scope.$apply();
-                }
+                else // Sino, pasar a calcular las funciones
+                    getBooleanExpressions();
             },50);    
         };
         evalInput(0); // Empezar por la primera
