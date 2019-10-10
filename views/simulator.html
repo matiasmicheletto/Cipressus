@@ -8,11 +8,11 @@
     <div class="card hoverable z-depth-1" id="simcir" style="width: 100%;height: 75vh;"></div>
 
     <div>
-        <a class="right waves-effect waves-white btn blue darken-3" ng-click="analizeCircuit()"
+        <a title="Análisis combinacional" class="right waves-effect waves-white btn blue darken-3" ng-click="analizeCircuit()"
             style="margin:2px">Analizar</a>
-        <a class="right waves-effect waves-white btn green darken-3 modal-trigger" data-target="save_modal"
+        <a title="Guardar circuito" class="right waves-effect waves-white btn green darken-3 modal-trigger" data-target="save_modal"
             ng-click="updateFields()" style="margin:2px">Guardar</a>
-        <a class="right waves-effect waves-white btn green darken-1" ng-click="getSimulations()"
+        <a title="Abrir circuito guardado" class="right waves-effect waves-white btn green darken-1" ng-click="getSimulations()"
             style="margin:2px">Abrir</a>
     </div>
 </div>
@@ -50,7 +50,6 @@
                     <th>Componentes</th>
                 </tr>
             </thead>
-
             <tbody>
                 <tr ng-repeat="(key,row) in simulations track by $index" style="cursor:pointer"
                     ng-click="loadCircuit(key)">
@@ -85,20 +84,28 @@
         <h5>Análisis combinacional del circuito</h5>
         <div class="row">
             <div class="col s12 m6">
+                <h5>Tabla de verdad</h5>
                 <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
                     <thead>
                         <tr>
-                            <th ng-repeat="(key,input) in truthTable.header.inputs track by $index" style="background-color:rgb(214, 214, 214)">{{input}}</th>
-                            <th ng-repeat="(key,output) in truthTable.header.outputs track by $index" style="background-color:rgb(163, 163, 163)">{{output}}</th>
+                            <th>m</th>
+                            <th ng-repeat="(key,input) in circuitDetails.truthTable.header.inputs track by $index" style="background-color:rgb(214, 214, 214)">{{input}}</th>
+                            <th ng-repeat="(key,output) in circuitDetails.truthTable.header.outputs track by $index" style="background-color:rgb(163, 163, 163)">{{output}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="padding: 1px 1px;" ng-repeat="(key,row) in truthTable.rows track by $index">
-                            <td ng-repeat="(key2, col) in truthTable.rows[key].inputs track by $index" style="background-color:rgb(214, 214, 214)">{{col}}</td>
-                            <td ng-repeat="(key2, col) in truthTable.rows[key].outputs track by $index" style="background-color:rgb(163, 163, 163)">{{col}}</td>
+                        <tr style="padding: 1px 1px;" ng-repeat="(key,row) in circuitDetails.truthTable.rows track by $index">
+                            <td style="background-color:rgb(250, 250, 250)">{{$index}}</td>
+                            <td ng-repeat="(key2, col) in circuitDetails.truthTable.rows[key].inputs track by $index" style="background-color:rgb(214, 214, 214)">{{col}}</td>
+                            <td ng-repeat="(key2, col) in circuitDetails.truthTable.rows[key].outputs track by $index" style="background-color:rgb(163, 163, 163)">{{col}}</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="col s12 m6">
+                <h5>Detalles</h5>
+                <p><b>Componentes utilizados:</b> {{circuitDetails.deviceCnt}}</p>
+                <p><b>Conectores: {{circuitDetails.connectorCnt}}</b></p>
             </div>
         </div>
     </div>

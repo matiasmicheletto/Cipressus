@@ -179,42 +179,54 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
         // Iniciar
         $rootScope.loading = true;
+
+        // Cantidad de entradas y salidas (para calcular cantidad de dispositivos) 
+        // (Antes de eliminar nodos repetidos)
+        var ioDevices = inputs.length + outputs.length;
+
         inputs = inputs.filter((value, index, self) => self.indexOf(value) === index); // Eliminar nombres repetidos
 
+        var model = simcir.controller($('#simcir').find('.simcir-workspace')).data();
+
         // Objeto para mostrar resultados en modal
-        $scope.truthTable = {
-            header:{ // Nombres de las variables de entrada y salida
-                inputs:inputs,
-                outputs:outputs
-            },
-            rows:[] // Combinaciones de entrada
+        $scope.circuitDetails = {
+            model: model,
+            deviceCnt: model.devices.length - ioDevices, // Cantidad de componentes sin contar entradas y salidas
+            connectorCnt: model.connectors.length,
+            truthTable: { // Objeto para genrar la tabla de verdad en la vista
+                header:{ // Nombres de las variables de entrada y salida
+                    inputs:inputs,
+                    outputs:outputs
+                },
+                rows:[] // Combinaciones de entrada
+            }
         };
 
-        var N = Math.pow(2,inputs.length); // Cantidad de combinaciones
+        var combMax = Math.pow(2,inputs.length); // Cantidad de combinaciones
   
         var evalInput = function(k){ // Evaluar entrada k-esima (en binario)
             var inputBin = k.toString(2).padStart(inputs.length,"0"); // Convertir numero de combinacion a binario
-            $scope.truthTable.rows[k] = { 
+            $scope.circuitDetails.truthTable.rows[k] = { 
                 inputs: inputBin.split(""), // Separar bits en arreglo
                 outputs: [] // Completar salidas despues
             }
-            for(var j in $scope.truthTable.rows[k].inputs) // Escribir entrada en el circuito del simulador
-                simcir.setInputStatus(inputs[j], $scope.truthTable.rows[k].inputs[j] == "1");
+            for(var j in $scope.circuitDetails.truthTable.rows[k].inputs) // Escribir entrada en el circuito del simulador
+                simcir.setInputStatus(inputs[j], $scope.circuitDetails.truthTable.rows[k].inputs[j] == "1");
 
             // Esperar un poco antes de leer la salida
             setTimeout(function(){
                 // Leer la salida
                 for(var n in outputs)
-                    $scope.truthTable.rows[k].outputs[n] = simcir.getOutputStatus(outputs[n]) == 1 ? "1":"0";
+                    $scope.circuitDetails.truthTable.rows[k].outputs[n] = simcir.getOutputStatus(outputs[n]) == 1 ? "1":"0";
                 k++; // Siguiente combinacion
-                if(k < N){ // Si quedan, pasar a la siguiente
+                if(k < combMax){ // Si quedan, pasar a la siguiente
                     evalInput(k);
                 }else{ // Sino, terminar
                     $rootScope.loading = false;
                     results_modal.open();
                     $scope.$apply();
                 }
-            },100);    
+            },50);    
         };
         evalInput(0);
     };
@@ -233,6 +245,18 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         width: document.getElementById("simcir").clientWidth,
         height: document.getElementById("simcir").clientHeight
     });
+
+    
+    window.onresize = function(ev){ // Simulador responsive
+        // Dimensiones del card (que es responsive)
+        var w = document.getElementById('simcir').clientWidth;
+        var h = document.getElementById('simcir').clientHeight;
+        //console.log(h,w);
+        var el = document.getElementsByClassName("simcir-workspace")[0]; // Div contenedor (generado por simcir)
+        el.setAttribute("viewBox", "0 0 "+w+" "+h); 
+        el.setAttribute("width", w);
+        el.setAttribute("height", h); 
+    };
 
     Cipressus.utils.activityCntr($rootScope.user.uid, "simulator").catch(function (err) {console.log(err)});
 }]);

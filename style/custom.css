@@ -34,7 +34,7 @@ body {
 }
 
 .body-login{
-  background-image: linear-gradient(to right, rgba(245, 246, 252, 0.5), rgba(19, 85, 12, 1)), url('../images/forest.jpg');
+  background-image: linear-gradient(to right, rgba(245, 246, 252, 0.4), rgb(9, 61, 25)), url('../images/forest.jpg');
   background-size:cover;
 }
 
