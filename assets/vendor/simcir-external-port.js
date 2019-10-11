@@ -55,11 +55,17 @@
             return labels;
         };
 
+        var clearDevices = function(){ // Restablecer manager al abrir nuevo circuito
+            idCount = 0;
+            devices = {};
+        };
+
         return {
             register: register,
             setValueByLabel: setValueByLabel,
             getValueByLabel: getValueByLabel,
             getLabels: getLabels,
+            clearDevices: clearDevices
         };
     }();
 
@@ -116,6 +122,17 @@
     };
 
     $s.getExternalLabels = externalPortManager.getLabels;
+
+    // Se debe definir esta funcion en simcir-virtual-port.js para eliminar tambien los virtual-ports que quedan en cache
+    if(!$s.clearDevices)
+        $s.clearDevices = externalPortManager.clearDevices;
+    else{ // Si ya existe, concatenar operaciones
+        var temp = $s.clearDevices();
+        $s.clearDevices = function(){
+            temp();
+            externalPortManager.clearDevices();
+        };
+    }
 
     // In case of callback required
     /*$s.outputsUpdate = function(label,value){ 

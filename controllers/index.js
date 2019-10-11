@@ -41,6 +41,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             templateUrl: "views/simulator.html",
             controller: "simulator"
         })
+        .when("/kMaps", {
+            templateUrl: "views/kMaps.html",
+            controller: "kMaps"
+        })
         .when("/users", {
             templateUrl: "views/users.html",
             controller: "users"

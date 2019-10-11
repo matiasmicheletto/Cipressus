@@ -39,6 +39,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
     $scope.loadCircuit = function(key){ // Cargar circuito
         var data = JSON.parse($scope.simulations[key].data);
+        
+        simcir.clearDevices(); // Borrar caches de managers
+
         // Poner barra de herramientas
         data.showToolbox = true;
         data.width = document.getElementById("simcir").clientWidth;
@@ -184,7 +187,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         // (Antes de eliminar nodos repetidos)
         var ioDevices = inputs.length + outputs.length;
 
-        inputs = inputs.filter((value, index, self) => self.indexOf(value) === index); // Eliminar nombres repetidos
+        // Eliminar nombres repetidos (externalPortManager sigue teniendo duplicados si se carga varias veces)
+        inputs = inputs.filter((value, index, self) => self.indexOf(value) === index); 
+        //outputs = outputs.filter((value, index, self) => self.indexOf(value) === index); 
 
         var model = simcir.controller($('#simcir').find('.simcir-workspace')).data();
 

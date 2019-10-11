@@ -8,12 +8,17 @@
     <div class="card hoverable z-depth-1" id="simcir" style="width: 100%;height: 75vh;"></div>
 
     <div>
-        <a title="Análisis combinacional" class="right waves-effect waves-white btn blue darken-3" ng-click="analizeCircuit()"
-            style="margin:2px">Analizar</a>
-        <a title="Guardar circuito" class="right waves-effect waves-white btn green darken-3 modal-trigger" data-target="save_modal"
-            ng-click="updateFields()" style="margin:2px">Guardar</a>
-        <a title="Abrir circuito guardado" class="right waves-effect waves-white btn green darken-1" ng-click="getSimulations()"
-            style="margin:2px">Abrir</a>
+        <a title="Análisis combinacional" class="right waves-effect waves-white btn blue darken-3"
+            ng-click="analizeCircuit()" style="margin:2px">Analizar</a>
+        <a title="Guardar circuito" class="right waves-effect waves-white btn green darken-3 modal-trigger"
+            data-target="save_modal" ng-click="updateFields()" style="margin:2px">Guardar</a>
+        <a title="Abrir circuito guardado" class="right waves-effect waves-white btn green darken-1"
+            ng-click="getSimulations()" style="margin:2px">Abrir</a>
+    </div>
+
+    <div>
+        <div id="myKarnaughMap"> </div>
+        <div id="myQmcDisplay"></div>
     </div>
 </div>
 
@@ -89,27 +94,33 @@
                     <thead>
                         <tr>
                             <th>m</th>
-                            <th ng-repeat="(key,input) in circuitDetails.truthTable.header.inputs track by $index" style="background-color:rgb(214, 214, 214)">{{input}}</th>
-                            <th ng-repeat="(key,output) in circuitDetails.truthTable.header.outputs track by $index" style="background-color:rgb(163, 163, 163)">{{output}}</th>
+                            <th ng-repeat="(key,input) in circuitDetails.truthTable.header.inputs track by $index"
+                                style="background-color:rgb(214, 214, 214)">{{input}}</th>
+                            <th ng-repeat="(key,output) in circuitDetails.truthTable.header.outputs track by $index"
+                                style="background-color:rgb(163, 163, 163)">{{output}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="padding: 1px 1px;" ng-repeat="(key,row) in circuitDetails.truthTable.rows track by $index">
+                        <tr style="padding: 1px 1px;"
+                            ng-repeat="(key,row) in circuitDetails.truthTable.rows track by $index">
                             <td style="background-color:rgb(250, 250, 250)">{{$index}}</td>
-                            <td ng-repeat="(key2, col) in circuitDetails.truthTable.rows[key].inputs track by $index" style="background-color:rgb(214, 214, 214)">{{col}}</td>
-                            <td ng-repeat="(key2, col) in circuitDetails.truthTable.rows[key].outputs track by $index" style="background-color:rgb(163, 163, 163)">{{col}}</td>
+                            <td ng-repeat="(key2, col) in circuitDetails.truthTable.rows[key].inputs track by $index"
+                                style="background-color:rgb(214, 214, 214)">{{col}}</td>
+                            <td ng-repeat="(key2, col) in circuitDetails.truthTable.rows[key].outputs track by $index"
+                                style="background-color:rgb(163, 163, 163)">{{col}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col s12 m6">
                 <h5>Detalles</h5>
-                <p><b>Componentes utilizados:</b> {{circuitDetails.deviceCnt}}</p>
-                <p><b>Conectores: {{circuitDetails.connectorCnt}}</b></p>
-                <p><b>Expresiones de salida:</b></p>
-                <ul>
-                    <li ng-repeat="(key,exp) in circuitDetails.expressions track by $index">{{exp}}</li>
-                </ul>
+                <p><b>Componentes utilizados:</b> {{circuitDetails.deviceCnt}} <br>
+                    <b>Conectores:</b> {{circuitDetails.connectorCnt}} <br>
+                    <b>Expresiones de salida:</b>
+                    <ul style="margin-left: 20px">
+                        <li ng-repeat="(key,exp) in circuitDetails.expressions track by $index">{{exp}}</li>
+                    </ul>
+                </p>
             </div>
         </div>
     </div>
