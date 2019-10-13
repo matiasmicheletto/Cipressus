@@ -20,7 +20,7 @@
         <p ng-bind-html="selectedEvent.info" class="flow-text"></p>
         <div class="divider"></div>
         <p><b>Día </b>{{selectedEventExtras.startDay}}, de {{selectedEventExtras.startTime}} a
-            {{selectedEventExtras.endTime}} ({{selectedEventExtras.fromNow}})</p>
+            {{selectedEventExtras.endTime}} ({{selectedEventExtras.fromNow}}) <b ng-if="selectedEvent.attendance" class="red-text"> - Contabiliza asistencia</b></p>
     </div>
 
     <div class="modal-footer" ng-show="user.admin">
@@ -68,6 +68,12 @@
                 <p>Finalización</p>
                 <input id="event_end_time" type="time">
             </div>
+        </div>
+        <div class="row">
+            <label class="input-field">
+                <input type="checkbox" ng-model="selectedEvent.attendance"/>
+                <span>Asistencia obl.</span>
+            </label>  
         </div>
     </div>
 

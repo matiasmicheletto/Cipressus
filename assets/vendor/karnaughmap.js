@@ -784,7 +784,8 @@ function KarnaughMap(parentDivId, qmcRef) {
     // draw minterm
     var termX = data.fieldBorder;
     var termY = data.fieldHeight * data.fieldLines + data.fieldBorder;
-    var termStyle = resultStyle + 'max-width:' + data.fieldPerLine * data.fieldWidth + 'px;';
+    //var termStyle = resultStyle + 'max-width:' + data.fieldPerLine * data.fieldWidth + 'px;';
+    var termStyle = resultStyle;
     overlays[data.noOfVars + 1].setAttribute('style', termStyle);
     if(!dontShowResult) {
       overlays[data.noOfVars + 1].innerHTML = "<span class='qmcMathFont'><i>y</i>&nbsp;=&nbsp;" + qmc.data.coloredMinimalTerm + "</span></p>";

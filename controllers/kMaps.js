@@ -11,9 +11,25 @@ app.controller("kMaps", ['$scope', '$rootScope', '$location', function ($scope, 
 
     qmc = new QuineMcCluskey("", 2, 4, 0);
     qmc.init();
-
     karnaugh = new KarnaughMap("myKarnaughMap", qmc);
     karnaugh.init();
 
-    Cipressus.utils.activityCntr($rootScope.user.uid, "kMap").catch(function (err) {console.log(err)});
+    $scope.varsNum = 4;
+    $scope.showDCares = false;
+
+    setTimeout(function(){
+        M.updateTextFields();
+    },200);
+
+    $scope.varNumChange = function() {
+        karnaugh.setNoOfVars($scope.varsNum);
+    };
+
+    $scope.dCareChange = function() {
+        karnaugh.allowDontCares($scope.showDCares);
+    };
+
+    Cipressus.utils.activityCntr($rootScope.user.uid, "kMap").catch(function (err) {
+        console.log(err)
+    });
 }]);

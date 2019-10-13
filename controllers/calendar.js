@@ -42,6 +42,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
         eventDrop: function( event ) { // Al soltar evento en otro casillero
             $scope.selectedEvent = { // Extraer datos necesarios para actualizar en DB
                 author: $rootScope.user.uid,
+                attendance: event.attendance,
                 color: event.color,
                 start: moment(event.start._d).unix()*1000+10800000,
                 end: moment(event.end._d).unix()*1000+10800000,
@@ -59,6 +60,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
         eventResize: function(event){ // Extender o acortar horario de evento
             $scope.selectedEvent = { // Extraer datos necesarios para actualizar en DB
                 author: $rootScope.user.uid,
+                attendance: event.attendance,
                 color: event.color,
                 start: moment(event.start._d).unix()*1000+10800000,
                 end: moment(event.end._d).unix()*1000+10800000,
@@ -76,6 +78,7 @@ app.controller("calendar", ['$scope','$rootScope','$location', function ($scope,
         eventClick: function(event) {
             $scope.selectedEvent = { // Extraer datos necesarios para actualizar en DB
                 author: event.timestamp, // Esto hay que editarlo despues
+                attendance: event.attendance,
                 color: event.color,
                 start: moment(event.start._d).unix()*1000+10800000, // GMT+3 (cosa de calendar)
                 end: moment(event.end._d).unix()*1000+10800000,

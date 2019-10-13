@@ -6,7 +6,26 @@
   </h4>
   <div>
     <div class="card hoverable z-depth-1">
-      <div class="card-content" id="myKarnaughMap"></div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col s12 m6" id="myKarnaughMap"></div>
+          <div class="row">
+            <div class="col s12 m6">
+              <div class="col s12 m6 input-field">
+                <input class="validate" id="inputSize" type="number" ng-model="varsNum" ng-change="varNumChange()"
+                  min="2" max="6">
+                <label for="inputSize">Cantidad de variables</label>
+              </div>
+              <div class="col s12 m6 input-field">
+                <label>
+                  <input class="filled-in" type="checkbox" ng-model="showDCares" ng-change="dCareChange()" />
+                  <span>Don't cares</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -14,8 +33,18 @@
 <div id="tutorial_modal" class="modal">
 
   <div class="modal-content">
-      <h3>Mapa de Karnaugh interactivo</h3>
+    <h3>Mapa de Karnaugh interactivo</h3>
 
-      <p><a href="https://www.mathematik.uni-marburg.de/~thormae/lectures/ti1/code/karnaughmap/index.html">Proyecto original</a></p>
+    <p>Instrucciones de uso:</p>
+
+    <ol>
+        <li>Seleccione la cantidad de variables (entre 2 y 6 únicamente).</li>
+        <li>Puede seleccionar la opción "Don't cares" para incluir términos redundantes.</li>
+        <li>Seleccione los casilleros del mapa haciendo click para alternar entre valores.</li>
+        <li>La función resultante se muestra en la parte inferior del mapa.</li>
+    </ol>
+
+    <p><a href="https://www.mathematik.uni-marburg.de/~thormae/lectures/ti1/code/karnaughmap/index.html">Proyecto
+        original</a></p>
   </div>
 </div>

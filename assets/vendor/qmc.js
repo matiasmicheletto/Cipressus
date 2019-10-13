@@ -195,18 +195,18 @@ function PetrickMethod()
     var str = "";
     for (var i = 0; i < andArray.length; i++) {
       var first = true;
-      str += "(";
+      //str += "(";
       var orArray = andArray[i];
       for (var j = 0; j < orArray.length; j++) {
         if (!first)
-          str += " &or; ";
+          str += " + ";
         var monom = orArray[j];
         for (var k in monom) {
           str += "<i>p</i><sub><small>"+ monom[k] + "</small></sub>";
         }
         first = false;
       }
-      str += ")";
+      //str += ")";
     }
     if(that.log.length > 0) {
       that.log += "<p>&hArr;&nbsp;" + str + "</p>";
@@ -229,7 +229,7 @@ function PetrickMethod()
     var str = "";
     for (var i = 0; i < andArray.length; i++) {
       var first = true;
-      str += "(";
+      //str += "(";
       var orArray = andArray[i];
       for (var j = 0; j < orArray.length; j++) {
         if (!first)
@@ -240,7 +240,7 @@ function PetrickMethod()
         }
         first = false;
       }
-      str += ")";
+      //str += ")";
     }
     console.log(str);
   }
@@ -530,7 +530,7 @@ function QuineMcCluskeyDataCtrl() {
                 }
                 one = one << 1;
               }
-              minTerm = "(" + minTerm + ")";
+              //minTerm = "(" + minTerm + ")";
               if (primTerm.implicant.bitMask === Math.pow(2, this.noOfVars) - 1)
                 minTerm = "1";
               primTerm.color = hsvToRgb(color, 1.0, 0.5);
@@ -776,8 +776,8 @@ function QuineMcCluskeyDataCtrl() {
       var firstL = true;
       for (var i = 0; i < this.minimalTermPrims.length; i++) {
         if (!firstL) {
-          this.minimalTerm += " &or; ";
-          this.coloredMinimalTerm += " &or; ";
+          this.minimalTerm += " + ";
+          this.coloredMinimalTerm += " + ";
         }
         this.minimalTerm += this.minimalTermPrims[i].termString;
         this.coloredMinimalTerm += this.minimalTermPrims[i].coloredTermString;
