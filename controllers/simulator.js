@@ -215,9 +215,22 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         var minifiedExpresions = [];
 
         var getBooleanExpressions = function(){ // A partir de miniterminos y maxiterminos, devuelve las expresiones logicas
+
             for(var k in outputs){
+                //if(minterms[k].length == 0){ // Si no hay miniterminos, la funcion es siempre nula
+                if(!minterms[k]){              // Si no hay miniterminos, la funcion es siempre nula                    
+                    minifiedExpresions[k] = "0";
+                    continue; // Pasar a la siguiente salida
+                }
+
+                if(minterms[k].length == combMax){ // Si hay tantos miniterminos como combinaciones, la salida es siempre 1
+                    minifiedExpresions[k] = "1";
+                    continue; // Pasar a la siguiente salida
+                }
+                
+                // Si ninguno de los casos anteriores se dio, obtener implicantes primos con el metodo QMC
                 primeImplicants[k] = Cipressus.utils.getPrimeImplicants(minterms[k]);
-                for(var j in primeImplicants[k]){ // Para cada implicante
+                for(var j in primeImplicants[k]){ // Para cada implicante                  
                     for(var t in primeImplicants[k][j]){ // Para cada variable del implicante
                         switch(primeImplicants[k][j][t]){
                             case "1":
@@ -240,9 +253,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
                     }
                     minifiedExpresions[k] += " + ";
                 }
-                // Remover el ultimo "+"
-                var l = minifiedExpresions[k].length;
-                minifiedExpresions[k] = minifiedExpresions[k].substring(0,l-3);
+                minifiedExpresions[k] = minifiedExpresions[k].substring(0,minifiedExpresions[k].length-3);// Remover el ultimo "+"
             }
             //console.log($scope.circuitDetails);
             for(var k in minifiedExpresions) // Generar expresiones para mostrar en vista de analisis
