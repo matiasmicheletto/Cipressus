@@ -165,6 +165,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
 
     $scope.analizeCircuit = function(){ // Analisis combinacional del circuito
+        // Las funciones declaradas mas abajo se ejecutan desde el final hacia arriba
 
         // Obtener nombres de las entradas y salidas
         var inputs = simcir.getExternalLabels("input");
@@ -205,7 +206,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
                 },
                 rows:[] // Combinaciones de entrada
             },
-            expressions: [] // Funciones de salida
+            expressions: [], // Funciones de salida minimizadas
+            canonMinTerm: [], // Funciones de salida canonicas suma de productos
+            canonMaxTerm: [] // Funciones de salida canonicas producto de sumas
         };
 
         var combMax = Math.pow(2,inputs.length); // Cantidad de combinaciones
@@ -213,6 +216,85 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         var maxterms = []; // Maxiterminos de cada salida
         var primeImplicants = [];
         var minifiedExpresions = [];
+        var canonMinExpressions = [];
+        var canonMaxExpressions = [];
+
+
+        var getCanonicalExpressions = function(){ // Obtener las expresiones canonicas a partir de miniterminos y maxiterminos
+            
+            for(var k in outputs){ // Para cada funcion de salida                
+                if(!minterms[k]){ // Si no hay minterms, la funcion es siempre nula                    
+                    canonMinExpressions[k] = "0";
+                    canonMaxExpressions[k] = "0";
+                    continue; // Pasar a la siguiente salida
+                }
+
+                if(!maxterms[k]){ // Si no hay maxterms, la salida es siempre 1
+                    canonMinExpressions[k] = "1";
+                    canonMaxExpressions[k] = "1";
+                    continue; // Pasar a la siguiente salida
+                }
+            
+                /////// Minterms
+                for(var j in minterms[k]){ // Para cada minitermino
+                    for(var t in minterms[k][j]){ // Para cada variable dentro del termino
+                        switch(minterms[k][j][t]){
+                            case "1":
+                                if(canonMinExpressions[k])
+                                    canonMinExpressions[k] += inputs[t];
+                                else
+                                    canonMinExpressions[k] = inputs[t];
+                                break;
+                            case "0":
+                                if(canonMinExpressions[k])
+                                    canonMinExpressions[k] += inputs[t]+"'";
+                                else
+                                    canonMinExpressions[k] = inputs[t]+"'";
+                                break;                            
+                            default:
+                                break;
+                        }
+                    }
+                    canonMinExpressions[k] += " + ";
+                }
+                canonMinExpressions[k] = canonMinExpressions[k].substring(0,canonMinExpressions[k].length-3);// Remover el ultimo "+"
+            
+                /////// Maxterms
+                for(var j in maxterms[k]){ // Para cada minitermino
+                    if(canonMaxExpressions[k])
+                        canonMaxExpressions[k] += "(";
+                    else
+                        canonMaxExpressions[k] = "(";
+                    for(var t in maxterms[k][j]){ // Para cada variable dentro del termino
+                        switch(maxterms[k][j][t]){
+                            case "0":
+                                canonMaxExpressions[k] += inputs[t]+"+";                                
+                                break;
+                            case "1":
+                                canonMaxExpressions[k] += inputs[t]+"'+";
+                                break;                            
+                            default:
+                                break;
+                        }
+                    }
+                    canonMaxExpressions[k] = canonMaxExpressions[k].substring(0,canonMaxExpressions[k].length-1);// Remover el ultimo "+"    
+                    canonMaxExpressions[k] += ") · ";
+                }
+                canonMaxExpressions[k] = canonMaxExpressions[k].substring(0,canonMaxExpressions[k].length-3);// Remover el ultimo "·"
+            }
+            
+
+            // Generar expresiones para mostrar en vista de analisis
+            for(var k in canonMinExpressions) 
+                $scope.circuitDetails.canonMinTerm[k] = "<b>" + outputs[k] + "</b>= " + canonMinExpressions[k];
+            for(var k in canonMaxExpressions) 
+                $scope.circuitDetails.canonMaxTerm[k] = "<b>" + outputs[k] + "</b>= " + canonMaxExpressions[k];
+            
+            // Para terminar, ocultar el preloader y mostrar el modal con resultados
+            $rootScope.loading = false;
+            results_modal.open();
+            $scope.$apply();
+        };
 
         var getBooleanExpressions = function(){ // A partir de miniterminos y maxiterminos, devuelve las expresiones logicas
 
@@ -257,11 +339,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
             }
             //console.log($scope.circuitDetails);
             for(var k in minifiedExpresions) // Generar expresiones para mostrar en vista de analisis
-                $scope.circuitDetails.expressions[k] = outputs[k] + "= " + minifiedExpresions[k];
+                $scope.circuitDetails.expressions[k] = "<b>" + outputs[k] + "</b>= " + minifiedExpresions[k];
             
-            $rootScope.loading = false;
-            results_modal.open();
-            $scope.$apply();
+            getCanonicalExpressions();
         };
   
         var evalInput = function(k){ // Evaluar entrada k-esima (en binario) (esta es una funcion recursiva)

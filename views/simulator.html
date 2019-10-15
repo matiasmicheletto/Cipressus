@@ -116,9 +116,17 @@
                 <h5>Detalles</h5>
                 <p><b>Componentes utilizados:</b> {{circuitDetails.deviceCnt}} <br>
                     <b>Conectores:</b> {{circuitDetails.connectorCnt}} <br>
-                    <b>Expresiones de salida:</b>
+                    <b>Expresiones minimizadas:</b>
                     <ul style="margin-left: 20px">
-                        <li ng-repeat="(key,exp) in circuitDetails.expressions track by $index">{{exp}}</li>
+                        <li ng-bind-html="exp" ng-repeat="(key,exp) in circuitDetails.expressions track by $index"></li>
+                    </ul>
+                    <b>Expresiones canónicas suma de productos:</b>
+                    <ul style="margin-left: 20px">
+                        <li ng-bind-html="exp" ng-repeat="(key,exp) in circuitDetails.canonMinTerm track by $index"></li>
+                    </ul>
+                    <b>Expresiones canónicas producto de sumas:</b>
+                    <ul style="margin-left: 20px">
+                        <li ng-bind-html="exp" ng-repeat="(key,exp) in circuitDetails.canonMaxTerm track by $index"></li>
                     </ul>
                 </p>
             </div>
