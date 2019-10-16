@@ -360,32 +360,35 @@ window.Cipressus = (function () {
         }
     };
 
-    core.utils.getArray = function (node, arr, parent) { // Convertir el arbol en arreglo referenciado
+    core.utils.getArray = function (node) { // Convertir el arbol en arreglo referenciado
         // Sirve para exportar a formato de highcharts y para listar actividades en vista de alumnos
-        // Entradas:
-        //		- node: contiene el arbol de notas
-        //		- arr: se pasa recursivamente para ir completando con informacion de los nodos y hojas
-        //      - parent: es el identificador del padre para ir pasando las referencias
-        if (node.children) {
-            for (var k in node.children) // Para cada hijo del nodo
-                arr.concat(core.utils.getArray(node.children[k], arr, node.id)); // Obtener arreglo de los hijos
-            arr.push({ // Agregar el nodo actual 
-                id: node.id,
-                parent: parent, // Referencias hacia atras
-                name: node.name,
-                score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
-                dl: node.deadline // Vencimiento va si existe
-            });
-            return arr;
-        } else { // Es hoja, agregar hoja y retornar
-            arr.push({
-                id: node.id,
-                parent: parent,
-                name: node.name,
-                value: node.score // Este dato lo usa highcarts (se calcula para los nodos padres)
-            });
-            return arr;
+
+        var getArrRec = function(node, arr, parent){ // Recorrido recursivo
+            if (node.children) {
+                for (var k in node.children) // Para cada hijo del nodo
+                    arr.concat(getArrRec(node.children[k], arr, node.id)); // Obtener arreglo de los hijos
+                arr.push({ // Agregar el nodo actual 
+                    id: node.id,
+                    parent: parent, // Referencias hacia atras
+                    name: node.name,
+                    score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
+                    dl: node.deadline // Vencimiento va si existe
+                });
+                return arr;
+            } else { // Es hoja, agregar hoja y retornar
+                arr.push({
+                    id: node.id,
+                    parent: parent,
+                    name: node.name,
+                    value: node.score // Este dato lo usa highcarts (se calcula para los nodos padres)
+                });
+                return arr;
+            }
         }
+
+        var arr = [];
+        arr = getArrRec(node, arr, ''); // Iniciar
+        return arr;
     };
 
     core.utils.sendEmail = function (data) { // Enviar email (requiere script php en hosting)

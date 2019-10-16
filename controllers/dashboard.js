@@ -304,8 +304,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                             $scope.user.submits = [];
                     }
                     // Actualizar graficos al nodo root
-                    var arr = [];
-                    arr = Cipressus.utils.getArray($scope.activities, arr, '');
+                    var arr = Cipressus.utils.getArray($scope.activities);
                     $scope.$apply(); // Este es para que actualice la vista antes de graficar
                     updateSunburst(arr);                    
                     updatePolarPlot($scope.activities.id);                    
