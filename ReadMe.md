@@ -29,7 +29,7 @@ Incluye una GUI para controlar un tester de circuitos digitales basado en Arduin
 ![Probador](images/screenshots/probador2.jpg "Probador") 
 
 
-### Contacto
+## Contacto
 LSD | Laboratorio de Sistemas Digitales  
 DIEC | Departamento de Ingeniería Eléctrica y Computadoras  
 UNS | Universidad Nacional del Sur  
@@ -42,40 +42,46 @@ Website: http://www.diec.uns.edu.ar/rts
 #### Diseño e implementación
 Ing. Matías J. Micheletto  
 Email: matias.micheletto@uns.edu.ar  
+https://matiasmicheletto.github.io
 
 
-## Librerías importadas
+## Documentación
+
+### Tecnologías utilizadas
 #### Angular
-http://angularjs.org  
+http://angularjs.org/  
 Framework para el control de la app.
 #### Materialize
-http://materializecss.com  
+http://materializecss.com/  
 Estilo de la GUI.
 #### Firebase
-http://firebase.google.com  
+http://firebase.google.com/  
 Para el control de autenticación de usuarios y almacenamiento de información en la nube.
-#### HighCharts
-http://highcharts.com  
-Graficos del dashboard
-#### JQuery
-http://jquery.com  
-Sólo como dependencia requerida para FullCalendar
-#### Fullcalendar
-http://fullcalendar.io  
+#### HighCharts  
+http://highcharts.com/  
+Graficos de datos estadísticos.
+#### JQuery  
+http://jquery.com/  
+Como dependencia requerida para FullCalendar y SimCirJS
+#### Fullcalendar  
+http://fullcalendar.io/  
 Calendario de eventos para el cronograma de la materia. 
-#### SimCirJS
-https://kazuhikoarase.github.io/simcirjs/  
-Simulador de circuitos lógicos digitales
-#### Quill
-https://quilljs.com/  
+#### SimCirJS 
+https://kazuhikoarase.github.io/simcirjs/   
+Simulador de circuitos lógicos digitales.
+#### Quill  
+https://quilljs.com/   
 https://github.com/kensnyder/quill-image-resize-module  
 Editor de texto enriquecido para crear publicaciones con comunicados y noticias.
 #### Moment
-http://momentjs.com  
-Operaciones de fecha y hora
-#### Is
-https://is.js.org/  
+http://momentjs.com/  
+Operaciones de fecha y hora.
+#### Is  
+https://is.js.org/   
 Identificación de Sist. Operativo, navegador, dispositivo, etc.
+#### Vis
+http://visjs.org/  
+Visualización de árboles.
 
 
 ## Evaluación de calificaciones
