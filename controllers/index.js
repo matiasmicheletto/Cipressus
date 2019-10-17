@@ -32,11 +32,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         .when("/analizer", {
             templateUrl: "views/analizer.html",
             controller: "analizer"
-        })
-        .when("/inspector", {
-            templateUrl: "views/inspector.html",
-            controller: "inspector"
-        })
+        })        
         .when("/simulator", {
             templateUrl: "views/simulator.html",
             controller: "simulator"
@@ -44,6 +40,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         .when("/kMaps", {
             templateUrl: "views/kMaps.html",
             controller: "kMaps"
+        })
+        .when("/tables", {
+            templateUrl: "views/tables.html",
+            controller: "tables"
         })
         .when("/users", {
             templateUrl: "views/users.html",
