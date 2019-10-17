@@ -184,8 +184,8 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     });
 
     M.Collapsible.init(document.querySelector('.collapsible_1'));
-    M.Collapsible.init(document.querySelector('.collapsible_2')).open();
-    M.Collapsible.init(document.querySelector('.collapsible_3')).open();
+    M.Collapsible.init(document.querySelector('.collapsible_2'));
+    M.Collapsible.init(document.querySelector('.collapsible_3'));
     
     M.Modal.init(document.getElementById("about_modal"),{});
     var usb_modal = M.Modal.init(document.getElementById("usb_modal"),{});
