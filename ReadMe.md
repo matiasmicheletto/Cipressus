@@ -69,6 +69,9 @@ Calendario de eventos para el cronograma de la materia.
 #### SimCirJS 
 https://kazuhikoarase.github.io/simcirjs/   
 Simulador de circuitos lógicos digitales.
+#### Tone
+https://tonejs.github.io/
+Generador de música interactivo para el simulador.
 #### Quill  
 https://quilljs.com/   
 https://github.com/kensnyder/quill-image-resize-module  
