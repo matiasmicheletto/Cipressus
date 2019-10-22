@@ -84,7 +84,8 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
           {"type":"Virtual-In"},
           {"type":"Virtual-Out"},
           {"type":"Test-In"},
-          {"type":"Test-Out"}
+          {"type":"Test-Out"},
+          {"type":"Audio-Out"}
         ];
         simcir.setupSimcir($('#simcir'), data);
         currentSim = {
