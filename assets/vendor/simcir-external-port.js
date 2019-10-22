@@ -127,7 +127,7 @@
     if(!$s.clearDevices)
         $s.clearDevices = externalPortManager.clearDevices;
     else{ // Si ya existe, concatenar operaciones
-        var temp = $s.clearDevices();
+        var temp = $s.clearDevices;
         $s.clearDevices = function(){
             temp();
             externalPortManager.clearDevices();
