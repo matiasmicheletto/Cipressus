@@ -2,6 +2,7 @@
 
     // Instrumentos
     var kick, snare, piano, bass;
+    var init = false;
     var setupInstruments = function(){ // Inicializar
         kick = new $t.MembraneSynth({
             "volume": 6,
@@ -50,6 +51,8 @@
                 "octaves": 2.6
             }
         }).toMaster();
+
+        init = true;
     }
 
     var audioPortManager = function () {
@@ -81,31 +84,25 @@
 
     $s.registerDevice('Audio-Out', function (device) {
         audioPortManager.register(device);
-        var in1 = device.addInput();
-        var in2 = device.addInput();
-        var in3 = device.addInput();
-        var in4 = device.addInput();
+        var inputs = [], inputValues = [], triggers = []; // Entradas, valores previos y cambios
+        for(var k = 0; k < 4; k++){
+            inputs[k] = device.addInput();
+            inputValues[k] = inputs[k].getValue();
+        }
         device.$ui
-        .on('inputValueChange', function () {            
-            if(in1.getValue()){
-                if(!kick) setupInstruments();
-                kick.triggerAttack('50');
+        .on('inputValueChange', function () {
+            if(!init) setupInstruments();
+            for(var k = 0; k < 4; k++){
+                var val = inputs[k].getValue();
+                triggers[k] = val && (val != inputValues[k]); // Disparar en flanco ascendente
+                inputValues[k] = val;
             }
-            if(in2.getValue()){
-                if(!snare) setupInstruments();
-                snare.triggerAttackRelease('50');
-            }
-            if(in3.getValue()){
-                if(!bass) setupInstruments();
-                bass.triggerAttackRelease('50','8n');
-            }
-            if(in4.getValue()){
-                if(!piano) setupInstruments();
-                piano.triggerAttackRelease(["D4", "F4", "A4", "C5"], "8n");
-            }
+            if(triggers[0]) kick.triggerAttack('50');
+            if(triggers[1]) snare.triggerAttackRelease('50');
+            if(triggers[2]) bass.triggerAttackRelease('30','8n');
+            if(triggers[3]) piano.triggerAttackRelease(["D4", "F4", "A4", "C5"], "8n");
         });
     });
-
 
     if(!$s.clearDevices)
         $s.clearDevices = audioPortManager.clearDevices;
