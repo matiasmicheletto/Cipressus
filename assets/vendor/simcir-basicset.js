@@ -732,7 +732,7 @@
 
   // register Oscillator
   $s.registerDevice('OSC', function(device) {
-    var freq = device.deviceDef.freq || 10;
+    var freq = device.deviceDef.freq || 5;
     var delay = ~~(500 / freq);
     var out1 = device.addOutput();
     var timerId = null;
@@ -755,10 +755,10 @@
       device.$ui.addClass('simcir-basicset-osc');
       device.doc = {
         params: [
-          {name: 'freq', type: 'number', defaultValue: '10',
+          {name: 'freq', type: 'number', defaultValue: '5',
             description: 'frequency of an oscillator.'}
         ],
-        code: '{"type":"' + device.deviceDef.type + '","freq":10}'
+        code: '{"type":"' + device.deviceDef.type + '","freq":5}'
       };
     };
   });
