@@ -52,13 +52,14 @@
         }
     };
 
-    core.utils.getArray = function (node) { // Convertir el arbol en arreglo referenciado
+    core.utils.getArray = function (root) { // Convertir el arbol en arreglo referenciado
         // Sirve para exportar a formato de highcharts y para listar actividades en vista de alumnos
 
         var getArrRec = function (node, arr, parent) { // Recorrido recursivo
             if (node.children) {
                 for (var k in node.children) // Para cada hijo del nodo
-                    arr.concat(getArrRec(node.children[k], arr, node.id)); // Obtener arreglo de los hijos
+                    getArrRec(node.children[k], arr, node.id); // Obtener arreglo de los hijos
+                
                 arr.push({ // Agregar el nodo actual 
                     id: node.id,
                     parent: parent, // Referencias hacia atras
@@ -66,7 +67,6 @@
                     score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
                     dl: node.deadline // Vencimiento va si existe
                 });
-                return arr;
             } else { // Es hoja, agregar hoja y retornar
                 arr.push({
                     id: node.id,
@@ -74,13 +74,72 @@
                     name: node.name,
                     value: node.score // Este dato lo usa highcarts (se calcula para los nodos padres)
                 });
-                return arr;
             }
         }
 
         var arr = [];
-        arr = getArrRec(node, arr, ''); // Iniciar
+
+        getArrRec(root, arr, ''); // Iniciar
+        
         return arr;
+    };
+
+    core.utils.getTree = function(root){ // Obtener arbol como nodos y lazos
+        
+        var treeRec = function(tree, nodes, edges, color){ // Funcion recursiva para recorrer el arbol
+            
+            nodes.push({
+                id: tree.id,
+                label: tree.name+"\nPuntaje: "+tree.score,
+                shape: "box",
+                color: color ? color : "#555555",                
+                font: { 
+                    size: 12, 
+                    color: "white", 
+                    face: "arial", 
+                    strokeWidth: 3, 
+                    strokeColor: "#000000" 
+                }
+            });
+
+            if(tree.children){ 
+                var color = '#'+Math.floor(Math.random()*16777215).toString(16);
+                for(var k in tree.children){
+                    treeRec(tree.children[k], nodes, edges, color);
+                    edges.push({
+                        from: tree.id,
+                        to: tree.children[k].id
+                    });
+                }
+            }else{                
+                return;
+            }
+        };
+
+        // Hay que crear un nodo root con un solo children para que funcione con la libreria vis.js
+        var nodes = [
+            {
+                id: "main", 
+                label: root.course.name.replace(/\s/g,"\n"),
+                shape: "box",
+                font: { 
+                    size: 12, 
+                    color: "white", 
+                    face: "arial", 
+                    strokeWidth: 3, 
+                    strokeColor: "#000000" 
+                }
+            }
+        ]; 
+
+        var edges = [{from: "main", to: root.id}];
+
+        treeRec(root, nodes, edges); // Iniciar
+
+        return {
+            nodes: nodes,
+            edges: edges
+        };
     };
 
     core.utils.sendEmail = function (data) { // Enviar email (requiere script php en hosting)

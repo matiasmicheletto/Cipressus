@@ -8,10 +8,12 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
     $rootScope.sidenav.close();
     $rootScope.loading = true;
 
+    M.Modal.init(document.getElementById("course_modal"), {preventScrolling: false});    
+
     var updateSunburst = function (data) { // Graficar sunburst
         Highcharts.chart('sunburst_container', {
             chart: {
-                height: '80%'
+                height: '100%'
             },
             title: {
                 text: 'Proporción de calificaciones'
@@ -94,7 +96,7 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
         }
 
         var container = document.getElementById('tree_container');
-        var options = {
+        var options = {            
             layout: {
                 hierarchical: {
                     direction: "UD"
@@ -104,80 +106,53 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
 
         tree = new vis.Network(container, data, options);
 
-        tree.on('select', function (params) {
-            console.log(params.nodes);
+        tree.once('afterDrawing', () => {
+            container.style.height = '75vh'
         });
-    };
 
-    var getCourseTree = function(){ // Mover a cipressus
-        var randomSeed = 764;
-        var nodeCount = 100;
-        function seededRandom() {
-            var x = Math.sin(randomSeed++) * 10000;
-            return x - Math.floor(x);
-        }
-        var nodes = [];
-        var edges = [];
-        var connectionCount = [];
-        // randomly create some nodes and edges
-        for (var i = 0; i < nodeCount; i++) {
-            nodes.push({
-                id: i,
-                label: String(i)
-            });
-            connectionCount[i] = 0;
-            // create edges in a scale-free-network way
-            if (i == 1) {
-                var from = i;
-                var to = 0;
-                edges.push({
-                    from: from,
-                    to: to
-                });
-                connectionCount[from]++;
-                connectionCount[to]++;
-            } else if (i > 1) {
-                var conn = edges.length * 2;
-                var rand = Math.floor(seededRandom() * conn);
-                var cum = 0;
-                var j = 0;
-                while (j < connectionCount.length && cum < rand) {
-                    cum += connectionCount[j];
-                    j++;
-                }
-
-                var from = i;
-                var to = j;
-                edges.push({
-                    from: from,
-                    to: to
-                });
-                connectionCount[from]++;
-                connectionCount[to]++;
-            }
-        }
-        return {
-            nodes: nodes,
-            edges: edges
-        };
+        tree.on('select', function (params) {
+            var node = Cipressus.utils.searchNode($scope.activities,params.nodes[0]); 
+            var arr = Cipressus.utils.getArray(node); // Obtener arreglo de notas            
+            updateSunburst(arr);
+        });
     };
 
     Cipressus.utils.activityCntr($rootScope.user.uid, "activities").catch(function (err) {
         console.log(err)
     });
 
-    Cipressus.db.get('activities/' + $rootScope.user.course) // Descargar arbol de actividades
+    $scope.changeCourse = function(){
+        var c = document.getElementById("courses_select").value;
+        if(c)
+            if(c!="")
+                setCourse(c);
+    };
+
+    var setCourse = function(courseKey){        
+        $rootScope.user.course = courseKey;
+        Cipressus.db.get('activities/' + $rootScope.user.course) // Descargar arbol de actividades
         .then(function (data) {
             $scope.activities = data;
 
             var arr = Cipressus.utils.getArray($scope.activities); // Obtener arreglo de notas
-            var tr = getCourseTree(); // Obtener esquema en formato de arbol jerarquico para vis.js
+            var tr = Cipressus.utils.getTree($scope.activities); // Obtener esquema en formato de arbol jerarquico para vis.js
 
             updateSunburst(arr);
             updateTree(tr);
 
-            $rootScope.loading = false;
-            $scope.$apply();
+            Cipressus.db.get("metadata/courses") // Descargar datos de los cursos disponibles
+            .then(function(courses){
+                $scope.courses = courses;                
+                setTimeout(function(){
+                    M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
+                },100);
+                $rootScope.loading = false;
+                $rootScope.$apply();
+            })
+            .catch(function(err){
+                console.log(err);
+                M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+            });
         })
         .catch(function (err) {
             console.log(err);
@@ -187,4 +162,8 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
                 displayLength: 2000
             });
         });
+
+    };
+
+    setCourse($rootScope.user.course); // Inicialmente, mostrar el actual
 }]);
