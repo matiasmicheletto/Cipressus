@@ -1,5 +1,5 @@
 // Instalacion de modulos:
-// npm install merge-stream del gulp@3.9.1 gulp-bundle-assets gulp-ng-annotate gulp-rename gulp-replace
+// npm install gulp@3.9.1 del merge-stream gulp-bundle-assets gulp-ng-annotate gulp-rename gulp-replace
 
 const gulp = require('gulp');
 const del = require('del');
@@ -14,14 +14,19 @@ gulp.task('clean', function(){
   return del('./public/**', {force:true});
 });
 
-// Copiar librerias, vistas y el index.html a la carpeta de produccion
+// Copiar librerias, vistas, manifest, configuraciones e index.html a la carpeta de produccion
 gulp.task('copy', function () {
   var paths = [
-    { src: './src/assets/**/*', dest: './public/assets' },
+    { src: './src/assets/vendor/**/*', dest: './public/assets/vendor' },
     { src: './src/images/**/*', dest: './public/images' },
     { src: './src/probador/**/*', dest: './public/probador' },
     { src: './src/views/**/*', dest: './public/views' },
     { src: './src/style/**/*', dest: './public/style' },
+    { src: './src/firebase-messaging-sw.js', dest: './public/' },
+    { src: './src/manifest.json', dest: './public/' },
+    { src: './src/pwabuilder-sw.js', dest: './public/' },
+    { src: './src/pwabuilder-sw-register.js', dest: './public/' },
+    { src: './src/manup.min.js', dest: './public/' },
     { src: './src/index.html', dest: './public/' }
   ];
 
