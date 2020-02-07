@@ -177,7 +177,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
         }
 
         // Ordenar datos por nota
-        seriesData.sort((a,b) => (a.y < b.y) ? 1 : ((b.y < a.y) ? -1 : 0)); 
+        seriesData.sort( function(a,b){return (a.y < b.y) ? 1 : ((b.y < a.y) ? -1 : 0)}); 
         // Renombrar datos por sus ordenes excepto mi nota
         for(var k in seriesData)
             seriesData[k].name = seriesData[k].name == $rootScope.user.uid ? "Yo" : "#"+(parseInt(k)+1);

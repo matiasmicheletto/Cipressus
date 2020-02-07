@@ -45,7 +45,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
             }
         }
 
-        seriesData.sort((a, b) => (a.y < b.y) ? 1 : ((b.y < a.y) ? -1 : 0));
+        seriesData.sort(function(a, b){return (a.y < b.y) ? 1 : ((b.y < a.y) ? -1 : 0) });
 
         Highcharts.setOptions({
             lang: {

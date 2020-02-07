@@ -1,0 +1,92 @@
+<div class="container">
+
+    <h3>Asistencia</h3>
+
+    <div class="input-field col s12 m6 l6">
+        <select id="event_select">
+            <option value="" disabled selected>Elija una opción</option>
+            <option value="{{key}}" ng-repeat="(key,ev) in events">{{ev.title}} {{getTime(4,ev.start)}}</option>
+        </select>
+        <label for="event_select">Actividad</label>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>Ausentes</h3>
+
+    <div ng-show="absents.length==0">
+        <h5>Lista vacía</h5>
+    </div>
+
+    <div class="section" ng-if="absents.length>0">
+        <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>LU</th>
+                    <th>Carrera</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="(idx,key) in absents track by $index" ng-click="isPresent(idx)">
+                    <td><img class="circle" src="{{users[key].data.avatar}}" height="50px" width="50px"></td>
+                    <td>{{users[key].data.name}} {{users[key].data.secondName}}</td>
+                    <td>{{users[key].data.email}}</td>
+                    <td>{{users[key].data.lu}}</td>
+                    <td>{{users[key].data.degree}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>Presentes</h3>
+
+    <div ng-show="presents.length==0">
+        <h5>Lista vacía</h5>
+    </div>
+
+    <div class="section" ng-if="presents.length>0">
+        <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>LU</th>
+                    <th>Carrera</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="(idx,key) in presents track by $index" ng-click="isAbsent(idx)">
+                    <td><img class="circle" src="{{users[key].data.avatar}}" height="50px" width="50px"></td>
+                    <td>{{users[key].data.name}} {{users[key].data.secondName}}</td>
+                    <td>{{users[key].data.email}}</td>
+                    <td>{{users[key].data.lu}}</td>
+                    <td>{{users[key].data.degree}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="right">
+        <a class="waves-effect waves-white btn green darken-4 {{changes?'':'disabled'}}" ng-click="saveList()">Guardar</a>
+    </div>
+</div>
+
+<div id="confirm_modal" class="modal">
+    <div class="modal-content">
+        <h5>Hay cambios sin guardar</h5>
+        <p>¿Desea guardar los cambios antes de cambiar de fecha?</p>
+    </div>
+    
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn green darken-4" ng-click="changes=false">Cancelar</a>
+        <a class="waves-effect waves-white btn teal" ng-click="saveList()">Guardar</a>
+    </div>
+</div>

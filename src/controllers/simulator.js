@@ -111,7 +111,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
         // Crear objeto a guardar en db
         var model = simcir.controller($('#simcir').find('.simcir-workspace')).data(); // Objeto con datos de simulacion
-        var data = JSON.stringify((({ devices, connectors }) => ({ devices, connectors }))(model)); // Solo guardar dos propiedades
+        //var data = JSON.stringify((({ devices, connectors }) => ({ devices, connectors }))(model)); // Solo guardar dos propiedades
+        // Metodo alternativo para sintaxis de bundle-assets 3
+        var data = JSON.stringify((function(model){return {devices:model.devices, connectors:model.connectors};})(model));
 
         if(model.devices.length == 0){ // No guardar si no hay componentes
             M.toast({html: "No hay componentes!",classes: 'rounded red',displayLength: 2000});
@@ -190,7 +192,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         var ioDevices = inputs.length + outputs.length;
 
         // Eliminar nombres repetidos (externalPortManager sigue teniendo duplicados si se carga varias veces)
-        inputs = inputs.filter((value, index, self) => self.indexOf(value) === index); 
+        inputs = inputs.filter(function(value, index, self){ return self.indexOf(value) === index}); 
         //outputs = outputs.filter((value, index, self) => self.indexOf(value) === index); 
 
         var model = simcir.controller($('#simcir').find('.simcir-workspace')).data();

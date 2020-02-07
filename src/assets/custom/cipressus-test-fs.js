@@ -571,7 +571,7 @@
                 var sum = []; // Arreglo con valores de puntajes de cada resepuesta
                 for (var quest in answers) // Para cada pregunta
                     sum[quest] = this.evalMatrix[vble][quest][answers[quest]]; // Puntaje que otorga cada pregunta a la escala actual
-                var_sum[vble] = sum.reduce((a, b) => a + b, 0); // Sumar arreglo de puntajes de la escala actual
+                var_sum[vble] = sum.reduce(function(a, b){return a + b}, 0); // Sumar arreglo de puntajes de la escala actual
             }
             var scales = [];
             for (var sc = 0; sc < 8; sc += 2)

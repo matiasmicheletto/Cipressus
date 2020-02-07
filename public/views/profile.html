@@ -1,0 +1,93 @@
+<style>
+	.overlay-img {
+	cursor: pointer; 
+	position: absolute; 
+	top:0; 
+	display:block; 
+	margin: auto; 
+	}
+</style>
+
+<div class="container">
+
+	<div class="card-panel grey lighten-3 z-depth-3" ng-show="!edit">
+		<div class="row">
+
+			<div class="col s12 m3 l3">
+				<img class="responsive-img" src="{{user.avatar}}"></a>
+			</div>
+
+			<div class="col s12 m9 l9">
+				<h4>{{user.name}} {{user.secondName}}</h4>
+				<h5 class="truncate"><i>{{user.email}}</i></h5>
+				<h5>LU: <i>{{user.lu}}</i></h5>
+				<h5 class="truncate"><i>{{user.degree}}</i></h5>
+				<p><b>Usuario desde:</b> {{created}}</p>
+				<p><b>Compañeros de comisión:</b> {{getUserNames(users, user.partners)}}</p>
+				<div ng-show="user.test_fs.answers">
+					<div class="divider"></div>
+					<test-results answers="{{user.test_fs.answers}}"></test-results>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row right">
+			<button ng-click="edit=true" type="button" class="btn green darken-4">Editar perfil</button>
+		</div>
+	</div>
+
+	<input type="file" id="imgInput" accept="image/*" style="display:none;">
+
+	<div class="card-panel grey lighten-3 z-depth-3" ng-show="edit">
+		<div class="row">
+
+			<div class="col s12 m3 l3" style="position: relative">
+				<img class="responsive-img" src="{{newAvatar}}" style="cursor: pointer; opacity: 0.5;" ng-click="uploadPic()">
+				<img class="responsive-img overlay-img" src="images/updatePicture.png" ng-click="uploadPic()"> 
+			</div>
+
+			<div class="col s12 m9 l9">
+				<div class="input-field">
+					<input placeholder="{{user.name}}" class="validate" id="inputName" type="text">
+					<label for="inputName"><i class="left material-icons">person</i>Nombre</label>
+				</div>
+				<div class="input-field">
+					<input placeholder="{{user.secondName}}" class="validate" id="inputSecondName" type="text">
+					<label for="inputSecondName"><i class="left material-icons">supervisor_account</i>Apellido</label>
+				</div>
+				<div class="input-field">
+					<input placeholder="{{user.lu}}" class="validate" id="inputLU" type="number">
+					<label for="inputLU"><i class="left material-icons">credit_card</i>LU</label>
+				</div>
+				<div class="input-field">
+					<select id="inputDegree" class="icons">
+						<option value="" disabled selected>Elija una opción</option>
+						<option value="Ing. Electrónica" data-icon="images/electronica.jpg">Ing. Electrónica</option>
+						<option value="Ing. Electricista" data-icon="images/electricista.jpg">Ing. Electricista</option>
+						<option value="Ing. Computación" data-icon="images/computacion.jpg">Ing. Computación</option>
+					</select>
+					<label><i class="left material-icons">school</i>Carrera</label>
+				</div>
+				<div class="input-field col s12 m6">
+					<input class="autocomplete" id="partner1" type="text">
+					<label for="partner1"><i class="left material-icons">people</i>Compañero 1</label>
+				</div>
+				<div class="input-field col s12 m6">
+					<input class="autocomplete" id="partner2" type="text">
+					<label for="partner2"><i class="left material-icons">people</i>Compañero 2</label>
+				</div>
+			
+				<h6>Usuario desde: {{created}}</h6>
+			</div>
+
+		</div>
+
+		<div class="row">
+			<button ng-click="saveForm()" type="button" class="btn green darken-4 right">Guardar</button>
+			<button ng-click="edit=false" type="button" class="btn red darken-4 right">Descartar</button>
+		</div>
+	</div>
+
+
+</div>

@@ -106,7 +106,7 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
 
         tree = new vis.Network(container, data, options);
 
-        tree.once('afterDrawing', () => {
+        tree.once('afterDrawing', function() {
             container.style.height = '75vh'
         });
 

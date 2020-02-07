@@ -278,7 +278,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
                     document.getElementById("activity_select").addEventListener("change",function(){ // Callback al elegir actividad para entregar informe
                         var sel = document.getElementById("activity_select"); // Se puede usar this?
-                        var actIdx = $scope.activities.findIndex(x => x.id == sel.options[sel.selectedIndex].value); // Buscar la actividad seleccionada
+                        var actIdx = $scope.activities.findIndex(function(x){ return x.id == sel.options[sel.selectedIndex].value}); // Buscar la actividad seleccionada
                         $scope.selectedActivity = { // Objeto con info de la actividad sobre la que se entrega el trabajo
                             id: sel.options[sel.selectedIndex].value, // Identificador de la actividad
                             name: sel.options[sel.selectedIndex].text, // Nombre legible de la actividad
