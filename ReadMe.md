@@ -1,32 +1,32 @@
 # Cipressus
 
-Sistema de gestión de contenidos para el aprendizaje (LCMS). 
+Sistema de gestión de contenidos para el aprendizaje (LCMS).  
 
-Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales.
+Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales.  
 
 
-![Screenshot1](images/screenshots/scrshot1lr.png "Simulador") ![Screenshot2](images/screenshots/scrshot2lr.png "Perfil")
+![Screenshot1](screenshots/scrshot1lr.png "Simulador") ![Screenshot2](screenshots/scrshot2lr.png "Perfil")
 
 ### Características
-  - Acceso mediante registro con email y contraseña.
-  - Usuarios con roles de alumnos, docentes o visitante.
-  - Perfil de usuario personalizable.
-  - Publicación de comunicados y novedades.
-  - Consulta de cronograma de actividades.
-  - Calificaciones actualizadas en tiempo real.
-  - Tablero de calificaciones animado con información de progreso de la materia, actividades entregadas, calificaciones generales del curso y lista de eventos próximos.
-  - Entrega online de informes o archivos para evaluación.
-  - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento y simulación de sistemas.
-  - Simulador de circuitos lógicos embebido en la misma app.
-  - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios alumnos. 
-  - Estadística y analíticos de usuarios alumnos sobre uso de la app, origen y frecuencia de acceso, progreso de notas.
-  - Evaluación de asistencia ágil con cómputo automático.
-  - Notificaciones y mensajería instantánea [Próximamente].
-  - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.
+  - Acceso mediante registro con email y contraseña.  
+  - Usuarios con roles de alumnos, docentes o visitante.  
+  - Perfil de usuario personalizable.  
+  - Publicación de comunicados y novedades.  
+  - Consulta de cronograma de actividades.  
+  - Calificaciones actualizadas en tiempo real.  
+  - Tablero de calificaciones animado con información de progreso de la materia, actividades entregadas, calificaciones generales del curso y lista de eventos próximos.  
+  - Entrega online de informes o archivos para evaluación.  
+  - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento y simulación de sistemas.  
+  - Simulador de circuitos lógicos embebido en la misma app.  
+  - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios alumnos.  
+  - Estadística y analíticos de usuarios alumnos sobre uso de la app, origen y frecuencia de acceso, progreso de notas.  
+  - Evaluación de asistencia ágil con cómputo automático.  
+  - Notificaciones y mensajería instantánea [Próximamente].  
+  - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.  
 
 ### Hardware adjunto
 
-![Probador](images/screenshots/probador2.jpg "Probador") 
+![Probador](screenshots/probador2.jpg "Probador") 
 
 
 ## Contacto
@@ -42,7 +42,7 @@ Website: http://www.diec.uns.edu.ar/rts
 #### Diseño e implementación
 Ing. Matías J. Micheletto  
 Email: matias.micheletto@uns.edu.ar  
-https://matiasmicheletto.github.io
+https://matiasmicheletto.github.io  
 
 
 ## Documentación
@@ -88,7 +88,7 @@ Visualización de árboles.
 
 
 ## Evaluación de calificaciones
-Las actividades del curso se organizan en una estructura jerárquica que permite calcular la calificación general un alumno o parcial de cada actividad realizada mediante algoritmos de recorrido de árboles, con funciones recursivas y computando la suma ponderada de los puntajes obtenidos y registrados en cada nivel de este árbol, que contiene los factores de ponderación o puntajes absolutos de dichas actividades. Para cada alumno se registra una lista de notas referenciadas a las actividades del árbol de puntajes. Para actividades con vencimiento se pueden definir funciones de costo que aplican sobre las calificaciones en función del tiempo transcurrido desde el vencimiento de la actividad hasta el cumplimiento de la misma.
+Las actividades del curso se organizan en una estructura jerárquica que permite calcular la calificación general un alumno o parcial de cada actividad realizada mediante algoritmos de recorrido de árboles, con funciones recursivas y computando la suma ponderada de los puntajes obtenidos y registrados en cada nivel de este árbol, que contiene los factores de ponderación o puntajes absolutos de dichas actividades. Para cada alumno se registra una lista de notas referenciadas a las actividades del árbol de puntajes. Para actividades con vencimiento se pueden definir funciones de costo que aplican sobre las calificaciones en función del tiempo transcurrido desde el vencimiento de la actividad hasta el cumplimiento de la misma.  
 
 
 ## Estructura de la DB
@@ -220,10 +220,10 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 
 ## Setup
 
-  - Crear proyecto Firebase con una cuenta de Google.
-  - Copiar el código de configuración Firebase en objeto ```core.db.config```, en cipressus.js. 
-  - Registrar manualmente, desde la consola firebase, un usuario admin y cargar el arbol de actividades de la asignatura. 
-  - Definir las reglas de escritura y lectura de información de la db (ejemplo para un admin con uid = FlX1c7HXkzUrrKBmuaqK9mLp1EI2):
+  - Crear proyecto Firebase con una cuenta de Google.  
+  - Copiar el código de configuración Firebase en objeto ```core.db.config```, en cipressus.js.  
+  - Registrar manualmente, desde la consola firebase, un usuario admin y cargar el arbol de actividades de la asignatura.  
+  - Definir las reglas de escritura y lectura de información de la db (ejemplo para un admin con uid = FlX1c7HXkzUrrKBmuaqK9mLp1EI2):  
 ```json
 {
   "rules": {
@@ -262,8 +262,8 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   }
 }
 ```
-  - Configurar CORS para la descarga de archivos (ver documentacion firebase).
-  - Hostear en servidor con certificado SSL para que funcionen los service workers.
+  - Configurar CORS para la descarga de archivos (ver documentacion firebase).  
+  - Hostear en servidor con certificado SSL para que funcionen los service workers.  
 
 
 ### Backlog
@@ -271,12 +271,12 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
-- [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.
-- [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos.
+- [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  
+- [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos.  
 - [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
-- [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo.
-- [Feature] Creacion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.
-- [Feature] En creacion de actividades con vencimiento, mostrar las fechas en cronograma de actividades y dejar la edición de eventos para indicar temas y actividades de clases.
-- [Feature] Notificaciones por real-time db o notificaciones push.
-- [Feature] Incluir soporte touch para el simulador.
+- [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo.  
+- [Feature] Creacion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
+- [Feature] En creacion de actividades con vencimiento, mostrar las fechas en cronograma de actividades y dejar la edición de eventos para indicar temas y actividades de clases.  
+- [Feature] Notificaciones por real-time db o notificaciones push.  
+- [Feature] Incluir soporte touch para el simulador.  
 
