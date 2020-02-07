@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="description" content="Webapp Cipressus" />
-    <meta name="keywords" content="Cipressus, educación, diseño, circuitos lógicos" />
+    <meta name="keywords" content="Cipressus, educación, diseño, circuitos lógicos, LCMS, learning, education" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Deshabilitar cache -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -21,11 +21,11 @@
     <!-- PWA Service Worker -->
     <script>
         if (navigator.serviceWorker.controller){
-            console.log('[PWA Builder] active service worker found, no need to register')
+            console.log('[PWA Builder] se encontró service worker activo, no hace falta registrar.')
         }else
             navigator.serviceWorker.register('pwabuilder-sw.js', {scope: './'})
             .then(function(reg){
-                console.log('Service worker has been registered for scope:'+ reg.scope);
+                console.log('Service worker registrado, scope:'+ reg.scope);
             });
     </script>
     <script src="manup.min.js"></script> 
@@ -72,10 +72,6 @@
     <script type="text/javascript" src="assets/custom/simcir-audio-port.js"></script>
     <script type="text/javascript" src="assets/vendor/karnaughmap.js"></script>
     <script type="text/javascript" src="assets/vendor/qmc.js"></script>
-    <script type="text/javascript" src="assets/custom/cipressus.js"></script>
-    <script type="text/javascript" src="assets/custom/cipressus-utils.js"></script>
-    <script type="text/javascript" src="assets/custom/cipressus-hardware.js"></script>
-    <script type="text/javascript" src="assets/custom/cipressus-test-fs.js"></script>
 
 </head>
 
@@ -321,7 +317,11 @@
         </div>
     </div>
 
-
+    <!-- ##################### CUSTOM LIB ##################### -->
+    <script type="text/javascript" src="assets/custom/cipressus.js"></script>
+    <script type="text/javascript" src="assets/custom/cipressus-utils.js"></script>
+    <script type="text/javascript" src="assets/custom/cipressus-hardware.js"></script>
+    <script type="text/javascript" src="assets/custom/cipressus-test-fs.js"></script>
 
     <!-- ##################### CONTROLLERS ##################### -->
     <script type="text/javascript" src="controllers/index.js"></script>
