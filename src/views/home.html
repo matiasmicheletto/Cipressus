@@ -29,7 +29,16 @@
                 </div>
                 <div class="col s11 home-comment">
                     <div>
-                        <span class="right" style="font-size: 70%;color:gray">{{getTime(5,comment.timestamp)}}</span>
+                        <span class="right" style="font-size: 70%;color:gray">
+                            {{getTime(5,comment.timestamp)}} 
+                            <i ng-show="comment.uid == user.uid" class="material-icons tiny dropdown-trigger" 
+                            style="cursor: pointer; color:black" data-target="delete-dropdown{{$index}}">
+                                more_vert
+                            </i>
+                        </span>
+                        <ul id="delete-dropdown{{$index}}" class="dropdown-content z-depth-4" style="background-color: white;border-radius: 20px;">
+                            <li><a ng-click="deleteComment(idx,comment)">Eliminar</a></li>
+                        </ul>
                         <p style="margin:0px"><b>{{users[comment.uid].name}}</b></p>
                     </div>                    
                     <p style="margin:0px">{{comment.text}}</p>            

@@ -94,15 +94,15 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                         }
                         $scope.news.unshift(child); // Sentido inverso para que las nuevas noticias queden arriba
                     });
-                    var ready = authors.length; // Cantidad de descargas que hay que hacer
                     $scope.users = {};
-                    if(authors.length > 0){
-                        for (var k in authors) {
+                    if(authors.length > 0){ // Descargar datos de los usuarios que publicaron o comentaron
+                        var k = 0; // Indice de arreglo de authors
+                        var getUser = function(k){ // Funcion recursiva para ir descargando los datos de usuarios
                             Cipressus.db.get('users_public/' + authors[k]) // Descargar datos de los autores de publicaciones solamente
                                 .then(function (user_data) {
                                     $scope.users[authors[k]] = user_data;
-                                    ready--; // Contar descarga
-                                    if (ready == 0) { // Si no quedan mas, terminar
+                                    k++; // Pasar al siguiente
+                                    if (k == authors.length) { // Si no quedan mas, terminar
                                         newsData = { // Objeto a guardar en localStorage
                                             news: $scope.news,
                                             authors: $scope.users,
@@ -111,6 +111,11 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                                         localStorageService.set("newsData_"+$rootScope.user.course, newsData);
                                         $rootScope.loading = false;
                                         $rootScope.$apply();
+                                        setTimeout(function(){
+                                            M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {}); // Dropdown eliminar comentario
+                                        },200);
+                                    }else{ // Si quedan mas, pasar al siguiente
+                                        getUser(k);
                                     }
                                 })
                                 .catch(function (err) {
@@ -121,7 +126,8 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                                         displayLength: 2000
                                     });
                                 });
-                            }
+                        };
+                        getUser(0); // Empezar
                     }else{
                         $rootScope.loading = false;
                         $rootScope.$apply();
@@ -167,16 +173,20 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                     $scope.news[$scope.commEntryIdx].comments = {};
                 $scope.news[$scope.commEntryIdx].comments[snap.key] = comment;
                 $scope.commentText = ""; // Borrar el input
+                if(!$scope.users[$rootScope.user.uid]){ // Si no estan los datos de este usuario, agregar
+                    $scope.users[$rootScope.user.uid] = $rootScope.user;
+                }
                 // Actualizar estampa de tiempo para cacheos
                 var ts = {}; ts[$rootScope.user.course] = Date.now(); // Siempre se actualizan los datos como objetos
                 Cipressus.db.update(ts,"metadata/updates/news")
                 .then(function(res){
-                    
                     M.toast({
                         html: "Comentario publicado correctamente",
                         classes: 'rounded green',
                         displayLength: 1500
                     });
+                    // Reinicializar dropdowns
+                    M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {});
                     $rootScope.loading = false;
                     comment_modal.close();
                     $scope.$apply();
@@ -211,6 +221,11 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
         }
     };
 
+    $scope.deleteComment = function(idx, comment){ // Eliminar comentario
+        console.log(idx);
+        console.log(comment);
+    };
+
     // Monitoreo de actividad
     Cipressus.utils.activityCntr($rootScope.user.uid, "home").catch(function (err) {
         console.log(err);
@@ -225,6 +240,8 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                 if (newsData.last_update < news_update) // Hay cambios en la base de datos
                     downloadNews(); // Descargar de db y guardar en localstorage
                 else { // Si no hay cambios, terminar
+                    // Inicializar dropdowns de eliminar comentarios
+                    M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {});
                     $rootScope.loading = false;
                     $rootScope.$apply();
                 }
