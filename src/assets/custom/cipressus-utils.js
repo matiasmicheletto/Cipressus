@@ -1,5 +1,7 @@
 (function (core) { //// UTILIDADES ////
 
+    var actionStack = [];
+
     core.utils.searchNode = function (node, id) { // Obtener el objeto de un nodo a partir del id
         // Entradas:
         //		- node: es el nodo del arbol a partir del cual se inicia la busqueda
@@ -226,6 +228,51 @@
                 .catch(function (err) {
                     return reject(err);
                 });
+        });
+    };
+
+    core.utils.logAction = function(actionMsg){ // Registra acciones del usuario localmente. Si ocurre error se guarda el registro en la db
+        actionStack.push({
+            msg: actionMsg,
+            timestamp: Date.now()
+        });
+    };
+
+    core.utils.logError = function(error){ // Registra error en db para llevar estadistica de funcionamiento
+        /* Formato:
+        error = {
+            source: [string], // Nombre del controller o libreria donde ocurre el error
+            line: [number], // Numero de linea del codigo donde se dispara el error
+            code: [string], // Si hay codigo de error disponible o mensaje (generado por librerias, dependencias, etc)
+            msg: [string], // Mensaje de error (redactado por programador)
+            uid: [string], // Usuario que genero ese error
+        }
+
+        Ejemplo (sin codigo de error):
+
+        var error = {
+            source: "main.js", 
+            line: 54,  // TODO: generar automaticamente
+            msg: "Error actualizando dato", // Mensaje de error (redactado por programador)
+            uid: "erfd6f7a8dfadyfgad" // Usuario que genero ese error
+        }
+        Cipressus.utils.logError(error);
+        */
+
+        // Agregar un par de atributos automaticos
+        error.timestamp = Date.now(); // Hora local (usar de firebase?)
+
+        if(actionStack.length > 0) // Registro de acciones
+            error.stack = actionStack;
+
+        // Logear en firestore
+        core.fs.add(error, "errorLog")
+        .then(function(){
+            actionStack = []; // Se reinicia la pila de acciones
+            console.log("Error reportado");
+        })
+        .catch(function(err){
+            console.log(err);
         });
     };
 

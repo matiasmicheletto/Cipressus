@@ -21,11 +21,31 @@ window.Cipressus = (function () {
         publicvapidkey: "BF0sMjIt0y1H_3oyJzmkBmPkrG9UK7HL5ekgRXj50jEYc3MZSfpjCd051A0tNkNfEtLmmVlYILFvi8PQ0BDXRNM"
     };
 
-    core.db.listen = function (path) { // Escuchar cambios
+    core.db.listen = function (path, callback_success, callback_error) { // Escuchar cambios
+        firebase.database().ref(path).on('value',
+            function (snapshot) {
+                callback_success(snapshot.val(), snapshot.key);
+            },
+            function (error) {
+                callback_error(error);
+            });
+    };
+
+    core.db.listenChild = function(path, child, value, callback_success, callback_error) { // Escucha cambios con filtro
+        firebase.database().ref(path).orderByChild(child).equalTo(value).on('child_added',
+            function (snapshot) {
+                callback_success(snapshot.val(), snapshot.key);
+            },
+            function (error) {
+                callback_error(error);
+            });
+    };
+
+    core.db.stopListener = function(path){ // Detener escuchador
         return new Promise(function (fulfill, reject) {
-            firebase.database().ref(path).on('value')
-                .then(function (snapshot) {
-                    return fulfill(snapshot.val());
+            firebase.database().ref(path).off()
+                .then(function () {
+                    return fulfill();
                 })
                 .catch(function (error) {
                     return reject(error);

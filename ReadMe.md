@@ -117,6 +117,16 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-order               // Numero para ordenar el listado
   +-timestamp           // Fecha de publicacion/edicion
   +-title               // Titulo del post
+-notifications          // Lista de notificaciones para todos los usuarios
+ |
+ +-(child_key)          // ID firebase de la notificacion
+  |
+  +-uid                 // ID del destinatario
+  +-title               // Titulo de la notificacion
+  +-text                // Texto descriptivo
+  +-link                // Enlace (opcional)
+  +-timestamp           // Fecha de generacion
+  +-read                // Acuse de lectura
 -sources                // Listas de archivos
  |
  +-(child_key)          // Subcategoria de directorio
@@ -229,27 +239,31 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   "rules": {
     "activities":{
     	".read": "auth != null",
-      ".write": false
+      ".write": "root.child('users_private/'+auth.uid+'/admin').val() === true"  
     },
     "news":{
       ".read":"auth != null",
-      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+      ".write":"root.child('users_private/'+auth.uid+'/admin').val() === true"
     },
     "events":{
       ".read":"auth != null",
-      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+      ".write":"root.child('users_private/'+auth.uid+'/admin').val() === true"
     },
     "sources":{
       ".read" : "auth != null",
-      ".write" : "auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"  
+      ".write" : "root.child('users_private/'+auth.uid+'/admin').val() === true"  
     },
     "submissions":{
       ".read":"auth != null",
       ".write":"auth != null"
     },
+    "notifications":{
+      ".read":"auth != null",
+      ".write":"auth != null"
+    },
     "users_private":{
       ".read":"auth != null",
-      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+      ".write":"root.child('users_private/'+auth.uid+'/admin').val() === true"
     },
     "users_public":{ 
       ".read":"auth != null",
@@ -257,7 +271,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     },
     "metadata":{
       ".read":"auth != null",
-      ".write":"auth.uid == 'FlX1c7HXkzUrrKBmuaqK9mLp1EI2'"
+      ".write":"auth != null"
     }
   }
 }

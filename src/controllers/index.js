@@ -84,6 +84,8 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     $rootScope.userLogged = false; // Indicador de usuario logeado para habilitar componentes de ventana
     $location.path("/login"); // Ir a vista de logeo #TODO: cambiar modelo por uno que admita acceso sin login
     $rootScope.bodyClass = ""; // Clase del body (para poner fondos)
+    $rootScope.notifications = []; // Lista de notificaciones del usuario
+    $rootScope.notifCnt = 0; // Contador de notificaciones sin leer
 
     // Configuracion de moment.js
     moment.locale('es', {
@@ -177,6 +179,16 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         throw new Error("Unable to copy obj! Its type isn't supported.");
     };
 
+    $rootScope.openNotification = function(idx){ // Abrir enlace de notificacion y marcar leida
+        if(!$rootScope.notifications[idx].read){ // Si no estaba leida, cambiar estado
+            $rootScope.notifications[idx].read = true;
+            $rootScope.notifCnt--; // Descontar contador
+            Cipressus.db.update({read:true},"notifications/"+$rootScope.notifications[idx].key); // Actualizar en db
+        }
+        if($rootScope.notifications[idx].link) // Si tiene un enlace, abrir
+            $location.path($rootScope.notifications[idx].link);
+    };
+
     // Inicializacion componentes de materialize
     $rootScope.sidenav = M.Sidenav.init(document.querySelector('.sidenav'), {
         side: "left", 
@@ -195,6 +207,8 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         if($rootScope.resizeEvent)
             $rootScope.resizeEvent()
     });
+
+    M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {});
 
     $rootScope.signOut = function(){ // Callback para el boton de salir
         $location.path("/login"); // #TODO: navigation no debe forzar ir a login
@@ -224,6 +238,8 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         .then(function(public_data){
             $rootScope.user = public_data;
             $rootScope.user.uid = uid;
+            $rootScope.notifications = []; // Lista de notificaciones del usuario (reinicio del arreglo)
+            $rootScope.notifCnt = 0; // Reiniciar contador de notificaciones no leidas
             Cipressus.db.get('users_private/'+uid) // Descargar informacion dde usuario para el sistema
             .then(function(private_data){
                 if(private_data){ // Usuario aceptado por admin
@@ -268,6 +284,19 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
                 }
                 
                 Cipressus.db.update(update_activity,'users_public/'+uid+'/activity').then(function(res){console.log("Actividad actualizada")}); // Actualizar logeo y dispositivo usado
+
+                // Inicializar escuchador de notificaciones
+                Cipressus.db.listenChild("notifications", "uid", uid,
+                function(data, key){
+                    data.key = key; // Copiar id de la notificacion para actualizar estado
+                    $rootScope.notifications.push(data);
+                    if(!data.read)
+                        $rootScope.notifCnt++;
+                    $rootScope.$apply();
+                },
+                function(err){
+                    console.log(err);
+                });
 
                 if($location.path() == "/login"){ // Si se acaba de logear en la vista de login
                     $location.path("/"); // Ir a vista de home

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html ng-app="cipressus" lang="es-AR">
 
 <head>
 
-	<title>Cipressus</title>
+    <title ng-bind="notifCnt > 0 ? '('+notifCnt+') | Cipressus':'Cipressus'"></title>
 
     <!-- ##################### META ##################### -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -75,7 +75,7 @@
 
 </head>
 
-<body ng-app="cipressus" class="{{bodyClass}}">
+<body class="{{bodyClass}}">
 
     <!-- ##################### PRELOADER ##################### -->
     <div class="preloader-wrapper-pre valign-wrapper" ng-if="loading">
@@ -113,16 +113,32 @@
                     <a id="menu" data-target="slide-out" class="sidenav-trigger" ng-show="userLogged"
                         style="cursor: pointer;"><i class="material-icons small">menu</i></a>
                     <a class="brand-logo"><img width="100px" src="images/navbarlogo.png"></a>
-                    <ul id="nav-mobile" class="right">                        
+                    <ul id="nav-mobile" class="right">   
                         <li><a title="Probador (Desc.)" class="red-text hide-on-med-and-up"><i class="material-icons">bluetooth</i></a></li>
                         <li><a title="Probador ({{usbStatus}})" class="{{wssIconColor}} hide-on-med-and-down" ng-click="openUSBModal()"><i class="material-icons">usb</i></a></li>
+                        <li class="custom-dropdown">
+                            <a title="Notificaciones">
+                                <span ng-if="notifCnt>0" class="badge-counter">{{notifCnt}}</span>
+                                <i ng-if="notifCnt<=0" class="material-icons">notifications_none</i>
+                                <i ng-if="notifCnt>0" class="material-icons">notifications</i>
+                            </a>
+                            <div class="custom-dropdown-content z-depth-4">
+                                <div class="custom-dropdown-item {{notif.read ? '':'unread-item'}}" 
+                                ng-repeat-start="(idx,notif) in notifications track by $index"
+                                ng-click="openNotification(idx)">
+                                    <p><b>{{notif.title}}</b></p>
+                                    <p style="margin-top: -5px;">{{notif.text}}</p>
+                                    <p style="font-size: 70%; text-align: right; margin-top: -5px;">{{getTime(1,notif.timestamp)}}</p>
+                                </div>
+                                <div ng-repeat-end class="divider" tabindex="-1"></div>
+                            </div>
+                        </li>
                         <li><a title="Salir" ng-click="signOut()"><i class="material-icons">power_settings_new</i></a></li>
                     </ul>
                 </div>
             </nav>
         </div>
     </div>
-
 
     <!-- ##################### SIDENAV ##################### -->
     <ul id="slide-out" class="sidenav hoverable" ng-show="userLogged">
@@ -158,11 +174,11 @@
                     <a class="collapsible-header">Herramientas<i class="material-icons">arrow_drop_down</i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="#/simulator">Simulador<i class="material-icons">developer_board</i></a></li>
-                            <li><a href="#/kMaps">Mapas-K<i class="material-icons">grid_on</i></a></li>
+                            <li class="no-padding"><a href="#/simulator">Simulador<i class="material-icons">developer_board</i></a></li>
+                            <li class="no-padding"><a href="#/kMaps">Mapas-K<i class="material-icons">grid_on</i></a></li>
                             <!--<li><a href="#/tables">Tablas de verdad<i class="material-icons">playlist_add_check</i></a></li>-->
-                            <li><a href="#/hardware">Tester<i class="material-icons">memory</i></a></li>
-                            <li><a href="#/analizer">Analizador lógico<i class="material-icons">broken_image</i></a></li>                            
+                            <li class="no-padding"><a href="#/hardware">Tester<i class="material-icons">memory</i></a></li>
+                            <li class="no-padding"><a href="#/analizer">Analizador lógico<i class="material-icons">broken_image</i></a></li>                            
                         </ul>
                     </div>
                 </li>
@@ -175,11 +191,11 @@
                     <a class="collapsible-header">Administrar<i class="material-icons">arrow_drop_down</i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="#/activities">Curso<i class="material-icons">build</i></a></li>
-                            <li><a href="#/users">Alumnos<i class="material-icons">group</i></a></li>
-                            <li><a href="#/attendance">Asistencia<i class="material-icons">how_to_reg</i></a></li>
-                            <li><a href="#/editor">Noticias<i class="material-icons">fiber_new</i></a></li>
-                            <li><a href="#/stats">Estadísticas<i class="material-icons">insert_chart</i></a></li>
+                            <li class="no-padding"><a href="#/activities">Curso<i class="material-icons">build</i></a></li>
+                            <li class="no-padding"><a href="#/users">Alumnos<i class="material-icons">group</i></a></li>
+                            <li class="no-padding"><a href="#/attendance">Asistencia<i class="material-icons">how_to_reg</i></a></li>
+                            <li class="no-padding"><a href="#/editor">Noticias<i class="material-icons">fiber_new</i></a></li>
+                            <li class="no-padding"><a href="#/stats">Estadísticas<i class="material-icons">insert_chart</i></a></li>
                         </ul>
                     </div>
                 </li>
@@ -191,8 +207,8 @@
                     <a class="collapsible-header">Usuario<i class="material-icons">arrow_drop_down</i></a>
                     <div class="collapsible-body">
                         <ul>
-                            <li><a href="#/profile">Ver perfil<i class="material-icons">perm_identity</i></a></li>
-                            <li><a href="#/" ng-click="signOut()">Salir<i class="material-icons">exit_to_app</i></a></li>
+                            <li class="no-padding"><a href="#/profile">Ver perfil<i class="material-icons">perm_identity</i></a></li>
+                            <li class="no-padding"><a href="#/" ng-click="signOut()">Salir<i class="material-icons">exit_to_app</i></a></li>
                         </ul>
                     </div>
                 </li>
