@@ -285,12 +285,10 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
+- [Feature] Creacion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
 - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  
 - [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos.  
-- [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
 - [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo.  
-- [Feature] Creacion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
-- [Feature] En creacion de actividades con vencimiento, mostrar las fechas en cronograma de actividades y dejar la edición de eventos para indicar temas y actividades de clases.  
-- [Feature] Notificaciones por real-time db o notificaciones push.  
+- [Feature] En creacion de actividades con vencimiento, generar evento para mostrar las fechas en cronograma de actividades.
+- [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
 - [Feature] Incluir soporte touch para el simulador.  
-
