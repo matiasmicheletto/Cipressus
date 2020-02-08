@@ -129,6 +129,9 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             case 5: // Relativo al actual
                 time = moment(stamp).fromNow();
                 break;
+            case 6: // Fecha corta y hora
+                time = moment(stamp).format("DD/MM HH:mm");
+                break;
             default:
                 time = null;
         }

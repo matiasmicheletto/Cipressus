@@ -1,8 +1,6 @@
 # Cipressus
 
-Sistema de gestión de contenidos para el aprendizaje (LCMS).  
-
-Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales.  
+Sistema de gestión de contenidos para el aprendizaje (LCMS). Implementa un sistema de cómputo automático de calificaciones y permite la consulta en tiempo real de resultados de evaluaciones, noticias y cronograma de cátedra, descarga de material de estudio y muchas otras utilidades. Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales físicos.  
 
 
 ![Screenshot1](screenshots/scrshot1lr.png "Simulador") ![Screenshot2](screenshots/scrshot2lr.png "Perfil")
@@ -117,6 +115,13 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   +-order               // Numero para ordenar el listado
   +-timestamp           // Fecha de publicacion/edicion
   +-title               // Titulo del post
+  +-comments            // Comentarios de esta publicación
+   |
+   +-(child_key)        // ID del comentario
+    |
+    +-uid               // ID del usuario que comenta
+    +-text              // Texto el comentario
+    +-timestamp         // Estampa de tiempo del comentario
 -notifications          // Lista de notificaciones para todos los usuarios
  |
  +-(child_key)          // ID firebase de la notificacion
@@ -243,7 +248,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
     },
     "news":{
       ".read":"auth != null",
-      ".write":"root.child('users_private/'+auth.uid+'/admin').val() === true"
+      ".write":"auth != null"
     },
     "events":{
       ".read":"auth != null",
@@ -285,9 +290,10 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
-- [Feature] Creacion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
+- [Feature] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
+- [Feature] Material de estudio debe ir asociado a cursos.
 - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  
-- [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos.  
+- [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos (compartir). Modulo audio de 8 canales.  
 - [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo.  
 - [Feature] En creacion de actividades con vencimiento, generar evento para mostrar las fechas en cronograma de actividades.
 - [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.

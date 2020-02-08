@@ -1,14 +1,14 @@
 <div class="container">
 
-    <h3>Novedades</h3>
+    <h4>Novedades</h4>
 
     <h5 class="grey-text text-lighten-1" ng-hide="news.length > 0">
         <br><br>
         <i>Aún no tiene un curso asignado</i>
     </h5>
 
-    <div class="card hoverable z-depth-1" ng-repeat="entry in news" ng-show="entry.timestamp < getTime(0)">
-        <div class="right chip">
+    <div class="card hoverable z-depth-1" style="margin-bottom:30px" ng-repeat="(idx,entry) in news track by $index" ng-show="entry.timestamp < getTime(0)">
+        <div class="right chip" style="margin-top: 10px;">
             <img src="{{users[entry.author].avatar}}">
             Publicado {{getTime(5,entry.timestamp)}} por {{users[entry.author].name}}
         </div>
@@ -16,8 +16,27 @@
             <h5><b>{{entry.title}}</b></h5>
             <div class="row" ng-bind-html=entry.content></div>
         </div>
+        <div style="height: 0px; text-align: right;">
+            <a title="Comentar" class="btn-floating waves-effect waves-light green darken-3" 
+            style="right: 20px;top:-20px;" ng-click="commentPost(idx)">
+                <i class="material-icons">chat_bubble</i>
+        </a>
+        </div>
+        <div class="card-action" ng-if="entry.comments">
+            <div class="row" ng-repeat="comment in entry.comments track by $index">
+                <div class="col s1" style="padding:0px;">
+                    <img class="circle" width="30px" height="30px" src="{{users[comment.uid].avatar}}">
+                </div>
+                <div class="col s11 home-comment">
+                    <div>
+                        <span class="right" style="font-size: 70%;color:gray">{{getTime(5,comment.timestamp)}}</span>
+                        <p style="margin:0px"><b>{{users[comment.uid].name}}</b></p>
+                    </div>                    
+                    <p style="margin:0px">{{comment.text}}</p>            
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
 
 
@@ -68,5 +87,21 @@
         <a class="waves-effect waves-white btn green darken-3 {{testStatus==2 ? '':'disabled'}}"
             ng-click="saveTestResults()" ng-show="testStatus==1 || testStatus==2">Evaluar</a>
         <a class="modal-close waves-effect waves-white btn green darken-3" ng-show="testStatus==3">Finalizar</a>
+    </div>
+</div>
+
+<div id="comment_modal" class="modal">
+    <div class="modal-content">
+        <h5>Comentar publicación</h5>
+        <p><b>Título: </b>{{news[commEntryIdx].title}}</p>
+        <div class="input-field" style="margin-top:30px;">
+            <input type="text" placeholder="Nuevo comentario" id="inputComment" ng-model="commentText">
+            <label for="inputComment"><i class="left material-icons">comment</i>Comentario</label>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-white btn red darken-3">Cancelar</a>
+        <a class="waves-effect waves-white btn green darken-3" ng-click="publishComment()">Publicar</a>
     </div>
 </div>

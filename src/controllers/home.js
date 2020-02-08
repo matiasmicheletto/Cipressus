@@ -84,9 +84,14 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
                 .then(function (snapshot) {
                     snapshot.forEach(function (childSnapshot) { // Lista ordenada
                         var child = childSnapshot.val();
+                        child.key = childSnapshot.key;
                         child.content = Cipressus.utils.quillToHTML(child.content); // Parsear para quitar formato de quill
                         if (authors.indexOf(child.author) == -1) // Si todavia no se guardo el uid del autor de esta publicacion
                             authors.push(child.author); // Agregar a la lista
+                        for(var k in child.comments){ // Para cada comentario, obtener autores
+                            if (authors.indexOf(child.comments[k].uid) == -1) // Si todavia no se guardo el uid del autor de este comentario
+                                authors.push(child.comments[k].uid); // Agregar a la lista
+                        }
                         $scope.news.unshift(child); // Sentido inverso para que las nuevas noticias queden arriba
                     });
                     var ready = authors.length; // Cantidad de descargas que hay que hacer
@@ -135,6 +140,76 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
         }
     };
 
+    /// Comentarios
+    var comment_modal = M.Modal.init(document.getElementById("comment_modal"), {});
+    $scope.commentText = ""; // Input de texto para comentarios
+
+    $scope.commentPost = function(idx){ // Abrir modal para escribir comentario
+        $scope.commEntryIdx = idx;
+        comment_modal.open();
+        setTimeout(function(){
+            M.updateTextFields();
+        },100);
+    };
+
+    $scope.publishComment = function(){ // Adjuntar comentario al post correspondiente        
+        if($scope.commentText != ""){ // Tiene que existir texto
+            $rootScope.loading = true;
+            var comment = {
+                uid: $rootScope.user.uid,
+                text: $scope.commentText,
+                timestamp: Date.now()
+            };
+            Cipressus.db.push(comment,'news/'+$rootScope.user.course+'/'+$scope.news[$scope.commEntryIdx].key+'/comments')
+            .then(function(snap){
+                // Actualizar objeto local
+                if(!$scope.news[$scope.commEntryIdx].comments)
+                    $scope.news[$scope.commEntryIdx].comments = {};
+                $scope.news[$scope.commEntryIdx].comments[snap.key] = comment;
+                $scope.commentText = ""; // Borrar el input
+                // Actualizar estampa de tiempo para cacheos
+                var ts = {}; ts[$rootScope.user.course] = Date.now(); // Siempre se actualizan los datos como objetos
+                Cipressus.db.update(ts,"metadata/updates/news")
+                .then(function(res){
+                    
+                    M.toast({
+                        html: "Comentario publicado correctamente",
+                        classes: 'rounded green',
+                        displayLength: 1500
+                    });
+                    $rootScope.loading = false;
+                    comment_modal.close();
+                    $scope.$apply();
+                })
+                .catch(function(err){
+                    console.log(err);
+                    M.toast({
+                        html: "Ocurrió un error al publicar comentario",
+                        classes: 'rounded red',
+                        displayLength: 1500
+                    });
+                    $rootScope.loading = false;
+                    $scope.$apply();
+                });
+            })
+            .catch(function(err){
+                console.log(err);
+                M.toast({
+                    html: "Ocurrió un error al publicar comentario",
+                    classes: 'rounded red',
+                    displayLength: 1500
+                });
+                $rootScope.loading = false;
+                $scope.$apply();
+            });
+        }else{
+            M.toast({
+                html: "El comentario está vacío!",
+                classes: 'rounded red',
+                displayLength: 1500
+            });
+        }
+    };
 
     // Monitoreo de actividad
     Cipressus.utils.activityCntr($rootScope.user.uid, "home").catch(function (err) {

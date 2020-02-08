@@ -49,10 +49,19 @@ body {
   font: 15px Arial, sans-serif;
 }
 
-/* Fix sidenav style*/
+/* Comentarios en home */
+.home-comment{
+  border-radius: 20px;
+  background-color: rgb(219, 219, 219);
+  padding:10px!important;
+}
+
+
+/* Fix efecto escalera del sidenav*/
 .no-padding{
   clear: both;
 }
+
 
 /* Preloader */
 .preloader-wrapper {
@@ -75,6 +84,7 @@ body {
   z-index: 2001;
 }
 
+
 /* Login */
 .login-box{
   border-radius: 10px;
@@ -88,10 +98,12 @@ body {
   background-size:cover;
 }
 
+
 /* Ocultar boton de drillup de sunburst (override de la libreria) */
 .highcharts-drillup-button {
   display: none
 }
+
 
 /* Modals de tamanio personalizado */
 .wide-modal {
