@@ -23,7 +23,7 @@
         </a>
         </div>
         <div class="card-action" ng-if="entry.comments">
-            <div class="row" ng-repeat="comment in entry.comments track by $index">
+            <div class="row" ng-repeat="(key, comment) in entry.comments track by $index">
                 <div class="col s1" style="padding:0px;">
                     <img class="circle" width="30px" height="30px" src="{{users[comment.uid].avatar}}">
                 </div>
@@ -32,12 +32,12 @@
                         <span class="right" style="font-size: 70%;color:gray">
                             {{getTime(5,comment.timestamp)}} 
                             <i ng-show="comment.uid == user.uid" class="material-icons tiny dropdown-trigger" 
-                            style="cursor: pointer; color:black" data-target="delete-dropdown{{$index}}">
+                            style="cursor: pointer; color:black" data-target="delete-dropdown{{key}}">
                                 more_vert
                             </i>
                         </span>
-                        <ul id="delete-dropdown{{$index}}" class="dropdown-content z-depth-4" style="background-color: white;border-radius: 20px;">
-                            <li><a ng-click="deleteComment(idx,comment)">Eliminar</a></li>
+                        <ul id="delete-dropdown{{key}}" class="dropdown-content z-depth-4" style="background-color: white;border-radius: 20px;">
+                            <li><a ng-click="deleteComment(key,$parent.$parent.$index)">Eliminar</a></li>
                         </ul>
                         <p style="margin:0px"><b>{{users[comment.uid].name}}</b></p>
                     </div>                    

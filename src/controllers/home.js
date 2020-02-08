@@ -221,9 +221,49 @@ app.controller("home", ['$scope', '$rootScope', '$location', 'localStorageServic
         }
     };
 
-    $scope.deleteComment = function(idx, comment){ // Eliminar comentario
-        console.log(idx);
-        console.log(comment);
+    $scope.deleteComment = function(commentId, entryId){ // Eliminar comentario
+
+        $rootScope.loading = true;
+        
+        Cipressus.db.set(null,'news/'+$rootScope.user.course+'/'+$scope.news[entryId].key+'/comments/'+commentId)
+        .then(function(snap){
+            // Actualizar objeto local
+            delete $scope.news[entryId].comments[commentId];
+            // Actualizar estampa de tiempo para cacheos
+            var ts = {}; ts[$rootScope.user.course] = Date.now(); // Siempre se actualizan los datos como objetos
+            Cipressus.db.update(ts,"metadata/updates/news")
+            .then(function(res){
+                M.toast({
+                    html: "Comentario eliminado",
+                    classes: 'rounded green',
+                    displayLength: 1500
+                });
+                $rootScope.loading = false;
+                comment_modal.close();
+                $scope.$apply();
+            })
+            .catch(function(err){
+                console.log(err);
+                M.toast({
+                    html: "Ocurrió un error al publicar comentario",
+                    classes: 'rounded red',
+                    displayLength: 1500
+                });
+                $rootScope.loading = false;
+                $scope.$apply();
+            });
+        })
+        .catch(function(err){
+            console.log(err);
+            M.toast({
+                html: "Ocurrió un error al publicar comentario",
+                classes: 'rounded red',
+                displayLength: 1500
+            });
+            $rootScope.loading = false;
+            $scope.$apply();
+        });
+
     };
 
     // Monitoreo de actividad
