@@ -312,6 +312,7 @@ Se emplea una base de datos No-SQL (Firebase) y los datos se estructuran en form
 [Bug] Error para corregir  
 [Feature] Agregar característica  
 
+- [Bug] Listado de usuarios. Error en cómputo de asistencia de usuarios visitantes o admin. Error grafico sunburst.
 - [Feature] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
 - [Feature] Material de estudio debe ir asociado a cursos y una misma entrada puede estar en dos cursos.
 - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  

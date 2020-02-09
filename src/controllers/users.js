@@ -8,8 +8,21 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
     $rootScope.loading = true;
     $rootScope.sidenav.close();
     $scope.selectedKey = null;
+    $scope.selectedIndex = null;
     $scope.showAll = true;
     var attendableEvents=0; // Contador de eventos para calcular asistencia
+
+    $scope.orderTag = 'name';
+    $scope.reverseOrder = false;
+
+    $scope.changeOrder = function(tag) { // Acmbiar el sentido de ordenamiento de la tabla
+        if($scope.orderTag === tag) {
+            $scope.reverseOrder = !$scope.reverseOrder;
+        } else {
+            $scope.orderTag = tag;
+            $scope.reverseOrder = false;
+        }
+    };
 
     // Los inputs date no funcionan con ng-change entonces la actualizacion
     // la hago programaticamente. Este es el callback de cambios
@@ -25,27 +38,29 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
     $scope.viewUser = function (key) { // Selecciona un usuario de la lista para ver detalles
         // Tambien se abre el modal con detalles desde la vista
         $scope.selectedKey = key; // Recordar limpiar esta variable despues de usar
+        $scope.selectedIndex = $scope.getUserIndex[key];
         evalAttendance();
         updatePolarPlot();
     };
 
     $scope.selectUser = function(key) { // Seleccionar usuario para aprobar inscripcion a un curso
         $scope.selectedKey = key;
+        $scope.selectedIndex = $scope.getUserIndex[key];
         confirmEnrollModal.open();
     };
 
     var evalAttendance = function(){ // Calcular asistencia del alumno seleccionado
-        if($scope.users[$scope.selectedKey].scores){
-            if($scope.users[$scope.selectedKey].attendance){ // Calcular asistencia aquí (solo se usa para mostrar pero no se guarda en db)
-                var userAttendedEvents = Object.getOwnPropertyNames($scope.users[$scope.selectedKey].attendance).length; // Cantidad de clases asistidas por el usuario
+        if($scope.users[$scope.selectedIndex].scores){
+            if($scope.users[$scope.selectedIndex].attendance){ // Calcular asistencia aquí (solo se usa para mostrar pero no se guarda en db)
+                var userAttendedEvents = Object.getOwnPropertyNames($scope.users[$scope.selectedIndex].attendance).length; // Cantidad de clases asistidas por el usuario
                 var att = attendableEvents > 0 ? userAttendedEvents/attendableEvents*100 : 0;
-                $scope.users[$scope.selectedKey].scores.asistencia = {
+                $scope.users[$scope.selectedIndex].scores.asistencia = {
                     score: parseInt(att.toFixed(2)), // Calcular porcentaje de asistencia
                     evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
                     timestamp: Date.now()
                 };                                
             }else{ // Si no asistió a nada, entonces la asistencia queda en 0
-                $scope.users[$scope.selectedKey].scores.asistencia = {
+                $scope.users[$scope.selectedIndex].scores.asistencia = {
                     score: 0,
                     evaluator: "Cipressus", // Evaluado por el sistema, no manualmente
                     timestamp: Date.now()
@@ -58,7 +73,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         var data = []; // Datos para mostrar en el grafico polar
         // Buscar nodo de la actividad seleccionada
         $scope.currentNode = Cipressus.utils.searchNode($scope.activitiesTree,"final");         
-        var value = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode)/$scope.currentNode.score*100;        
+        var value = Cipressus.utils.eval($scope.users[$scope.selectedIndex],$scope.currentNode)/$scope.currentNode.score*100;        
         $scope.currentActivityScores = { // Para detallar textualmente
             name: $scope.currentNode.name,
             points: ($scope.currentNode.score*value/100).toFixed(2), 
@@ -67,7 +82,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         };
         for(k in $scope.currentNode.children){ // Para cada sub actividad
             // Calcular nota de las sub actividades
-            var subValue = Cipressus.utils.eval($scope.users[$scope.selectedKey],$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
+            var subValue = Cipressus.utils.eval($scope.users[$scope.selectedIndex],$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
             // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
             $scope.currentActivityScores.children.push({
                 name: $scope.currentNode.children[k].name, // Nombre de la actividad
@@ -92,13 +107,6 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         });
     };
 
-    $scope.sendMessage = function () { // Enviar mensaje al usuario seleccionado
-        console.log($scope.message);
-        console.log($scope.selectedKey);
-        $scope.selectedKey = null;
-        messageModal.close();
-    };
-
     $scope.enrollUser = function () { // Aprobar usuario como alumno
         var user_private = { // Objeto a subir
             admin: false,
@@ -111,8 +119,8 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             Cipressus.db.update(user_private, "users_private/" + $scope.selectedKey)
                 .then(function (snapshot) {
                     // Copiar atributos para actualizar vista
-                    $scope.users[$scope.selectedKey].admin = false;
-                    $scope.users[$scope.selectedKey].enrolled = user_private.enrolled;
+                    $scope.users[$scope.selectedIndex].admin = false;
+                    $scope.users[$scope.selectedIndex].enrolled = user_private.enrolled;
                     M.toast({
                         html: "Listo!",
                         classes: 'rounded green darken-3',
@@ -120,6 +128,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                     });
                     confirmEnrollModal.close();
                     $scope.selectedKey = null; // Deseleccionar user
+                    $scope.selectedIndex = null;
                     $rootScope.loading = false;
                     $scope.$apply();
                 })
@@ -138,23 +147,24 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
 
     $scope.evalUser = function (key) { // Preparar para ingresar calificaciones al usuario seleccionado
         $scope.selectedKey = key;
+        $scope.selectedIndex = $scope.getUserIndex[key];
 
         evalAttendance(); // Calcular asistencia automáticamente
 
         // Generar arreglos auxiliares para no sobreescribir el original
         $scope.auxiliaryScores = {};
-        for (var k in $scope.users[key].scores) // Debo copiar notas una a una para no referenciar objetos
+        for (var k in $scope.users[$scope.selectedIndex].scores) // Debo copiar notas una a una para no referenciar objetos
             $scope.auxiliaryScores[k] = {
-                evaluator: $scope.users[key].scores[k].evaluator,
-                score: $scope.users[key].scores[k].score,
-                timestamp: $scope.users[key].scores[k].timestamp
+                evaluator: $scope.users[$scope.selectedIndex].scores[k].evaluator,
+                score: $scope.users[$scope.selectedIndex].scores[k].score,
+                timestamp: $scope.users[$scope.selectedIndex].scores[k].timestamp
             };
         $scope.auxiliarySubmits = {};
-        for (var k in $scope.users[key].submits) { // Debo copiar notas una a una para no referenciar objetos
+        for (var k in $scope.users[$scope.selectedIndex].submits) { // Debo copiar notas una a una para no referenciar objetos
             $scope.auxiliarySubmits[k] = {
-                evaluator: $scope.users[key].submits[k].evaluator,
-                submitted: $scope.users[key].submits[k].submitted,
-                timestamp: $scope.users[key].submits[k].timestamp
+                evaluator: $scope.users[$scope.selectedIndex].submits[k].evaluator,
+                submitted: $scope.users[$scope.selectedIndex].submits[k].submitted,
+                timestamp: $scope.users[$scope.selectedIndex].submits[k].timestamp
             };
         }
 
@@ -202,11 +212,11 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         obj.submits = $scope.auxiliarySubmits;
         Cipressus.db.update(obj, "users_private/" + $scope.selectedKey)
             .then(function (snapshot) {
-                $scope.users[$scope.selectedKey].scores = $scope.auxiliaryScores;
-                $scope.users[$scope.selectedKey].submits = $scope.auxiliarySubmits;
+                $scope.users[$scope.selectedIndex].scores = $scope.auxiliaryScores;
+                $scope.users[$scope.selectedIndex].submits = $scope.auxiliarySubmits;
                 scoresModal.close();
                 // Borrar los datos temporales
-                $scope.selectedKey = null;
+                $scope.selectedIndex = null;
                 $scope.auxiliaryScores = null;
                 $scope.auxiliarySubmits = null;
                 M.toast({
@@ -229,7 +239,6 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             });
     };
 
-
     ///// Inicializacion del controller
 
     M.Modal.init(document.getElementById("view_modal"), {
@@ -250,16 +259,24 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         console.log(err)
     });
 
+    $scope.users = [];
     Cipressus.db.get('users_public') // Descargar lista de usuarios
         .then(function (users_public_data) {
-            $scope.users = users_public_data;
+            // Convertir objeto a arreglo y copiar claves
+            $scope.getUserIndex = {}; // Arreglo para mapear uid a indice de arreglo
+            for(var k in users_public_data){
+                $scope.users.push(users_public_data[k]);
+                $scope.users[$scope.users.length-1].key = k;
+                $scope.getUserIndex[k] = $scope.users.length-1; // Mapear indice
+            }
             Cipressus.db.get('users_private') // Descargar lista de usuarios aceptados
                 .then(function (users_private_data) {
                     // Mezclar los atributos
-                    // #TODO: listar solo usuarios del curso actual
+                    console.log($scope.users);
                     for (var k in users_private_data)
-                        for (var j in users_private_data[k]) // Dos niveles de entrada
-                            $scope.users[k][j] = users_private_data[k][j];
+                        for (var j in users_private_data[k]){ // Dos niveles de entrada
+                            $scope.users[$scope.getUserIndex[k]][j] = users_private_data[k][j];
+                        }
                     // Descargar lista de actividades
                     Cipressus.db.get('activities/'+$rootScope.user.course)
                         .then(function (activities_data) {
