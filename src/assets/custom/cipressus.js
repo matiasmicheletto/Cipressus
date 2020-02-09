@@ -257,7 +257,7 @@ window.Cipressus = (function () {
                     return reject([error, "Algo pasó.. intentálo nuevamente."]);
                 });
         });
-    }
+    };
 
     core.users.signUp = function (form) { // Registrarse como nuevo usuario
         return new Promise(function (fulfill, reject) {
@@ -297,7 +297,7 @@ window.Cipressus = (function () {
                         email: form.email,
                         degree: form.degree,
                         lu: form.lu,
-                        avatar: "images/avatar_0.png" // Imagen por defecto (luego se carga una base64)
+                        avatar: "images/robohashes/robohash"+Math.floor(Math.random()*20+1)+".png" // Imagen de perfil aleatoria
                     };
                     // Inicializar contadores de navegador y so
                     users_public.activity.browser[is.firefox() ? 'Firefox' : (is.chrome() ? 'Chrome' : (is.ie() ? 'IE' : (is.opera() ? 'Opera' : (is.safari() ? 'Safari' : 'Otro'))))] = 1;

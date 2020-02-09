@@ -9,9 +9,10 @@ Sistema de gestión de contenidos para el aprendizaje (LCMS). Implementa un sist
   - Acceso mediante registro con email y contraseña.  
   - Usuarios con roles de alumnos, docentes o visitante.  
   - Perfil de usuario personalizable.  
-  - Publicación de comunicados y novedades.  
+  - Publicación de comunicados y novedades con posibilidad de incorporar comentarios.  
   - Consulta de cronograma de actividades.  
   - Calificaciones actualizadas en tiempo real.  
+  - Notificaciones y mensajería instantánea. 
   - Tablero de calificaciones animado con información de progreso de la materia, actividades entregadas, calificaciones generales del curso y lista de eventos próximos.  
   - Entrega online de informes o archivos para evaluación.  
   - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento y simulación de sistemas.  
@@ -19,8 +20,7 @@ Sistema de gestión de contenidos para el aprendizaje (LCMS). Implementa un sist
   - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios alumnos.  
   - Estadística y analíticos de usuarios alumnos sobre uso de la app, origen y frecuencia de acceso, progreso de notas.  
   - Evaluación de asistencia ágil con cómputo automático.  
-  - Notificaciones y mensajería instantánea [Próximamente].  
-  - Descarga de material de estudio, prácticos, libros, apuntes, programas, etc.  
+  - Descarga de material de estudio, trabajos prácticos, libros, apuntes, programas, etc.  
 
 ### Hardware adjunto
 
@@ -85,11 +85,20 @@ http://visjs.org/
 Visualización de árboles.
 
 
+## Roles de usuarios
+Los usuarios pueden tener tres roles distintos: visitante, alumno o docente. Cuando un usuario se registra con su email, se le asigna el rol de visitante y sólo puede acceder a las herramientas de Cipressus: simulador, mapas-K, probador, etc.  
+
+Los usuarios con rol de docente o administrador del sistema, tienen acceso a toda la configuración y roles de otros usuarios. Cada usuario administrador tiene asociado un curso, que puede cambiar en cualquier momento por otro de la lista de cursos creada. Cuando un nuevo usuario se registra, el usuario administrador puede aceptar la subscripción del nuevo usuario como miembro del curso que actualmente tiene asociado y de esta manera, el usuario visitante pasa a tener el rol de alumno.
+
+Los usuarios alumnos tienen asociado una lista de actividades que corresponden a las del curso al cual fueron subscriptos. A medida que completan las actividades y los usuarios docentes califican dichas actividades, van incrementando su puntaje final. Los usuarios alumnos pueden ver un resumen completo de las actividades del curso en cronograma, descargar material de estudio del curso actual, consultar sus propias calificaciones y la de sus compañeros de curso (en forma anónima).
+
 ## Evaluación de calificaciones
 Las actividades del curso se organizan en una estructura jerárquica que permite calcular la calificación general un alumno o parcial de cada actividad realizada mediante algoritmos de recorrido de árboles, con funciones recursivas y computando la suma ponderada de los puntajes obtenidos y registrados en cada nivel de este árbol, que contiene los factores de ponderación o puntajes absolutos de dichas actividades. Para cada alumno se registra una lista de notas referenciadas a las actividades del árbol de puntajes. Para actividades con vencimiento se pueden definir funciones de costo que aplican sobre las calificaciones en función del tiempo transcurrido desde el vencimiento de la actividad hasta el cumplimiento de la misma.  
 
 
-## Estructura de la DB
+## Estructura de la Base de Datos
+Se emplea una base de datos No-SQL (Firebase) y los datos se estructuran en forma de árbol.
+
 ```
 -activities             // Contiene la estructura de actividades, puntajes, vencimientos, etc
  |
@@ -225,12 +234,24 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
    +-timeline           // Tiempos de respuesta de cada pregunta
 -metadata               // Informacion adicional que emplea la app
  |
+ +-courses              // Informacion de cursos creados
+  |
+  +-(child_key)         // ID del curso (coincide con el del arbol de actividades)
+   |
+   +-name               // Nombre del curso
+   +-start              // Inicio (timestamp)
+   +-end                // Finalizacion (timestamp)
+   +-enrolled           // Cantidad de usuarios registrados
  +-updates              // Estampas de tiempo de última actualizacion de los datos de cada vista
   |
-  +-news
+  +-news 
   +-events
   +-sources
   +-submissions
+ +-notifications        // Arreglos de UIDs de usuarios subscriptos a cada tipo de evento
+  |
+  +-new_user            // Nuevo usuario registrado (solo lo pueden configurar usuarios admins)
+  +-submission          // Nueva entrega realizada (se diferencia por curso)
 ```
 
 ## Setup
@@ -238,7 +259,8 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   - Crear proyecto Firebase con una cuenta de Google.  
   - Copiar el código de configuración Firebase en objeto ```core.db.config```, en cipressus.js.  
   - Registrar manualmente, desde la consola firebase, un usuario admin y cargar el arbol de actividades de la asignatura.  
-  - Definir las reglas de escritura y lectura de información de la db (ejemplo para un admin con uid = FlX1c7HXkzUrrKBmuaqK9mLp1EI2):  
+  - Definir las reglas de escritura y lectura de información de la db:  
+
 ```json
 {
   "rules": {
@@ -281,7 +303,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
   }
 }
 ```
-  - Configurar CORS para la descarga de archivos (ver documentacion firebase).  
+  - Configurar CORS para la descarga de archivos (ver documentacion Firebase).  
   - Hostear en servidor con certificado SSL para que funcionen los service workers.  
 
 
@@ -291,7 +313,7 @@ Las actividades del curso se organizan en una estructura jerárquica que permite
 [Feature] Agregar característica  
 
 - [Feature] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
-- [Feature] Material de estudio debe ir asociado a cursos.
+- [Feature] Material de estudio debe ir asociado a cursos y una misma entrada puede estar en dos cursos.
 - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  
 - [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos (compartir). Modulo audio de 8 canales.  
 - [Impr] Mejorar sistema de entrega de trabajos. No permitir dos entregas de lo mismo.  
