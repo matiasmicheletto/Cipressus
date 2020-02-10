@@ -47,10 +47,14 @@
                         }
             return sum;
         } else { // Es hoja
-            if (student.scores[node.id]) // Si ya esta evaluado este campo
-                return student.scores[node.id].score * node.score / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
-            else
-                return 0; // Si no tiene nota, devolver 0
+            if(student.scores){ // Puede que no tenga ninguna calificacion aun
+                if (student.scores[node.id]) // Si ya esta evaluado este campo
+                    return student.scores[node.id].score * node.score / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
+                else
+                    return 0; // Si no tiene nota, devolver 0
+            }else{
+                return 0;
+            }
         }
     };
 

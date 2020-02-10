@@ -114,7 +114,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             enrolled: Date.now()
             // scores y submits se completan a medida que apruebe actividades
         };
-        if($scope.selectedKey){ // Habria que agrega un mejor control de la key que se esta escribiendo
+        if($scope.selectedKey){ // Habria que agregar un mejor control de la key que se esta escribiendo
             $rootScope.loading = true;
             Cipressus.db.update(user_private, "users_private/" + $scope.selectedKey)
                 .then(function (snapshot) {
@@ -127,6 +127,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                         displayLength: 2000
                     });
                     confirmEnrollModal.close();
+                    // #NOTIFICAR USUARIO
                     $scope.selectedKey = null; // Deseleccionar user
                     $scope.selectedIndex = null;
                     $rootScope.loading = false;
@@ -212,6 +213,9 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         obj.submits = $scope.auxiliarySubmits;
         Cipressus.db.update(obj, "users_private/" + $scope.selectedKey)
             .then(function (snapshot) {
+
+                // #NOTIFICAR USUARIO
+
                 $scope.users[$scope.selectedIndex].scores = $scope.auxiliaryScores;
                 $scope.users[$scope.selectedIndex].submits = $scope.auxiliarySubmits;
                 scoresModal.close();

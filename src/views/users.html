@@ -6,19 +6,23 @@
       <h5>Usuarios</h5>
     </div>
 
-    <div class="row right">
+    <div class="row">
       <div class="col s2">
-          <a class="right waves-effect waves-grey btn-flat" ng-click="user_filter=''" style="margin-top:20px;"><i class="material-icons tiny">close</i></a>
+          <a class="right waves-effect waves-grey btn-flat" ng-click="user_filter=''" style="margin-top:15px;"><i class="material-icons tiny">close</i></a>
       </div>
-      <div class="input-field col s4">
+      <div class="input-field col s4" style="height: 50px; margin:0px;">
         <input id="filter_input" type="text" ng-model="user_filter">
         <label for="filter_input">Búsqueda</label>
       </div>
-      <div class="col s4">
-        <label class="section right">
-          <input type="checkbox" ng-model="showAll"/>
-          <span>Todos</span>
-        </label>  
+      <div class="col s6 valign-wrapper" style="height: 70px;">
+        <div class="switch">
+          <label>
+            Curso actual
+            <input type="checkbox" ng-model="showAll">
+            <span class="lever"></span>
+            Todos
+          </label>
+        </div>
       </div>
     </div>
 
@@ -170,12 +174,12 @@
           <i>{{users[selectedIndex].enrolled?getTime(3,users[selectedIndex].enrolled):"(Usuario no aprobado)"}}</i></p>
         <p><b>Último acceso:</b> <i>{{getTime(3,users[selectedIndex].activity.last_login)}}
             ({{getTime(5,users[selectedIndex].activity.last_login)}})</i></p>
-        <p><b>Compañeros de comisión:</b> {{getUserNames(users, users[selectedIndex].partners)}}</p>
+        <p><b>Compañeros de comisión:</b> <a style="color:black;" ng-repeat="part in users[selectedIndex].partners"> {{users[getUserIndex[part]].secondName}}</a></p>
       </div>      
     </div>
     <div class="divider"></div>
-    <div class="row">
-      <div class="col s12 m6" ng-show="!users[selectedIndex].admin">
+    <div class="row" ng-show="!users[selectedIndex].admin">
+      <div class="col s12 m6">
         <div id="variable_pie_container"></div>
       </div>
       <div class="col s12 m6" ng-show="users[selectedIndex].test_fs">        
@@ -203,7 +207,6 @@
 
 <div id="confirm_enroll_modal" class="modal">
   <div class="modal-content">
-
     <h5>Confirme la operación</h5>
     <p>¿Desea aprobar el registro del usuario {{users[selectedIndex].name}} {{users[selectedIndex].secondName}} como alumno?</p>
     <p>El curso actual es: <b>{{activitiesTree.course.name}}</b></p>

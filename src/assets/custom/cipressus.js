@@ -305,6 +305,7 @@ window.Cipressus = (function () {
 
                     core.db.set(users_public, 'users_public/' + result.user.uid)
                         .then(function (res) {
+                            // #NOTIFICAR ADMINS
                             return fulfill("Datos de nuevo usuario registrados.");
                         })
                         .catch(function (err) {
