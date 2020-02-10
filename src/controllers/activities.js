@@ -1,4 +1,4 @@
-app.controller("activities", ['$scope', '$rootScope', '$location', function ($scope, $rootScope) {
+app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams', function ($scope, $rootScope, $routeParams) {
 
     if (!$rootScope.userLogged) {
         $location.path("/login");
@@ -8,9 +8,11 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
     $rootScope.sidenav.close();
     $rootScope.loading = true;
 
-    var selectCourseModal = M.Modal.init(document.getElementById("course_modal"), {preventScrolling: false});    
-
     var updateSunburst = function (data) { // Graficar sunburst
+
+        if(!data)
+            data = Cipressus.utils.getArray($scope.activities);
+
         Highcharts.chart('sunburst_container', {
             chart: {
                 height: '100%'
@@ -89,11 +91,13 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
 
     var tree = null; // Global
 
-    var updateTree = function (data) {
+    var updateTree = function () {
         if (tree !== null) {
             tree.destroy();
             tree = null;
         }
+
+        var data = Cipressus.utils.getTree($scope.activities); // Obtener esquema en formato de arbol jerarquico para vis.js
 
         var container = document.getElementById('tree_container');
         var options = {            
@@ -120,28 +124,24 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
     };
 
     Cipressus.utils.activityCntr($rootScope.user.uid, "activities").catch(function (err) {
-        console.log(err)
+        console.log(err);
     });
 
-    $scope.changeCourse = function(){
-        var c = document.getElementById("courses_select").value;
-        if(c)
-            if(c!="")
-                setCourse(c);
-    };
+     
+    $rootScope.loading = true;  
+    
+    var courseID = $routeParams.$$search.id;
 
-    var setCourse = function(courseKey){      
-        $rootScope.loading = true;  
-        $rootScope.user.course = courseKey;
-        Cipressus.db.get('activities/' + $rootScope.user.course) // Descargar arbol de actividades
+    console.log(courseID);
+
+    if(courseID){
+        Cipressus.db.get('activities/' + courseID) // Descargar arbol de actividades
         .then(function (data) {
             $scope.activities = data;
 
-            var arr = Cipressus.utils.getArray($scope.activities); // Obtener arreglo de notas
-            var tr = Cipressus.utils.getTree($scope.activities); // Obtener esquema en formato de arbol jerarquico para vis.js
+            updateSunburst();
+            updateTree();
 
-            updateSunburst(arr);
-            updateTree(tr);
             $rootScope.loading = false;
             $rootScope.$apply();
         })
@@ -153,23 +153,22 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
                 displayLength: 2000
             });
         });
-    };
-
-    // Descargar informacion sobre los cursos
-    $rootScope.loading = true;
-    Cipressus.db.get("metadata/courses") // Descargar datos de los cursos disponibles
-    .then(function(courses){
-        $scope.courses = courses;                
-        setTimeout(function(){
-            M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
-        },100);
+    }else{
+        $scope.activities = {
+            childres:[],
+            course:{
+                start: Date.now(),
+                end: Date.now()+9504000000,
+                name: "Nuevo curso"
+            },
+            id: "final",
+            name: "Nota final",
+            score: 100
+        };
+        updateSunburst();
+        updateTree();
         $rootScope.loading = false;
-        $rootScope.$apply();
-    })
-    .catch(function(err){
-        console.log(err);
-        M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
-    });
+    }
 
-    setCourse($rootScope.user.course); // Inicialmente, mostrar el actual
+
 }]);

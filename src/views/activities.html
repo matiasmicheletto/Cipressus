@@ -1,5 +1,6 @@
 <div class="container">
-    <h4>{{activities.course.name}} <a  style="font-size: 85%; cursor:pointer;" class="modal-trigger" data-target="course_modal">[cambiar]</a></h4>    
+    <h4>{{activities.course.name}}</h4>    
+    <h4>Previsualización</h4>
 </div>
 
 <div class="row">
@@ -19,23 +20,13 @@
     </div>
 </div>
 
+<div class="container">
+    <h4>Edición</h4>
+    <div class="row"></div>
 
-<div id="course_modal" class="modal">
-    <div class="modal-content">         
-        <div class="row">
-            <div class="col s12">
-                <h4>Cambiar curso actual</h4>
-                
-                <div class="input-field col s12">
-                    <select id="courses_select">
-                        <option value="" disabled selected>Elija una opción</option>
-						<option ng-repeat="(key,course) in courses track by $index" value="{{key}}">{{course.name}}</option>						
-                    </select>
-                </div>
+</div>
 
-                <a class="modal-close waves-effect waves-white btn red darken-4">Cancelar</a>
-                <a class="waves-effect waves-white btn green darken-4" ng-click="changeCourse()">Aplicar</a>
-            </div>
-        </div>
-    </div>
+<div class="fixed-action-btn">
+    <a href="#/courses" class="waves-effect waves-white btn red darken-4">Descartar</a>
+    <a class="waves-effect waves-white btn green darken-4" ng-click="saveCourse()">Guardar</a>
 </div>

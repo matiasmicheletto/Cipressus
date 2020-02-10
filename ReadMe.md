@@ -315,6 +315,7 @@ Se emplea una base de datos No-SQL (Firebase) y los datos se estructuran en form
   - [Feature] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
   - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  
   - [Impr] Entrega de trabajos. No permitir dos entregas de lo mismo. Cargar nota directamente. 
+  - [Feature] Asignar administradores.
   - [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos (compartir). Modulo audio de 8 canales.  
 -------- Testing
   - [Feature] Material de estudio debe ir asociado a cursos y una misma entrada puede estar en dos cursos.
