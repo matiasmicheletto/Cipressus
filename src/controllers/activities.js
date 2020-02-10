@@ -8,7 +8,7 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
     $rootScope.sidenav.close();
     $rootScope.loading = true;
 
-    M.Modal.init(document.getElementById("course_modal"), {preventScrolling: false});    
+    var selectCourseModal = M.Modal.init(document.getElementById("course_modal"), {preventScrolling: false});    
 
     var updateSunburst = function (data) { // Graficar sunburst
         Highcharts.chart('sunburst_container', {
@@ -112,8 +112,10 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
 
         tree.on('select', function (params) {
             var node = Cipressus.utils.searchNode($scope.activities,params.nodes[0]); 
-            var arr = Cipressus.utils.getArray(node); // Obtener arreglo de notas            
-            updateSunburst(arr);
+            if(node){
+                var arr = Cipressus.utils.getArray(node); // Obtener arreglo de notas            
+                updateSunburst(arr);
+            }
         });
     };
 
@@ -128,7 +130,8 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
                 setCourse(c);
     };
 
-    var setCourse = function(courseKey){        
+    var setCourse = function(courseKey){      
+        $rootScope.loading = true;  
         $rootScope.user.course = courseKey;
         Cipressus.db.get('activities/' + $rootScope.user.course) // Descargar arbol de actividades
         .then(function (data) {
@@ -139,20 +142,8 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
 
             updateSunburst(arr);
             updateTree(tr);
-
-            Cipressus.db.get("metadata/courses") // Descargar datos de los cursos disponibles
-            .then(function(courses){
-                $scope.courses = courses;                
-                setTimeout(function(){
-                    M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
-                },100);
-                $rootScope.loading = false;
-                $rootScope.$apply();
-            })
-            .catch(function(err){
-                console.log(err);
-                M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
-            });
+            $rootScope.loading = false;
+            $rootScope.$apply();
         })
         .catch(function (err) {
             console.log(err);
@@ -162,8 +153,23 @@ app.controller("activities", ['$scope', '$rootScope', '$location', function ($sc
                 displayLength: 2000
             });
         });
-
     };
+
+    // Descargar informacion sobre los cursos
+    $rootScope.loading = true;
+    Cipressus.db.get("metadata/courses") // Descargar datos de los cursos disponibles
+    .then(function(courses){
+        $scope.courses = courses;                
+        setTimeout(function(){
+            M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
+        },100);
+        $rootScope.loading = false;
+        $rootScope.$apply();
+    })
+    .catch(function(err){
+        console.log(err);
+        M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+    });
 
     setCourse($rootScope.user.course); // Inicialmente, mostrar el actual
 }]);
