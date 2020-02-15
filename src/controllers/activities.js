@@ -123,16 +123,15 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
         });
     };
 
-    Cipressus.utils.activityCntr($rootScope.user.uid, "activities").catch(function (err) {
-        console.log(err);
-    });
-
-     
     $rootScope.loading = true;  
     
     var courseID = $routeParams.$$search.id;
 
-    console.log(courseID);
+    Cipressus.utils.activityCntr($rootScope.user.uid, "activities", courseID).catch(function (err) {
+        console.log(err);
+    });
+
+    //console.log(courseID);
 
     if(courseID){
         Cipressus.db.get('activities/' + courseID) // Descargar arbol de actividades

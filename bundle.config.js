@@ -24,6 +24,7 @@ module.exports = {
           'src/controllers/stats.js',
           'src/controllers/attendance.js',
           'src/controllers/activities.js',
+          'src/controllers/courses.js',
           'src/controllers/editor.js',
           'src/controllers/profile.js',
         ]

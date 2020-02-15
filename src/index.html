@@ -20,13 +20,15 @@
     <link rel="manifest" href="manifest.json"></link>
     <!-- PWA Service Worker -->
     <script>
-        if (navigator.serviceWorker.controller){
-            console.log('[PWA Builder] se encontró service worker activo, no hace falta registrar.')
-        }else
-            navigator.serviceWorker.register('pwabuilder-sw.js', {scope: './'})
-            .then(function(reg){
-                console.log('Service worker registrado, scope:'+ reg.scope);
-            });
+        if(navigator.serviceWorker){ // Por si no es localhost
+            if (navigator.serviceWorker.controller)
+                console.log('[PWA Builder] se encontró service worker activo, no hace falta registrar.')
+            else
+                navigator.serviceWorker.register('pwabuilder-sw.js', {scope: './'})
+                .then(function(reg){
+                    console.log('Service worker registrado, scope:'+ reg.scope);
+                });
+        }   
     </script>
     <script src="manup.min.js"></script> 
 

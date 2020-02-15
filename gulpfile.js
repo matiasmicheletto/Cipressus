@@ -77,12 +77,10 @@ gulp.task('replace', function(){
     .pipe(replace('<script type="text/javascript" src="controllers/stats.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/attendance.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/activities.js"></script>', ''))
+    .pipe(replace('<script type="text/javascript" src="controllers/courses.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/editor.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/profile.js"></script>', ''))
     .pipe(replace('<!-- ##################### CUSTOM LIB ##################### -->', ''))
     .pipe(replace('<!-- ##################### CONTROLLERS ##################### -->', ''))
     .pipe(gulp.dest('./public'));
 });
-
-// Habria que ejecutar todo junto (no funciona con gulp 3 y en gulp 4 no funciona bundle)
-//gulp.task('production', ['clean', 'copy', 'bundle', 'rename', 'replace']);

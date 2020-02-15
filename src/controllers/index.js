@@ -306,7 +306,14 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
                 });
 
                 if($location.path() == "/login"){ // Si se acaba de logear en la vista de login
-                    $location.path("/"); // Ir a vista de home
+                    if($rootScope.user.lastView){ // Si tiene guardado la ultima vista que uso
+                        var route = $rootScope.user.lastView.split("?id="); // Obtener parametros
+                        if(route.length > 1) // Si hay parametros, abrir vista y pasar argumento
+                            $location.path("/"+route[0]).search({id:route[1]});
+                        else // Si no tiene parametros, abrir vista sola
+                            $location.path("/"+route[0]);
+                    }else // Si no hay vista, ir a home
+                        $location.path("/"); 
                     $rootScope.bodyClass = "";
                 }
                 $rootScope.userLogged = true;

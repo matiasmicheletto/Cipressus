@@ -212,7 +212,7 @@
         return str.replace(/ql-align-center/g, "center-align"); // Por ahora solo este, buscar otros
     };
 
-    core.utils.activityCntr = function (userUid, item) { // Incrementador de contadores para monitoreo de actividad de usuarios
+    core.utils.activityCntr = function (userUid, item, param) { // Incrementador de contadores para monitoreo de actividad de usuarios
         return new Promise(function (fulfill, reject) {
             core.db.get("users_public/" + userUid + "/activity/items/" + item)
                 .then(function (activity_data) {
@@ -221,7 +221,13 @@
                         data[item] = activity_data + 1;
                     else // Aun no registra actividad en este item
                         data[item] = 1;
-                    core.db.update(data, "users_public/" + userUid + "/activity/items")
+                    var updates = {};
+                    updates["users_public/" + userUid + "/activity/items"] = data; // Contadores
+                    if(param)
+                        updates["users_public/" + userUid + "/lastView"] = item+"?id="+param; // Ultima vista
+                    else    
+                        updates["users_public/" + userUid + "/lastView"] = item; // Ultima vista
+                    core.db.update(updates)
                         .then(function (res) {
                             return fulfill(res);
                         })
@@ -270,7 +276,7 @@
             error.stack = actionStack;
 
         // Logear en firestore
-        core.fs.add(error, "errorLog")
+        core.db.push(error, "errorLog")
         .then(function(){
             actionStack = []; // Se reinicia la pila de acciones
             console.log("Error reportado");
