@@ -6,80 +6,53 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
     }
 
     $rootScope.sidenav.close();
-    $rootScope.loading = true;
 
-    var updateSunburst = function (data) { // Graficar sunburst
+    var updateSunburst = function (node) { // Graficar sunburst
 
-        if(!data)
-            data = Cipressus.utils.getArray($scope.activities);
+        var data = Cipressus.utils.getArray(node); // Obtener el formato que requiere el grafico
 
         Highcharts.chart('sunburst_container', {
-            chart: {
-                height: '100%'
-            },
-            title: {
-                text: 'Proporción de calificaciones'
-            },
-            subtitle: {
-                text: $scope.activities.course.name
-            },
-            credits: {
-                enabled: false
-            },
+            chart: {height: '90%'},
+            title: {text: 'Proporción de calificaciones'},
+            subtitle: {text: $scope.activities.course.name},
+            credits: {enabled: false},
             plotOptions: {
                 series: {
                     events: {
                         click: function (event) { // Evento de clickeo sobre partes del sunburst
-                            console.log(event.point.node.id);
+                            //console.log(event.point.node.id);
+                            var node = Cipressus.utils.searchNode($scope.activities, event.point.node.id); 
+                            if(node)
+                                $scope.selectActivity(node, false, true);
                         }
                     }
                 }
             },
             series: [{
                 type: "sunburst",
+                id: "Activities",
                 data: data,
                 allowDrillToNode: true,
                 cursor: 'pointer',
                 dataLabels: {
                     format: '{point.name}',
-                    filter: {
-                        property: 'innerArcLength',
-                        operator: '>',
-                        value: 16
-                    }
+                    filter: {property: 'innerArcLength',operator: '>',value: 16}
                 },
                 levels: [{
                         level: 1,
                         levelIsConstant: false,
                         dataLabels: {
-                            filter: {
-                                property: 'outerArcLength',
-                                operator: '>',
-                                value: 64
-                            }
+                            filter: {property: 'outerArcLength',operator: '>',value: 64}
                         }
                     },
                     {
                         level: 2,
                         colorIndex: 1
                     },
-                    {
-                        level: 3,
-                        colorByPoint: true
-                    }, {
-                        level: 4,
-                        colorVariation: {
-                            key: 'brightness',
-                            to: -0.5
-                        }
-                    }, {
-                        level: 5,
-                        colorVariation: {
-                            key: 'brightness',
-                            to: 0.5
-                        }
-                    }
-                ]
+                    {level: 3,colorByPoint: true}, 
+                    {level: 4,colorVariation: {key: 'brightness',to: -0.5}}, 
+                    {level: 5,colorVariation: {key: 'brightness',to: 0.5}
+                }]
 
             }],
             tooltip: {
@@ -92,6 +65,7 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
     var tree = null; // Global
 
     var updateTree = function () {
+        
         if (tree !== null) {
             tree.destroy();
             tree = null;
@@ -110,20 +84,28 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
 
         tree = new vis.Network(container, data, options);
 
+        /*
         tree.once('afterDrawing', function() {
             container.style.height = '75vh'
         });
+        */
 
-        tree.on('select', function (params) {
-            var node = Cipressus.utils.searchNode($scope.activities,params.nodes[0]); 
-            if(node){
-                var arr = Cipressus.utils.getArray(node); // Obtener arreglo de notas            
-                updateSunburst(arr);
-            }
+        tree.on('select', function (params) { // Callback de seleccion de nodos del arbol
+            var node = Cipressus.utils.searchNode($scope.activities, params.nodes[0]); 
+            if(node)
+                $scope.selectActivity(node, true, true);
         });
     };
 
-    $rootScope.loading = true;  
+    $scope.selectActivity = function(node, update_sunburst, apply){ // Selecciona un nodo
+        $scope.selectedNode = node;
+        if(update_sunburst)
+            updateSunburst(node);
+        
+        if(apply)
+            $scope.$apply();
+        M.updateTextFields();
+    };
     
     var courseID = $routeParams.$$search.id;
 
@@ -133,14 +115,17 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
 
     //console.log(courseID);
 
+    $rootScope.loading = true;
     if(courseID){
         Cipressus.db.get('activities/' + courseID) // Descargar arbol de actividades
         .then(function (data) {
             $scope.activities = data;
 
-            updateSunburst();
+            updateSunburst($scope.activities);
             updateTree();
+            $scope.selectedNode = angular.copy($scope.activities);
 
+            M.updateTextFields();
             $rootScope.loading = false;
             $rootScope.$apply();
         })
@@ -164,10 +149,11 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
             name: "Nota final",
             score: 100
         };
-        updateSunburst();
+        $scope.selectedNode = angular.copy($scope.activities);
+        updateSunburst($scope.activities);
         updateTree();
         $rootScope.loading = false;
     }
 
-
 }]);
+

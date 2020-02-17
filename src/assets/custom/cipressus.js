@@ -2,6 +2,7 @@ window.Cipressus = (function () {
     // Libreria para el control de la base de datos, storage, metodos utiles de la app y de comunicacion con hardware
 
     var core = { // Instancia de la clase
+        globalTarget: null, // Este atributo se usa para poder acceder a variables desde la consola
         db: {}, // Operaciones de base de datos
         storage: {}, // Almacenamiento de archivos
         users: {}, // Operaciones de autenticacion
