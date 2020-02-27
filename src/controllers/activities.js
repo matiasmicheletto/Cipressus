@@ -98,13 +98,33 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
     };
 
     $scope.selectActivity = function(node, update_sunburst, apply){ // Selecciona un nodo
-        $scope.selectedNode = node;
-        if(update_sunburst)
-            updateSunburst(node);
-        
-        if(apply)
-            $scope.$apply();
-        M.updateTextFields();
+        if(node){ // Checkeo de validez
+            if($scope.selectedHistory)
+                $scope.selectedHistory.push($scope.selectedNode);
+            else
+                $scope.selectedHistory = [$scope.selectedNode];
+
+            $scope.selectedNode = node;
+
+            if(update_sunburst)
+                updateSunburst(node);
+            
+            if(apply)
+                $scope.$apply();
+            M.updateTextFields();
+        }
+    };
+
+    $scope.selectPreviousActivity = function(){ // Callback de boton para volver hacia atras la seleccion
+        if($scope.selectedHistory){
+            var node = $scope.selectedHistory.pop(); // Devuelve el anterior al actual y lo quita
+            // De aca en adelante es lo mismo que $scope.selectActivity pero sin insertar en el historial
+            if(node){
+                $scope.selectedNode = node;
+                updateSunburst(node);
+                M.updateTextFields();
+            }
+        }
     };
     
     var courseID = $routeParams.$$search.id;
@@ -124,6 +144,7 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
             updateSunburst($scope.activities);
             updateTree();
             $scope.selectedNode = angular.copy($scope.activities);
+            $scope.selectedHistory = [$scope.selectedNode]; // Historial para hacer drillup
 
             M.updateTextFields();
             $rootScope.loading = false;

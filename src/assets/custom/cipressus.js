@@ -345,7 +345,8 @@ window.Cipressus = (function () {
                     console.log('Permisos de notificación otorgados.');
                 })
                 .catch(function (err) {
-                    console.log('No es posible habilitar notificaciones.', err);
+                    console.log(err);
+                    console.log('No es posible habilitar notificaciones.');
                 });
 
             /* Importar el script de notifications

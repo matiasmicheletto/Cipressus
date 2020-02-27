@@ -22,16 +22,6 @@
         <div class="col s12 m6 l6">
             <div class="card hoverable z-depth-1">
                 <div class="card-content">
-
-                </div>
-            </div>  
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col s12 m6 l6">
-            <div class="card hoverable z-depth-1">
-                <div class="card-content">
                     <p><b>Actividad seleccionada</b></p>
                     <div class="input-field">
                         <input placeholder="" id="inputName" type="text" ng-model="selectedNode.name">
@@ -44,6 +34,16 @@
                 </div>
             </div>  
         </div>  
+    </div>
+
+    <div class="row">
+        <div class="col s12 m6 l6">
+            <div class="card hoverable z-depth-1">
+                <div class="card-content" style="padding:0">
+                    <div id="sunburst_container" style="height:500px"></div>
+                </div>
+            </div>
+        </div>
 
         <div class="col s12 m6 l6">
             <div class="card hoverable z-depth-1">
@@ -73,10 +73,17 @@
                                 </a>
                             </td>
                           </tr>
+                          <tr>
+                            <td><b>Total:</b></td>
+                            <td>{{selectedNode.totalProportion}}</td>
+                            <td>{{selectedNode.score}}</td>
+                            <td></td>
+                          </tr>
                         </tbody>
                     </table>
                     <div class="row right">
-                        <a title="Nueva sub-actividad" class="btn-floating btn-small green darken-1"><i class="large material-icons">add</i></a>
+                        <a title="Volver" class="btn-floating btn-small green darken-1" ng-click="selectPreviousActivity()"><i class="large material-icons">arrow_back</i></a>
+                        <a title="Nueva sub-actividad" class="btn-floating btn-small green darken-3"><i class="large material-icons">add</i></a>
                     </div>
                 </div>
             </div>  
@@ -86,14 +93,7 @@
 
     <h5>Previsualización</h5>
     <div class="row">
-        <div class="col s12 m6 l6">
-            <div class="card hoverable z-depth-1">
-                <div class="card-content" style="padding:0">
-                    <div id="sunburst_container" style="height:500px"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m6 l6">
+        <div class="col s12">
             <div class="card hoverable z-depth-1">
                 <div class="card-content" style="padding:0">
                     <div id="tree_container" style="height:500px"></div>
