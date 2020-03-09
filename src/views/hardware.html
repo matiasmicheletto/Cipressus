@@ -28,7 +28,8 @@
 
 <div ng-show="tester">
     <div class="container">
-        <h4>Probador de circuitos lógicos</h4>
+        <h5 class="hide-on-med-and-up">Probador de circuitos lógicos</h5>
+        <h4 class="hide-on-small-only">Probador de circuitos lógicos</h4>
     </div>
 
     <center>
@@ -46,19 +47,19 @@
                     </div>
 
                     <div class="row" ng-repeat="item in tester track by $index">
-                        <div class="col s3">
+                        <div class="col s2 m3">
                             <input type="text" placeholder="{{$index+1}}" style="max-width: 100px; text-align: center;">
                         </div>
-                        <div class="switch col s3">
+                        <div class="switch col s5 m3">
                             <label>Off<input type="checkbox" ng-model="item.output"><span
                                     class="lever"></span>On</label>
                         </div>
-                        <div class="led-box col s3">
+                        <div class="led-box col s3 m3">
                             <label>
                                 <div class="led-red {{item.input  ? 'led-on':'led-off'}}"></div>
                             </label>
                         </div>
-                        <div class="col s3">
+                        <div class="col s2 m3">
                             <input type="text" placeholder="{{$index+1}}" style="max-width: 100px; text-align: center;">
                         </div>
                     </div>
