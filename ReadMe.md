@@ -1,103 +1,24 @@
 # Cipressus
 
-Sistema de gestión de contenidos para el aprendizaje (LCMS). Implementa un sistema de cómputo automático de calificaciones y permite la consulta en tiempo real de resultados de evaluaciones, noticias y cronograma de cátedra, descarga de material de estudio y muchas otras utilidades. Incluye una GUI para controlar un tester de circuitos digitales basado en Arduino y un simulador gráfico de circuitos lógicos. Por medio del tester se puede acceder a una interface tipo analizador lógico y crear simulaciones que son controladas mediante circuitos digitales físicos.  
-
-
-![Screenshot1](screenshots/scrshot1lr.png "Simulador") ![Screenshot2](screenshots/scrshot2lr.png "Perfil")
-
-### Características
-  - Acceso mediante registro con email y contraseña.  
-  - Usuarios con roles de alumnos, docentes o visitante.  
-  - Perfil de usuario personalizable.  
-  - Publicación de comunicados y novedades con posibilidad de incorporar comentarios.  
-  - Consulta de cronograma de actividades.  
-  - Calificaciones actualizadas en tiempo real.  
-  - Notificaciones y mensajería instantánea. 
-  - Tablero de calificaciones animado con información de progreso de la materia, actividades entregadas, calificaciones generales del curso y lista de eventos próximos.  
-  - Entrega online de informes o archivos para evaluación.  
-  - Interfaz gráfica para conectar el probador digital de circuitos lógicos y realizar verificación de funcionamiento y simulación de sistemas.  
-  - Simulador de circuitos lógicos embebido en la misma app.  
-  - Evaluación del Test de Felder & Silverman o instrumento ILS para usuarios alumnos.  
-  - Estadística y analíticos de usuarios alumnos sobre uso de la app, origen y frecuencia de acceso, progreso de notas.  
-  - Evaluación de asistencia ágil con cómputo automático.  
-  - Descarga de material de estudio, trabajos prácticos, libros, apuntes, programas, etc.  
-
-### Hardware adjunto
-
 ![Probador](screenshots/probador2.jpg "Probador") 
 
-
-## Contacto
-LSD | Laboratorio de Sistemas Digitales  
-DIEC | Departamento de Ingeniería Eléctrica y Computadoras  
-UNS | Universidad Nacional del Sur  
-San Andrés 800, CP8000 Bahía Blanca  
-Buenos Aires, Argentina  
-Teléfono: +54 291 4595153/4  
-Website: http://www.diec.uns.edu.ar/rts  
-
-
-#### Diseño e implementación
-Ing. Matías J. Micheletto  
-Email: matias.micheletto@uns.edu.ar  
-https://matiasmicheletto.github.io  
-
-
-## Documentación
-
-### Tecnologías utilizadas
-#### Angular
-http://angularjs.org/  
-Framework para el control de la app.
-#### Materialize
-http://materializecss.com/  
-Estilo de la GUI.
-#### Firebase
-http://firebase.google.com/  
-Para el control de autenticación de usuarios y almacenamiento de información en la nube.
-#### HighCharts  
-http://highcharts.com/  
-Graficos de datos estadísticos.
-#### JQuery  
-http://jquery.com/  
-Como dependencia requerida para FullCalendar y SimCirJS
-#### Fullcalendar  
-http://fullcalendar.io/  
-Calendario de eventos para el cronograma de la materia. 
-#### SimCirJS 
-https://kazuhikoarase.github.io/simcirjs/   
-Simulador de circuitos lógicos digitales.
-#### Tone  
-https://tonejs.github.io/  
-Generador de música interactivo para el simulador.  
-#### Quill  
-https://quilljs.com/   
-https://github.com/kensnyder/quill-image-resize-module  
-Editor de texto enriquecido para crear publicaciones con comunicados y noticias.  
-#### Moment
-http://momentjs.com/  
-Operaciones de fecha y hora.
-#### Is  
-https://is.js.org/   
-Identificación de Sist. Operativo, navegador, dispositivo, etc.  
-#### Vis
-http://visjs.org/  
-Visualización de árboles.
+| Librería | Documentación | Función |
+-----------|---------------|----------|
+| Angular | http://angularjs.org/ | Framework de front-end. |  
+| Materialize | http://materializecss.com/ | Componentes de la GUI.  |  
+| Firebase | http://firebase.google.com/ | Autenticación, base de datos, mensajería instantánea, notificaciones, almacenamiento. |  
+| HighCharts | http://highcharts.com/ | Gráficos interactivos. |  
+| Fullcalendar | http://fullcalendar.io/ | Calendario de eventos para el cronograma de la materia.  |  
+| SimCirJS  | https://kazuhikoarase.github.io/simcirjs/ | Simulador de circuitos lógicos digitales. |  
+| JQuery | http://jquery.com/ |Dependencia de FullCalendar y SimCirJS. |  
+| Tone | https://tonejs.github.io/ | Generador de audio para el simulador. |    
+| Quill | https://quilljs.com/, https://github.com/kensnyder/quill-image-resize-module | Editor de texto enriquecido para crear publicaciones de contenido multimedia. |    
+| Moment | http://momentjs.com/ | Operaciones de fecha y hora. |  
+| Is | https://is.js.org/ | Identificación de Sist. Operativo, navegador, dispositivo, etc. |  
+| Vis | http://visjs.org/ | Visualización de modelos abstractos. |  
 
 
-## Roles de usuarios
-Los usuarios pueden tener tres roles distintos: visitante, alumno o docente. Cuando un usuario se registra con su email, se le asigna el rol de visitante y sólo puede acceder a las herramientas de Cipressus: simulador, mapas-K, probador, etc.  
-
-Los usuarios con rol de docente o administrador del sistema, tienen acceso a toda la configuración y roles de otros usuarios. Cada usuario administrador tiene asociado un curso, que puede cambiar en cualquier momento por otro de la lista de cursos creada. Cuando un nuevo usuario se registra, el usuario administrador puede aceptar la subscripción del nuevo usuario como miembro del curso que actualmente tiene asociado y de esta manera, el usuario visitante pasa a tener el rol de alumno.
-
-Los usuarios alumnos tienen asociado una lista de actividades que corresponden a las del curso al cual fueron subscriptos. A medida que completan las actividades y los usuarios docentes califican dichas actividades, van incrementando su puntaje final. Los usuarios alumnos pueden ver un resumen completo de las actividades del curso en cronograma, descargar material de estudio del curso actual, consultar sus propias calificaciones y la de sus compañeros de curso (en forma anónima).
-
-## Evaluación de calificaciones
-Las actividades del curso se organizan en una estructura jerárquica que permite calcular la calificación general un alumno o parcial de cada actividad realizada mediante algoritmos de recorrido de árboles, con funciones recursivas y computando la suma ponderada de los puntajes obtenidos y registrados en cada nivel de este árbol, que contiene los factores de ponderación o puntajes absolutos de dichas actividades. Para cada alumno se registra una lista de notas referenciadas a las actividades del árbol de puntajes. Para actividades con vencimiento se pueden definir funciones de costo que aplican sobre las calificaciones en función del tiempo transcurrido desde el vencimiento de la actividad hasta el cumplimiento de la misma.  
-
-
-## Estructura de la Base de Datos
-Se emplea una base de datos No-SQL (Firebase) y los datos se estructuran en forma de árbol.
+## Base de Datos de Tiempo Real
 
 ```
 -activities             // Contiene la estructura de actividades, puntajes, vencimientos, etc
@@ -256,9 +177,7 @@ Se emplea una base de datos No-SQL (Firebase) y los datos se estructuran en form
 
 ## Setup
 
-  - Crear proyecto Firebase con una cuenta de Google.  
-  - Copiar el código de configuración Firebase en objeto ```core.db.config```, en cipressus.js.  
-  - Registrar manualmente, desde la consola firebase, un usuario admin y cargar el arbol de actividades de la asignatura.  
+  - Crear proyecto Firebase.  
   - Definir las reglas de escritura y lectura de información de la db:  
 
 ```json
@@ -303,22 +222,25 @@ Se emplea una base de datos No-SQL (Firebase) y los datos se estructuran en form
   }
 }
 ```
+  - Copiar el código de configuración Firebase en objeto ```core.db.config```, en cipressus.js.  
+  - Registrar manualmente, desde la consola firebase, un usuario administrador.  
   - Configurar CORS para la descarga de archivos (ver documentacion Firebase).  
   - Hostear en servidor con certificado SSL para que funcionen los service workers.  
 
+--------------------------------------------------
+### Contacto
 
-### Backlog
-[Impr] Optimizar o mejorar  
-[Bug] Error para corregir  
-[Feature] Agregar característica  
+Matías J. Micheletto  
 
-  - [Feature] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
-  - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  
-  - [Impr] Entrega de trabajos. No permitir dos entregas de lo mismo. Cargar nota directamente. 
-  - [Feature] Asignar administradores.
-  - [Feature] Probador de circuitos: eliminar circuitos guardados. Guardar circuitos publicos (compartir). Modulo audio de 8 canales.  
--------- Testing
-  - [Feature] Material de estudio debe ir asociado a cursos y una misma entrada puede estar en dos cursos.
-  - [Feature] En creacion de actividades con vencimiento, generar evento para mostrar las fechas en cronograma de actividades.
-  - [Feature] Detallar clases asistidas. En progreso, mostrar cantidad de actividades calificadas y por completar.
-  - [Feature] Incluir soporte touch para el simulador.  
+Email: matias.micheletto@uns.edu.ar  
+Portafolio: https://matiasmicheletto.github.io  
+
+--------------------------------------------------
+
+LSD | Laboratorio de Sistemas Digitales  
+DIEC | Departamento de Ingeniería Eléctrica y Computadoras  
+UNS | Universidad Nacional del Sur  
+San Andrés 800, CP8000 Bahía Blanca  
+Buenos Aires, Argentina  
+Teléfono: +54 291 4595153/4  
+Sitio web: http://www.diec.uns.edu.ar/rts  
