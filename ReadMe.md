@@ -1,183 +1,198 @@
-# Cipressus
+# Acerca de
 
-![Probador](screenshots/probador2.jpg "Probador") 
+Cipressus es un LCMS que pone a disposición de los practicantes de sistemas digitales, un conjunto de herramientas interactivas que permiten asistirlos y guiarlos en el desarrollo de habilidades de resolución de problemas. Como resultando de esta interacción de los alumnos con el sistema, se genera una gran cantidad de datos que permite a un docente evaluar el desempeño de todos los estudiantes en general o de cada alumno en particular, acorde a las habilidades individuales y preferencias de aprendizaje de cada uno mediante un sistema autogestionado y configurable.
+
+#### Esquema general
+![Arquitectura](screenshots/arquitectura.png "Arquitectura") 
+
+#### Simulador de circuitos digitales
+![Simulador](screenshots/simulador.png "Simulador") 
+
+#### Probador de circuitos
+![Probador](screenshots/probador.jpg "Probador") 
+
+#### Perfil de usuarios
+![Alumnos](screenshots/alumnos.png "Alumnos") 
+
+
+## Implementado con
 
 | Librería | Documentación | Función |
 -----------|---------------|----------|
-| Angular | http://angularjs.org/ | Framework de front-end. |  
+| Angular | http://angularjs.org/ | Data Binding del Front-End. |  
 | Materialize | http://materializecss.com/ | Componentes de la GUI.  |  
-| Firebase | http://firebase.google.com/ | Autenticación, base de datos, mensajería instantánea, notificaciones, almacenamiento. |  
+| Firebase | http://firebase.google.com/ | Autenticación, base de datos, mensajería, notificaciones, almacenamiento. |  
 | HighCharts | http://highcharts.com/ | Gráficos interactivos. |  
 | Fullcalendar | http://fullcalendar.io/ | Calendario de eventos para el cronograma de la materia.  |  
-| SimCirJS  | https://kazuhikoarase.github.io/simcirjs/ | Simulador de circuitos lógicos digitales. |  
-| JQuery | http://jquery.com/ |Dependencia de FullCalendar y SimCirJS. |  
+| SimCirJS  | https://kazuhikoarase.github.io/simcirjs/ | Simulador de circuitos digitales. |  
+| JQuery | http://jquery.com/ | Dependencia de FullCalendar y SimCirJS. |  
 | Tone | https://tonejs.github.io/ | Generador de audio para el simulador. |    
 | Quill | https://quilljs.com/, https://github.com/kensnyder/quill-image-resize-module | Editor de texto enriquecido para crear publicaciones de contenido multimedia. |    
 | Moment | http://momentjs.com/ | Operaciones de fecha y hora. |  
-| Is | https://is.js.org/ | Identificación de Sist. Operativo, navegador, dispositivo, etc. |  
+| Is | https://is.js.org/ | Identificación de Sist. Operativo, navegador, dispositivo, disponibilidad de red, ubicación, etc. |  
 | Vis | http://visjs.org/ | Visualización de modelos abstractos. |  
 
 
 ## Base de Datos de Tiempo Real
 
 ```
--activities             // Contiene la estructura de actividades, puntajes, vencimientos, etc
+-activities             // [map] Contiene la estructura de actividades, puntajes, vencimientos, etc
  |
- + ... (arbol)
--events/courseID        // Lista de eventos de calendario
+ + ... (definido por administrador)
+-events/courseID        // [map] Lista de eventos de calendario
  | 
- +-(child_key)          // ID firebase del evento
+ +-(child_key)          // [map] ID firebase del evento
   |
-  +-attendance          // Asistencia es obligatoria
-  +-start               // Inicio ms unix
-  +-end                 // Fin ms unix
-  +-author              // ID del autor
-  +-title               // Titulo del evento
-  +-info                // Detalles del evento formato html
-  +-timestamp           // Fecha de publicacion/edicion
-  +-color               // Color de la etiqueta
--news/courseID          // Lista de comunicados a mostrar en home
+  +-attendance          // [bool] asistencia obligatoria
+  +-start               // [number] Inicio ms unix
+  +-end                 // [number] Fin ms unix
+  +-author              // [string] ID autor
+  +-title               // [string] Titulo del evento
+  +-info                // [string] Detalles del evento formato html
+  +-timestamp           // [number] Fecha de publicacion/edicion
+  +-color               // [string] Color de la etiqueta
+-news/courseID          // [map] Lista de comunicados a mostrar en home
  |
- +-(child_key)          // ID firebase de la noticia
+ +-(child_key)          // [map] ID firebase de la noticia
   |
-  +-author              // ID del autor
-  +-content             // Contenido del post formato html
-  +-order               // Numero para ordenar el listado
-  +-timestamp           // Fecha de publicacion/edicion
-  +-title               // Titulo del post
-  +-comments            // Comentarios de esta publicación
+  +-author              // [string] ID del autor
+  +-content             // [string] Contenido del post formato html
+  +-order               // [number] Numero para ordenar el listado
+  +-timestamp           // [number] Fecha de publicacion/edicion
+  +-title               // [string] Titulo del post
+  +-comments            // [map] Comentarios de esta publicación
    |
-   +-(child_key)        // ID del comentario
+   +-(child_key)        // [map] ID del comentario
     |
-    +-uid               // ID del usuario que comenta
-    +-text              // Texto el comentario
-    +-timestamp         // Estampa de tiempo del comentario
--notifications          // Lista de notificaciones para todos los usuarios
+    +-uid               // [string] ID del usuario que comenta
+    +-text              // [string] Texto el comentario
+    +-timestamp         // [number] Estampa de tiempo del comentario
+-notifications          // [map] Lista de notificaciones para todos los usuarios
  |
- +-(child_key)          // ID firebase de la notificacion
+ +-(child_key)          // [map] ID firebase de la notificacion
   |
-  +-uid                 // ID del destinatario
-  +-title               // Titulo de la notificacion
-  +-text                // Texto descriptivo
-  +-link                // Enlace (opcional)
-  +-timestamp           // Fecha de generacion
+  +-uid                 // [string] ID del destinatario
+  +-title               // [string] Titulo de la notificacion
+  +-text                // [string] Texto descriptivo
+  +-link                // [string] Enlace (opcional)
+  +-timestamp           // [number] Fecha de generacion
   +-read                // Acuse de lectura
--sources                // Listas de archivos
+-sources                // [map] Listas de archivos
  |
- +-(child_key)          // Subcategoria de directorio
+ +-(child_key)          // [map] Subcategoria de directorio
   |
-  +-name                // Nombre del subdirectorio
-  +-files               // ID del archivo
+  +-name                // [string] Nombre del subdirectorio
+  +-files               // [string] ID del archivo
    |
-   +-(child_key)        // Identificador del archivo
+   +-(child_key)        // [map] Identificador del archivo
     |
-    +-link              // Enlace al storage
-    +-name              // Nombre visible (editable)
-    +-filename          // Nombre en storage
-    +-size              // Tamanio en storage
-    +-format            // Formato del archivo
-    +-uploaded          // Fecha de carga
--submissions/courseID   // Lista de entregas realizadas por alumnos
+    +-link              // [string] Enlace al storage
+    +-name              // [string] Nombre visible (editable)
+    +-filename          // [string] Nombre en storage
+    +-size              // [number] Tamanio en storage
+    +-format            // [string] Formato del archivo
+    +-uploaded          // [number] Fecha de carga
+-submissions/courseID   // [map] Lista de entregas realizadas por alumnos
  |
- +-(child_key)          // Identificador de la entrega
+ +-(child_key)          // [map] Identificador de la entrega
   |
-  +-authors             // Autores de la entrega (apellido de los integrantes separado por coma)
-  +-filename            // Nombre de archivo subido
-  +-link                // Enlace al storage
-  +-activity            // Identificador de la actividad entregada
-  +-status              // Estado de la correccion
+  +-authors             // [string] Autores de la entrega (apellido de los integrantes separado por coma)
+  +-filename            // [string] Nombre de archivo subido
+  +-link                // [string] Enlace al storage
+  +-activity            // [string] Identificador de la actividad entregada
+  +-status              // [map] Estado de la correccion
    |
-   +-(child_key)        // Identificador del registro
+   +-(child_key)        // [map] Identificador del registro
     |
-    +-timestamp         // Fecha/hora del registro
-    +-action            // Acciones del registro (0:subido, 1:descargado, 2:observacion, 3:evaluado)
-    +-user              // Usuario que realizo la accion
-    +-display           // Mensaje a mostrar del estado de revision
-    +-obs               // Observaciones
--users_private          // Informacion de usuarios alumnos
+    +-timestamp         // [number] Fecha/hora del registro
+    +-action            // [number] Acciones del registro (0:subido, 1:descargado, 2:observacion, 3:evaluado)
+    +-user              // [string] Usuario que realizo la accion
+    +-display           // [string] Mensaje a mostrar del estado de revision
+    +-obs               // [string] Observaciones
+-users_private          // [map] Informacion de usuarios alumnos
  |
- +-(child_key)          // ID firebase del usuario
+ +-(child_key)          // [map] ID firebase del usuario
   |
-  +-admin               // True/false dependiendo de si es administrador
-  +-enrolled            // Fecha de aprobacion como usuario alumno
-  +-scores              // Arreglo de notas
+  +-admin               // [bool] Si es administrador
+  +-enrolled            // [number] Fecha de aprobacion como usuario alumno
+  +-scores              // [map] Arreglo de notas
    |
-   +-(child_name)       // Nombre de la actividad 
+   +-(child_name)       // [map] Nombre de la actividad 
     |
-    +-evaluator         // ID de quien evaluo
-    +-score             // Puntaje de 0 a 100
-    +-timestamp         // Fecha/hora de correccion
-  +-submits             // Lista de fechas de entrega de tps
+    +-evaluator         // [string] ID de quien evaluo
+    +-score             // [number] Puntaje de 0 a 100
+    +-timestamp         // [number] Fecha/hora de correccion
+  +-submits             // [map] Lista de fechas de entrega de tps
    |
-   +-(child_name)       // Nombre de la actividad 
+   +-(child_name)       // [map] Nombre de la actividad 
     |
-    +-evaluator         // ID de quien evaluo
-    +-date              // Fecha de entrega de la actividad
-    +-timestamp         // Fecha/hora de correccion
-  +-attendance          // Para computo de asistencia a clase
+    +-evaluator         // [string] ID de quien evaluo
+    +-date              // [number] Fecha de entrega de la actividad
+    +-timestamp         // [number] Fecha/hora de correccion
+  +-attendance          // [map] Para computo de asistencia a clase
    |
-   +-(child_key)        // ID del evento asistido
+   +-(child_key)        // [map] ID del evento asistido
     |
-    +-evaluator         // ID de quien tomo asistencia
-    +-timestamp         // Fecha/hora de evaluacion de asistencia
--users_public           // Datos de usuarios (unico campo editable por cualquier usuario)
+    +-evaluator         // [string] ID de quien tomo asistencia
+    +-timestamp         // [number] Fecha/hora de evaluacion de asistencia
+-users_public           // [map] Datos de usuarios (unico campo editable por cualquier usuario)
  |
- +-(child_key)          // ID firebase
+ +-(child_key)          // [map] ID firebase del usuario (UID)
   |
-  +-avatar              // Foto de perfil
-  +-degree              // Carrera
-  +-email               // Email
-  +-lu                  // LU
-  +-name                // Nombre
-  +-secondName          // Apellido
-  +-partners            // Compañeros de comision
+  +-avatar              // [string] Foto de perfil
+  +-degree              // [string] Carrera
+  +-email               // [string] Email
+  +-lu                  // [number] LU
+  +-name                // [string] Nombre
+  +-secondName          // [string] Apellido
+  +-partners            // [map] Compañeros de comision
    |
-   +-(array_index)      // Indice de arreglo e identificador de usuario como valor
-  +-activity            // Monitor de actividad
+   +-(array_index)      // [number] Indice de arreglo e identificador de usuario como valor
+  +-activity            // [map] Monitor de actividad
    |
-   +-last_login         // Estampa de tiempo de ultimo acceso
-   +-so                 // Sist. operativos utilizados
-   +-browser            // Navegadores utilizados
-   +-item               // Contadores de acceso a secciones de la pagina
-  +-simulations            // Carpeta para guardar simulaciones de SimCirJS
+   +-last_login         // [number] Estampa de tiempo de ultimo acceso
+   +-so                 // [map] Sist. operativos utilizados
+   +-browser            // [map] Navegadores utilizados
+   +-item               // [map] Contadores de acceso a secciones de la pagina
+  +-simulations         // [map] Carpeta para guardar simulaciones de SimCirJS
    |
-   +-(child_key)        // Identificador del circuito
+   +-(child_key)        // [map] Identificador del circuito
     |
-    +-name              // Nombre de archivo
-    +-size              // Tamanio
-    +-timestamp         // Fecha y hora de generado
-    +-data              // Datos guardados de la simulacion
-  +-test_fs             // Resultados del test Felder-Silverman
+    +-name              // [string] Nombre de archivo
+    +-size              // [number] Tamanio
+    +-timestamp         // [number] Fecha y hora de generado
+    +-data              // [string] Datos guardados de la simulacion
+  +-test_fs             // [map] Resultados del test Felder-Silverman
    |
-   +-answers            // Arreglo de respuestas
-   +-changes            // Arreglo de cambios en respuestas
-   +-starTime           // Fecha/hora de inicio del test
-   +-timeline           // Tiempos de respuesta de cada pregunta
--metadata               // Informacion adicional que emplea la app
+   +-answers            // [map] Arreglo de respuestas
+   +-changes            // [map] Arreglo de cambios en respuestas
+   +-starTime           // [number] Fecha/hora de inicio del test
+   +-timeline           // [map] Tiempos de respuesta de cada pregunta
+-metadata               // [map] Informacion adicional que emplea la app
  |
- +-courses              // Informacion de cursos creados
+ +-courses              // [map] ID para cada curso
   |
-  +-(child_key)         // ID del curso (coincide con el del arbol de actividades)
+  +-(child_key)         // [map] ID del curso (coincide con el del arbol de actividades)
    |
-   +-name               // Nombre del curso
-   +-start              // Inicio (timestamp)
-   +-end                // Finalizacion (timestamp)
-   +-enrolled           // Cantidad de usuarios registrados
- +-updates              // Estampas de tiempo de última actualizacion de los datos de cada vista
+   +-name               // [string] Nombre del curso
+   +-start              // [number] Inicio (timestamp)
+   +-end                // [number] Finalizacion (timestamp)
+   +-enrolled           // [number] Cantidad de usuarios registrados
+ +-updates              // [map] Estampas de tiempo de última actualizacion de los datos de cada vista
   |
-  +-news 
-  +-events
-  +-sources
-  +-submissions
- +-notifications        // Arreglos de UIDs de usuarios subscriptos a cada tipo de evento
+  +-news                // [number] Ultima actualizacion de noticias
+  +-events              // [number] Ultima actualizacion de eventos de calendario
+  +-sources             // [number] Ultima actualizacion de archivos
+  +-submissions         // [number] Ultima actualizacion de entregas
+ +-notifications        // [map] Arreglo de UIDs subscriptos a cada tipo de evento
   |
-  +-new_user            // Nuevo usuario registrado (solo lo pueden configurar usuarios admins)
-  +-submission          // Nueva entrega realizada (se diferencia por curso)
+  +-new_user            // [map] Nuevo usuario registrado (solo lo pueden configurar usuarios admins)
+  +-submission          // [map] Nueva entrega realizada (se diferencia por curso)
 ```
 
 ## Setup
 
-  - Crear proyecto Firebase.  
+  - Crear proyecto Firebase en https://firebase.google.com/.  
   - Definir las reglas de escritura y lectura de información de la db:  
 
 ```json
