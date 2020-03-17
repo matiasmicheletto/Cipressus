@@ -390,6 +390,30 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         evalInput(0); // Empezar por la primera
     };
 
+    $scope.selectToDelete = function(key){ // Seleccionar circuito para eliminar
+        $scope.selected = $scope.simulations[key];
+        $scope.selected.key = key;
+        load_modal.close(); // Cerrar el modal de abrir circuito
+        setTimeout(function(){delete_modal.open()},500); // Abrir el modal de confirmacion
+    };
+
+    $scope.deleteCircuit = function(){ // Eliminar circuito
+        $rootScope.loading = true;
+        Cipressus.db.set(null,"simulations/"+$scope.selected.key)
+        .then(function(){
+            delete $scope.simulations[$scope.selected.key];
+            $scope.selected = null;
+            delete_modal.close();
+            $rootScope.loading = false;
+            $scope.$apply();
+        })
+        .catch(function(err){
+            console.log(err);
+            $rootScope.loading = false;
+            $scope.$apply();
+        });
+    };
+
 
     ///// Inicializacion del controller
     $scope.circuitFileName = "";
@@ -397,6 +421,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
     M.Modal.init(document.getElementById("tutorial_modal"), {});
     var load_modal = M.Modal.init(document.getElementById("load_modal"), {preventScrolling: false});
     var save_modal = M.Modal.init(document.getElementById("save_modal"), {preventScrolling: false});
+    var delete_modal = M.Modal.init(document.getElementById("delete_modal"), {preventScrolling: false});
     var results_modal = M.Modal.init(document.getElementById("results_modal"), {preventScrolling: false});
 
     // Inicializar simulador

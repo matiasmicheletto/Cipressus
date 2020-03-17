@@ -57,12 +57,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="(key,row) in simulations track by $index" style="cursor:pointer"
-                    ng-click="loadCircuit(key)">
+                <tr ng-repeat="(key,row) in simulations track by $index" style="cursor:pointer">
                     <td>{{row.name}}</td>
                     <td>{{getTime(3,row.timestamp)}}</td>
                     <td>{{row.size}}</td>
-                    <td><a title="Aceptar" class="waves-effect waves-light red btn-floating btn-small z-depth-3"ng-click="deleteSim(key)"><i class="material-icons">delete</i></a></td>
+                    <td>
+                        <a title="Abrir" class="waves-effect waves-light green darken-3 btn-floating btn-small z-depth-3"ng-click="loadCircuit(key)"><i class="material-icons">open_in_browser</i></a>
+                        <a title="Eliminar" class="waves-effect waves-light red darken-3 btn-floating btn-small z-depth-3"ng-click="selectToDelete(key)"><i class="material-icons">delete</i></a>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -83,6 +85,19 @@
     <div class="modal-footer">
         <a class="modal-close waves-effect waves-white btn red darken-3">Cancelar</a>
         <a class="waves-effect waves-white btn green darken-3" ng-click="saveCircuit()">Guardar</a>
+    </div>
+</div>
+
+<div id="delete_modal" class="modal">
+    <div class="modal-content">
+        <h5>Eliminar simulación</h5>
+        <p>¿Confirma que desea eliminar el siguiente circuito?</p>
+        <p><b>Nombre: </b>{{selected.name}}</p>
+        <p><b>Creado: </b>{{getTime(3,selected.timestamp)}}</p>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-white btn blue darken-3">Cancelar</a>
+        <a class="waves-effect waves-white btn red darken-3" ng-click="deleteCircuit()">Eliminar</a>
     </div>
 </div>
 
