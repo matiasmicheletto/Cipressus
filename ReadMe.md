@@ -109,6 +109,14 @@ Cipressus es un LCMS que pone a disposición de los practicantes de sistemas dig
     +-user              // [string] Usuario que realizo la accion
     +-display           // [string] Mensaje a mostrar del estado de revision
     +-obs               // [string] Observaciones
++-simulations           // [map] Simulaciones guardadas de SimCirJS
+   |
+   +-(child_key)        // [map] Identificador del circuito
+    |
+    +-name              // [string] Nombre de archivo
+    +-size              // [number] Tamanio
+    +-timestamp         // [number] Fecha y hora de generado
+    +-data              // [string] Datos guardados de la simulacion
 -users_private          // [map] Informacion de usuarios alumnos
  |
  +-(child_key)          // [map] ID firebase del usuario
@@ -154,14 +162,6 @@ Cipressus es un LCMS que pone a disposición de los practicantes de sistemas dig
    +-so                 // [map] Sist. operativos utilizados
    +-browser            // [map] Navegadores utilizados
    +-item               // [map] Contadores de acceso a secciones de la pagina
-  +-simulations         // [map] Carpeta para guardar simulaciones de SimCirJS
-   |
-   +-(child_key)        // [map] Identificador del circuito
-    |
-    +-name              // [string] Nombre de archivo
-    +-size              // [number] Tamanio
-    +-timestamp         // [number] Fecha y hora de generado
-    +-data              // [string] Datos guardados de la simulacion
   +-test_fs             // [map] Resultados del test Felder-Silverman
    |
    +-answers            // [map] Arreglo de respuestas

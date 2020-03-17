@@ -16,10 +16,16 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
     $scope.getSimulations = function () { // Descargar lista de archivos de simulacion del usuario
         if(!$scope.simulations){ // Si no se descargaron los archivos, bajar
             $rootScope.loading = true;
-            Cipressus.db.get("users_public/"+$rootScope.user.uid+"/simulations")
-            .then(function(simulations_data){
+            Cipressus.db.query("simulations", "uid", $rootScope.user.uid)
+            .then(function(snapshot){
+                simulations_data = {};
+                snapshot.forEach(function(sim){
+                    simulations_data[sim.key] = sim.val();
+                });
+
                 if(simulations_data){
                     $scope.simulations = simulations_data;
+                    console.log($scope.simulations);
                     load_modal.open();
                 }else
                     M.toast({html: "No hay circuitos guardados!",classes: 'rounded green darken-3',displayLength: 2000});
@@ -127,7 +133,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
             };
     
             if(currentSim.key){ // Si se esta trabajando sobre un modelo existente
-                Cipressus.db.update(sim,"users_public/"+$rootScope.user.uid+"/simulations/"+currentSim.key)
+                Cipressus.db.update(sim,"simulations/"+currentSim.key)
                 .then(function(res){
                     //console.log(res);   
                     $scope.simulations[currentSim.key] = sim; // Actualizar local
@@ -142,7 +148,8 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
                     $scope.$apply();
                 });
             }else{ // Si se creo un nuevo modelo
-                Cipressus.db.push(sim,"users_public/"+$rootScope.user.uid+"/simulations")
+                sim.uid = $rootScope.user.uid;
+                Cipressus.db.push(sim,"simulations")
                 .then(function(res){
                     //console.log(res);    
                     currentSim = {

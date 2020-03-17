@@ -75,7 +75,19 @@ window.Cipressus = (function () {
                 .catch(function (error) {
                     return reject(error);
                 });
-        })
+        });
+    };
+
+    core.db.query = function(path, key, value) { // Consulta por valor
+        return new Promise(function (fulfill, reject) {
+            firebase.database().ref(path).orderByChild(key).equalTo(value).once('value')
+                .then(function (snapshot) {
+                    return fulfill(snapshot);
+                })
+                .catch(function (error) {
+                    return reject(error);
+                });
+        });
     };
 
     core.db.set = function (data, path) { // Actualizar entrada de la db
