@@ -107,7 +107,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
             type: "sim", // Tipo de entrega
             size: $scope.selectedSim.size, // Tamanio del modelo
             format: "simcir", // Para respetar el formato
-            link: "#/simulator?"+$.param($scope.selectedSim.data), // Url para pasarle al simulador por querystring serializado
+            data: $scope.selectedSim.data, // Va el modelo del circuito guardado
             authors: [$rootScope.user.uid].concat($rootScope.user.partners ? $rootScope.user.partners:[]), // Comision
             status: [{ // Estados de la evaluacion (se concatenan)
                 timestamp: Date.now(),
@@ -120,7 +120,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         pushSubmission(reference);
     };
 
-    $scope.downloaded = function(key){ // Agregar registro de movimiento sobre este archivo
+    $scope.downloaded = function(key, subm){ // Agregar registro de movimiento sobre este archivo
         if($scope.submissions[key].status[$scope.submissions[key].status.length-1].action == 0){ // Solo la primera vez
             var newStatus = { // Nuevo estado del envio a registrar
                 timestamp: Date.now(),
@@ -148,10 +148,22 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
             });
         }else{
             M.toast({
-                html: "El archivo ya está siendo evaluado!",
-                classes: 'rounded red',
+                html: "El archivo ya está siendo evaluado",
+                classes: 'rounded cyan',
                 displayLength: 1500
             });
+        }
+        // Abrir el enlace
+        switch(subm.type){
+            case "report": // Abrir archivo cargado
+                window.open(subm.link,'_blank','noopener');    
+                break;
+            case "sim":
+                $rootScope.openSimulation = subm.data; // Pasar modelo como string al controller del simulador
+                $location.path("/simulator");
+                break;
+            default:
+                break;
         }
     };
 

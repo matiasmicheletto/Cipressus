@@ -3,7 +3,6 @@
 [Feature] Agregar característica  
 
   - [Impr] Entrega de trabajos: Cargar nota directamente. 
-  - [Feature] Probador de circuitos: Modulo audio de 8 canales.  
   - [Feature] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  
   - [Feature] Asignar administradores.
   - [Bug] Actualizacion de noticias: Al actualizar publicación se duplica la entrada y se agrega un "undefined" en db. No funciona el cambio de orden de articulos.  

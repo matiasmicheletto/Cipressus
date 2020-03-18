@@ -28,7 +28,7 @@
           </div>
         </td>
         <td width="1%" style="white-space:nowrap;">
-          <a ng-show="user.admin" title="Descargar" class="waves-effect waves-light green darken-3 btn-small btn-floating z-depth-3" href="{{row.link}}" {{row.type=='report' ? 'target="_blank" rel="noopener noreferrer"':''}} ng-click="downloaded(key)"><i class="material-icons">get_app</i></a>
+          <a ng-show="user.admin" title="Descargar" class="waves-effect waves-light green darken-3 btn-small btn-floating z-depth-3" ng-click="downloaded(key, row)"><i class="material-icons">get_app</i></a>
           <a title="Historial" class="waves-effect waves-light blue darken-3 btn-small btn-floating z-depth-3" ng-click="viewSubm(key)"><i class="material-icons">history</i></a>
           <a title="Eliminar" class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger {{!user.admin && (row.status[row.status.length-1].action > 0) ? 'disabled':''}}" data-target="confirm_delete_modal" ng-click="deleteFile(key)"><i class="material-icons">delete</i></a>
           <a title="Evaluar" ng-show="user.admin && row.status[row.status.length-1].action == 1" title="Corregido" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3" ng-click="evaluated(key)"><i class="material-icons">done_outline</i></a>

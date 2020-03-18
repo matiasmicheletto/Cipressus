@@ -75,7 +75,7 @@ var play = function(instrument){
             piano.triggerAttackRelease(["D4", "F4"], "8n");
             break;
         case 4:
-            kick.triggerAttack('120');
+            kick.triggerAttack('90');
             break;
         case 5:
             snare2.triggerAttackRelease('50');
@@ -83,10 +83,13 @@ var play = function(instrument){
         case 6:
             bass.triggerAttackRelease('120','8n');
             break;
+        case 7:
+            piano.triggerAttackRelease(["D3", "F3"], "8n");
+            break;
         default:
             break;
     }    
 };
 
-
-
+piano.triggerAttackRelease(["D3", "F3"], "8n");
+piano.triggerAttackRelease(["D4", "F4"], "8n");

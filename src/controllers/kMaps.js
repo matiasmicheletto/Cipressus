@@ -29,7 +29,7 @@ app.controller("kMaps", ['$scope', '$rootScope', '$location', function ($scope, 
         karnaugh.allowDontCares($scope.showDCares);
     };
 
-    Cipressus.utils.activityCntr($rootScope.user.uid, "kMap").catch(function (err) {
+    Cipressus.utils.activityCntr($rootScope.user.uid, "kMaps").catch(function (err) {
         console.log(err)
     });
 }]);

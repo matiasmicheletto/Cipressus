@@ -25,7 +25,7 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
                 if(simulations_data){
                     $scope.simulations = simulations_data;
-                    console.log($scope.simulations);
+                    //console.log($scope.simulations);
                     load_modal.open();
                 }else
                     M.toast({html: "No hay circuitos guardados!",classes: 'rounded green darken-3',displayLength: 2000});
@@ -43,10 +43,13 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         }
     };
 
-    $scope.loadCircuit = function(key, data){ // Cargar circuito
+    $scope.loadCircuit = function(key, model){ // Cargar circuito
+        var data;
         if(key) // Si se pasa clave, cargar desde los guardados, sino, usar data del argumento
             data = JSON.parse($scope.simulations[key].data);
-        
+        else
+            data = JSON.parse(model);
+
         simcir.clearDevices(); // Borrar caches de managers
 
         // Poner barra de herramientas
@@ -95,20 +98,16 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
           {"type":"Audio-Out"}
         ];
         simcir.setupSimcir($('#simcir'), data);
-        currentSim = {
-            key: key,
-            name: $scope.simulations[key].name
-        };
-        $scope.circuitFileName = $scope.simulations[key].name;
-        load_modal.close();
+
+        if(key){
+            currentSim = {
+                key: key,
+                name: $scope.simulations[key].name
+            };
+            $scope.circuitFileName = $scope.simulations[key].name;
+            load_modal.close();
+        }
     };
-
-    var externalData = $location.$$search; // El modelo viene en el query string
-
-    if(externalData){
-        var data = JSON.parse(externalData);
-        $scope.loadCircuit(null, data);
-    }
 
     $scope.saveCircuit = function () {
         $rootScope.loading = true;
@@ -433,10 +432,17 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
     var results_modal = M.Modal.init(document.getElementById("results_modal"), {preventScrolling: false});
 
     // Inicializar simulador
-    simcir.setupSimcir($('#simcir'), {
-        width: document.getElementById("simcir").clientWidth,
-        height: document.getElementById("simcir").clientHeight
-    });
+    // Para abrir simulaciones externas, se pasan por rootScope
+    if($rootScope.openSimulation){
+        var data = $rootScope.openSimulation;
+        $rootScope.openSimulation = null; // Eliminar para que no lo siga abriendo
+        $scope.loadCircuit(null,data);
+    }else{
+        simcir.setupSimcir($('#simcir'), {
+            width: document.getElementById("simcir").clientWidth,
+            height: document.getElementById("simcir").clientHeight
+        });
+    }
 
     window.onresize = function(ev){ // Simulador responsive
         // Dimensiones del card (que es responsive)

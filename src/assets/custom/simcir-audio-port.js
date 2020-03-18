@@ -27,6 +27,20 @@
                 "sustain": 0
             }
         }).toMaster();
+
+        snare2 = new Tone.NoiseSynth({
+            "volume": -5,
+            "envelope": {
+                "attack": 0.001,
+                "decay": 2,
+                "sustain": 0
+            },
+            "filterEnvelope": {
+                "attack": 0.001,
+                "decay": 0.1,
+                "sustain": 0
+            }
+        }).toMaster();
         
         piano = new $t.PolySynth(4, $t.Synth, {
             "volume": -8,
@@ -85,22 +99,26 @@
     $s.registerDevice('Audio-Out', function (device) {
         audioPortManager.register(device);
         var inputs = [], inputValues = [], triggers = []; // Entradas, valores previos y cambios
-        for(var k = 0; k < 4; k++){
+        for(var k = 0; k < 8; k++){
             inputs[k] = device.addInput();
             inputValues[k] = inputs[k].getValue();
         }
         device.$ui
         .on('inputValueChange', function () {
             if(!init) setupInstruments();
-            for(var k = 0; k < 4; k++){
+            for(var k = 0; k < 8; k++){
                 var val = inputs[k].getValue();
                 triggers[k] = val && (val != inputValues[k]); // Disparar en flanco ascendente
                 inputValues[k] = val;
             }
             if(triggers[0]) kick.triggerAttack('50');
-            if(triggers[1]) snare.triggerAttackRelease('50');
-            if(triggers[2]) bass.triggerAttackRelease('30','8n');
-            if(triggers[3]) piano.triggerAttackRelease(["D4", "F4", "A4", "C5"], "8n");
+            if(triggers[1]) kick.triggerAttack('90');
+            if(triggers[2]) snare.triggerAttackRelease('50');
+            if(triggers[3]) snare2.triggerAttackRelease('50');
+            if(triggers[4]) bass.triggerAttackRelease('60','8n');
+            if(triggers[5]) bass.triggerAttackRelease('120','8n');
+            if(triggers[6]) piano.triggerAttackRelease(["D4", "F4", "A4", "C5"], "8n");
+            if(triggers[7]) piano.triggerAttackRelease(["D3", "F3", "A2", "C4"], "8n");
         });
     });
 
