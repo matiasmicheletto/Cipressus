@@ -1,4 +1,4 @@
-app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams', function ($scope, $rootScope, $routeParams) {
+app.controller("activities", ['$scope', '$rootScope', '$location', function ($scope, $rootScope, $location) {
 
     if (!$rootScope.userLogged) {
         $location.path("/login");
@@ -127,7 +127,7 @@ app.controller("activities", ['$scope', '$rootScope', '$location', '$routeParams
         }
     };
     
-    var courseID = $routeParams.$$search.id;
+    var courseID = $location.$$search.id;
 
     Cipressus.utils.activityCntr($rootScope.user.uid, "activities", courseID).catch(function (err) {
         console.log(err);

@@ -71,14 +71,15 @@
                     parent: parent, // Referencias hacia atras
                     name: node.name,
                     score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
-                    dl: node.deadline // Vencimiento va si existe
+                    dl: node.deadline // Vencimiento si existe
                 });
             } else { // Es hoja, agregar hoja y retornar
                 arr.push({
                     id: node.id,
                     parent: parent,
                     name: node.name,
-                    value: node.score // Este dato lo usa highcarts (se calcula para los nodos padres)
+                    value: node.score, // Este dato lo usa highcarts (se calcula para los nodos padres)
+                    dl: node.deadline // Vencimiento si existe
                 });
             }
         }

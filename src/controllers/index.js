@@ -5,6 +5,10 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             templateUrl: "views/home.html",
             controller: "home"
         })
+        .when("/home", {
+            templateUrl: "views/home.html",
+            controller: "home"
+        })
         .when("/login", {
             templateUrl: "views/login.html",
             controller: "login"

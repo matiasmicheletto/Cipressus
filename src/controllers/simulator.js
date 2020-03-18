@@ -43,8 +43,9 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         }
     };
 
-    $scope.loadCircuit = function(key){ // Cargar circuito
-        var data = JSON.parse($scope.simulations[key].data);
+    $scope.loadCircuit = function(key, data){ // Cargar circuito
+        if(key) // Si se pasa clave, cargar desde los guardados, sino, usar data del argumento
+            data = JSON.parse($scope.simulations[key].data);
         
         simcir.clearDevices(); // Borrar caches de managers
 
@@ -101,6 +102,13 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
         $scope.circuitFileName = $scope.simulations[key].name;
         load_modal.close();
     };
+
+    var externalData = $location.$$search; // El modelo viene en el query string
+
+    if(externalData){
+        var data = JSON.parse(externalData);
+        $scope.loadCircuit(null, data);
+    }
 
     $scope.saveCircuit = function () {
         $rootScope.loading = true;
