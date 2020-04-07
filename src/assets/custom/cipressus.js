@@ -1,18 +1,17 @@
 window.Cipressus = (function () {
     // Libreria para el control de la base de datos, storage, metodos utiles de la app y de comunicacion con hardware
 
-    var core = { // Instancia de la clase
+    var public = { // Instancia de la clase
         globalTarget: null, // Este atributo se usa para poder acceder a variables desde la consola
         db: {}, // Operaciones de base de datos
         storage: {}, // Almacenamiento de archivos
         users: {}, // Operaciones de autenticacion
-        utils: {}, // Utilidades
         hardware: {} // Metodos de control de hardware (probador de circuitos)
     };
 
     //// BASE DE DATOS /////
 
-    core.db.config = { // Configuracion de la base de datos
+    public.db.config = { // Configuracion de la base de datos
         apiKey: "AIzaSyAHpgtsZeQbcoCbKNE1dNjd7gUbSIFWz6M",
         authDomain: "cipressus-0000.firebaseapp.com",
         databaseURL: "https://cipressus-0000.firebaseio.com",
@@ -22,7 +21,7 @@ window.Cipressus = (function () {
         publicvapidkey: "BF0sMjIt0y1H_3oyJzmkBmPkrG9UK7HL5ekgRXj50jEYc3MZSfpjCd051A0tNkNfEtLmmVlYILFvi8PQ0BDXRNM"
     };
 
-    core.db.listen = function (path, callback_success, callback_error) { // Escuchar cambios
+    public.db.listen = function (path, callback_success, callback_error) { // Escuchar cambios
         firebase.database().ref(path).on('value',
             function (snapshot) {
                 callback_success(snapshot.val(), snapshot.key);
@@ -32,7 +31,7 @@ window.Cipressus = (function () {
             });
     };
 
-    core.db.listenChild = function(path, child, value, callback_success, callback_error) { // Escucha cambios con filtro
+    public.db.listenChild = function(path, child, value, callback_success, callback_error) { // Escucha cambios con filtro
         firebase.database().ref(path).orderByChild(child).equalTo(value).on('child_added',
             function (snapshot) {
                 callback_success(snapshot.val(), snapshot.key);
@@ -42,7 +41,7 @@ window.Cipressus = (function () {
             });
     };
 
-    core.db.stopListener = function(path){ // Detener escuchador
+    public.db.stopListener = function(path){ // Detener escuchador
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).off()
                 .then(function () {
@@ -54,7 +53,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.get = function (path) { // Descargar informacion de la db
+    public.db.get = function (path) { // Descargar informacion de la db
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).once('value')
                 .then(function (snapshot) {
@@ -66,7 +65,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.getSorted = function (path, key) { // Obtener lista ordenada por key
+    public.db.getSorted = function (path, key) { // Obtener lista ordenada por key
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).orderByChild(key).once('value')
                 .then(function (snapshot) {
@@ -78,7 +77,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.query = function(path, key, value) { // Consulta por valor
+    public.db.query = function(path, key, value) { // Consulta por valor
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).orderByChild(key).equalTo(value).once('value')
                 .then(function (snapshot) {
@@ -90,7 +89,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.set = function (data, path) { // Actualizar entrada de la db
+    public.db.set = function (data, path) { // Actualizar entrada de la db
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).set(data)
                 .then(function (snapshot) {
@@ -102,7 +101,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.update = function (data, path) { // Actualizar entrada de la db
+    public.db.update = function (data, path) { // Actualizar entrada de la db
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).update(data)
                 .then(function (snapshot) {
@@ -114,7 +113,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.push = function (data, path) { // Nueva entrada (retorna id)
+    public.db.push = function (data, path) { // Nueva entrada (retorna id)
         return new Promise(function (fulfill, reject) {
             firebase.database().ref(path).push(data)
                 .then(function (snapshot) {
@@ -126,7 +125,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.db.pushMultiple = function (dataArray, path) { // Subir multiples entradas a un mismo directorio
+    public.db.pushMultiple = function (dataArray, path) { // Subir multiples entradas a un mismo directorio
         return new Promise(function (fulfill, reject) {
             var job = [];
             for (var k in dataArray) // Para cada objeto 
@@ -146,7 +145,7 @@ window.Cipressus = (function () {
 
     //// ALMACENAMIENTO ////
 
-    core.storage.put = function (file, path, filename) { // Subir archivo
+    public.storage.put = function (file, path, filename) { // Subir archivo
         return new Promise(function (fulfill, reject) {
             firebase.storage().ref().child(path + "/" + filename).put(file)
                 .then(function (snapshot) {
@@ -164,7 +163,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.storage.putMultiple = function (files, path, filenames) { // Subir muchos archivos
+    public.storage.putMultiple = function (files, path, filenames) { // Subir muchos archivos
         return new Promise(function (fulfill, reject) {
             var job = [];
             for (var k in files) // Para cada archivo                
@@ -191,7 +190,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.storage.putString = function (str, path, filename) { // Guardar string
+    public.storage.putString = function (str, path, filename) { // Guardar string
         return new Promise(function (fulfill, reject) {
             firebase.storage().ref().child(path + "/" + filename).putString(str)
                 .then(function (snapshot) {
@@ -205,7 +204,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.storage.delete = function (filename, path) { // Borrar un archivo de storage
+    public.storage.delete = function (filename, path) { // Borrar un archivo de storage
         return new Promise(function (fulfill, reject) {
             firebase.storage().ref().child(path + "/" + filename).delete()
                 .then(function () {
@@ -221,15 +220,15 @@ window.Cipressus = (function () {
 
     //// USUARIOS /////
 
-    core.users.onUserSignedIn = function (uid) { // Overridable - inicio de sesion
+    public.users.onUserSignedIn = function (uid) { // Overridable - inicio de sesion
         console.log("default -- logged in " + uid);
     };
 
-    core.users.onUserSignedOut = function () { // Overridable - cierre de sesion
+    public.users.onUserSignedOut = function () { // Overridable - cierre de sesion
         console.log("default -- logged out");
     };
 
-    core.users.signIn = function (form) { // Iniciar sesión
+    public.users.signIn = function (form) { // Iniciar sesión
         return new Promise(function (fulfill, reject) {
             firebase.auth().signInWithEmailAndPassword(form.email, form.password)
                 .catch(function (error) {
@@ -260,7 +259,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.users.signOut = function () {
+    public.users.signOut = function () {
         return new Promise(function (fulfill, reject) {
             firebase.auth().signOut()
                 .then(function () {
@@ -272,7 +271,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.users.signUp = function (form) { // Registrarse como nuevo usuario
+    public.users.signUp = function (form) { // Registrarse como nuevo usuario
         return new Promise(function (fulfill, reject) {
             firebase.auth().createUserWithEmailAndPassword(form.email, form.password)
                 .catch(function (error) {
@@ -316,7 +315,7 @@ window.Cipressus = (function () {
                     users_public.activity.browser[is.firefox() ? 'Firefox' : (is.chrome() ? 'Chrome' : (is.ie() ? 'IE' : (is.opera() ? 'Opera' : (is.safari() ? 'Safari' : 'Otro'))))] = 1;
                     users_public.activity.os[is.ios() ? 'IOS' : (is.android() ? 'Android' : (is.windows() ? 'Windows' : (is.linux() ? 'Linux' : 'Otro')))] = 1;
 
-                    core.db.set(users_public, 'users_public/' + result.user.uid)
+                    public.db.set(users_public, 'users_public/' + result.user.uid)
                         .then(function (res) {
                             // #NOTIFICAR ADMINS
                             return fulfill("Datos de nuevo usuario registrados.");
@@ -328,7 +327,7 @@ window.Cipressus = (function () {
         });
     };
 
-    core.users.resetPwd = function (email) { // Restablecer contrasenia
+    public.users.resetPwd = function (email) { // Restablecer contrasenia
         return new Promise(function (fulfill, reject) {
             firebase.auth().sendPasswordResetEmail(email)
                 .then(function () {
@@ -343,14 +342,14 @@ window.Cipressus = (function () {
 
     ///// INICIALIZACION /////
 
-    core.initialize = function () { // Instrucciones de inicializacion de las utilidades        
+    public.initialize = function () { // Instrucciones de inicializacion de las utilidades        
         return new Promise(function (fulfill, reject) {
-            firebase.initializeApp(core.db.config); // Inicializar base de datos
+            firebase.initializeApp(public.db.config); // Inicializar base de datos
 
             // Configurar mensajeria y notificaciones push
             var messaging = firebase.messaging();
             
-            messaging.usePublicVapidKey(core.db.config.publicvapidkey);
+            messaging.usePublicVapidKey(public.db.config.publicvapidkey);
             
             messaging.requestPermission()
                 .then(function () {
@@ -376,7 +375,7 @@ window.Cipressus = (function () {
                     icon: '/images/mainlogo.png',
                     sound: '/sounds/notification.mp3' // No soportado
                 };
-                core.registration.showNotification("Cipressus", opts);
+                public.registration.showNotification("Cipressus", opts);
             });
 
             messaging.getToken().then(function (currentToken) {
@@ -404,21 +403,21 @@ window.Cipressus = (function () {
             });
 
             navigator.serviceWorker.getRegistration().then(function(reg){
-                core.registration = reg; // Nuevo atributo
+                public.registration = reg; // Nuevo atributo
                 // messaging.useServiceWorker(reg); //
             });
 
             // Autenticacion
             firebase.auth().onAuthStateChanged(function (user) { // Escuchar cambios de logeo de usuario
                 if (user) // El usuario esta logeado
-                    core.users.onUserSignedIn(user.uid); // Pasar uid a los callbacks
+                    public.users.onUserSignedIn(user.uid); // Pasar uid a los callbacks
                 else // Si cerro sesión, se llama al callback
-                    core.users.onUserSignedOut();
+                    public.users.onUserSignedOut();
             });
 
             return fulfill();
         });
     };
 
-    return core;
+    return public;
 })();

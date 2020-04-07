@@ -35,10 +35,7 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
             theme: 'snow'
         });        
         if(key != undefined){ // Editar, ver o eliminar existente
-
-            // TODO: hay errores en esta parte
-
-            $scope.selected = $rootScope.clone($scope.news[key]);
+            $scope.selected = angular.copy($scope.news[key]);
             quill.container.firstChild.innerHTML = $scope.selected.content;
         }else{ // Editar nueva
             quill.container.firstChild.innerHTML = "";
@@ -52,12 +49,18 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
         }
     };
 
-    var updateTimestamp = function(){ // Actualizar fecha de actualizacion de notiricas en db
+    var updateTimestamp = function(){ // Actualizar fecha de actualizacion de noticias en db
         var ts = {}; ts[$rootScope.user.course] = Date.now(); // Siempre se actualizan los datos como objetos
         Cipressus.db.update(ts,"metadata/updates/news")
-        .then(function(res){
-            console.log("Actualizacion de metadata");
-            console.log(res);
+        .then(function(){
+            console.log("Actualización de metadata");
+            // Actualizar informacion en localstorage
+            newsData = { // Objeto a guardar en localStorage
+                news: $scope.news,
+                authors: $scope.users,
+                last_update: Date.now()
+            };
+            localStorageService.set("newsData_"+$rootScope.user.course,newsData);
         })
         .catch(function(err){
             console.log(err);
@@ -87,7 +90,6 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                 console.log(err);
                 M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
             });
-            
         })
         .catch(function(err){
             $rootScope.loading = false;
@@ -98,23 +100,22 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
         confirmModal.close();
     };
 
-    $scope.moveSelected = function(up,key){ // Mover noticia hacia arriba(true) o abajo(false)
+    $scope.moveSelected = function(up, key){ // Mover noticia hacia arriba(true) o abajo(false). key es el numero de elemento
         if(up){ // Subir
             if(key > 0){ // No puede subirse el primero
-                console.log($scope.news[key].key);
-                console.log($scope.news[key-1].key);
                 $rootScope.loading = true;
                 var updates = {};
-                updates["news/"+$rootScope.user.course+"/"+$scope.news[key].key+"/order"] = $scope.news[key].order-1;
+                // Hacer un swap con el de arriba
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[key].key+"/order"] = $scope.news[key].order - 1;
                 updates["news/"+$rootScope.user.course+"/"+$scope.news[key-1].key+"/order"] = $scope.news[key].order;
                 Cipressus.db.update(updates)
                 .then(function(snapshot){
                     // Luego de actualizar en DB, cambiar orden de los arreglos que se muestra en la tabla
-                    $scope.news[key].order = $scope.news[key].order - 1;
-                    $scope.news[key-1].order = $scope.news[key].order;
-                    var temp = $scope.news[key];
-                    $scope.news[key] = $scope.news[key-1];
-                    $scope.news[key-1] = temp;
+                    $scope.news[key].order = $scope.news[key].order-1;
+                    $scope.news[key-1].order = $scope.news[key-1].order+1;
+                    var temp = angular.copy($scope.news[key]);
+                    $scope.news[key] = angular.copy($scope.news[key-1]);
+                    $scope.news[key-1] = angular.copy(temp);
                     M.toast({html: "Orden actualizado",classes: 'rounded green darken-3',displayLength: 1000});
                     $rootScope.loading = false;
                     $scope.$apply();
@@ -131,15 +132,15 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                 console.log($scope.news[key+1].key);
                 $rootScope.loading = true;
                 var updates = {};
-                updates["news/"+$rootScope.user.course+"/"+$scope.news[key].key+"/order"] = $scope.news[key].order+1;
+                updates["news/"+$rootScope.user.course+"/"+$scope.news[key].key+"/order"] = $scope.news[key].order + 1;
                 updates["news/"+$rootScope.user.course+"/"+$scope.news[key+1].key+"/order"] = $scope.news[key].order;
                 Cipressus.db.update(updates).then(function(snapshot){
                     // Luego de actualizar en DB, cambiar orden de los arreglos que se muestra en la tabla
                     $scope.news[key].order = $scope.news[key].order + 1;
-                    $scope.news[key+1].order = $scope.news[key].order;
-                    var temp = $scope.news[key];
-                    $scope.news[key] = $scope.news[key+1];
-                    $scope.news[key+1] = temp;
+                    $scope.news[key+1].order = $scope.news[key+1].order - 1;
+                    var temp = angular.copy($scope.news[key]);
+                    $scope.news[key] = angular.copy($scope.news[key+1]);
+                    $scope.news[key+1] = angular.copy(temp);
                     M.toast({html: "Orden actualizado",classes: 'rounded green darken-3',displayLength: 1000});
                     $rootScope.loading = false;
                     $scope.$apply();
@@ -155,7 +156,9 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
     };
 
     $scope.saveSelected = function(){ // Guardar nueva noticia o guardar cambios editados
+        
         $rootScope.loading = true;
+        
         if($scope.scheduledNew){ // Si es publicacion programada
             var date = document.getElementById("schedule_date").value;
             var time = document.getElementById("schedule_time").value;
@@ -167,20 +170,20 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                 $rootScope.loading = false;
                 return;
             }
-        }else{
-            $scope.selected.timestamp = Date.now(); // Fecha/hora actuales
+        }else{ // Si no es publicación programada, usar fecha actual
+            $scope.selected.timestamp = Date.now(); // Fecha:hora actuales
         }
+
         $scope.selected.content = quill.container.firstChild.innerHTML.replace(new RegExp("<img src=", 'g'), "<img class='responsive-img' src="); // Agregar clase responsive a las imagenes
+        
         if($scope.selected.key){ // Si ya tiene una clave, hay que sobreescribir noticia en DB
-
-            /// #TODO: hay errores en esta parte
-
             var key = $scope.selected.key;            
             $scope.selected.key = null; // Borro la clave para que no quede en la db
             Cipressus.db.update($scope.selected,'news/'+$rootScope.user.course+"/"+key)
             .then(function(snapshot){
                 $scope.selected.key = key; // Volver a poner la clave para que no se pierda
-                $scope.news[key] = $rootScope.clone($scope.selected); // Actualizar local
+                var index = $scope.news.findIndex(function(el){return el.key == key;});
+                $scope.news[index] = angular.copy($scope.selected); // Actualizar local
                 M.toast({html: "Comunicado actualizado",classes: 'rounded green darken-3',displayLength: 1500});
                 editModal.close();
                 $rootScope.loading = false;
@@ -196,6 +199,13 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
             $rootScope.loading = true;
             Cipressus.db.push($scope.selected,'news/'+$rootScope.user.course)
             .then(function(snapshot){
+                // Si el autor aun no habia creado noticias, guardar su avatar y nombre
+                if(!$scope.users[$rootScope.user.uid]){
+                    $scope.users[$rootScope.user.uid] = {
+                        name: $rootScope.user.name,
+                        avatar:$rootScope.user.avatar
+                    }
+                }
                 $scope.selected.key = snapshot.key;
                 $scope.news.push($scope.selected);
                 editModal.close();
@@ -233,32 +243,30 @@ app.controller("editor", ['$scope','$rootScope','$location','localStorageService
                 child.key = childSnapshot.key; // Hay que guardar el key para actualizar
                 if(authors.indexOf(child.author) == -1) // Si todavia no se guardo el uid del autor de esta publicacion
                     authors.push(child.author); // Agregar a la lista
-                $scope.news.push(child); // Sentido inverso para que las nuevas noticias queden arriba
+                $scope.news.push(child);
             });  
-            var ready = authors.length; // Cantidad de descargas que hay que hacer
             $scope.users = {};
             if(authors.length > 0){
-                for(var k in authors){
-                    Cipressus.db.get('users_public/'+authors[k]) // Descargar datos de los autores de publicaciones solamente
-                    .then(function(user_data){
-                        $scope.users[authors[k]] = user_data; 
-                        ready--; // Contar descarga
-                        if(ready == 0){ // Si no quedan mas, terminar
-                            newsData = { // Objeto a guardar en localStorage
-                                news: $scope.news,
-                                authors: $scope.users,
-                                last_update: Date.now()
-                            };
-                            localStorageService.set("newsData_"+$rootScope.user.course,newsData);
-                            $rootScope.loading = false;
-                            $rootScope.$apply(); 
-                        }
-                    })
-                    .catch(function(err){
-                        console.log(err);
-                        M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
-                    });
-                }
+                var job = [];
+                for(var k in authors)
+                    job.push(Cipressus.db.get('users_public/'+authors[k])) // Descargar datos de los autores de publicaciones solamente
+                Promise.all(job)
+                .then(function(users_data){
+                    for(var k in users_data)
+                        $scope.users[authors[k]] = users_data[k]; 
+                    newsData = { // Objeto a guardar en localStorage
+                        news: $scope.news,
+                        authors: $scope.users,
+                        last_update: Date.now()
+                    };
+                    localStorageService.set("newsData_"+$rootScope.user.course,newsData);
+                    $rootScope.loading = false;
+                    $rootScope.$apply(); 
+                })
+                .catch(function(err){
+                    console.log(err);
+                    M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+                });
             }else{
                 $rootScope.loading = false;
                 $rootScope.$apply(); 

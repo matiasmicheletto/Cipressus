@@ -1,8 +1,10 @@
-(function (core) { //// UTILIDADES ////
+(function (public) { //// UTILIDADES ////
 
     var actionStack = [];
 
-    core.utils.searchNode = function (node, id) { // Obtener el objeto de un nodo a partir del id
+    public.utils = {};
+
+    public.utils.searchNode = function (node, id) { // Obtener el objeto de un nodo a partir del id
         // Entradas:
         //		- node: es el nodo del arbol a partir del cual se inicia la busqueda
         //      - id: es el identificador de la actividad que se desea buscar    
@@ -12,14 +14,14 @@
         else
         if (node.children) // Si el nodo tiene hijos, recorrer buscando
             for (var k in node.children) { // Para cada hijo del nodo
-                result = core.utils.searchNode(node.children[k], id); // Buscar
+                result = public.utils.searchNode(node.children[k], id); // Buscar
                 if (result)
                     return result;
             }
         return result;
     };
 
-    core.utils.defaultCostFunction = function (submitMs, deadlineMs, param) { // Funcion de costo por perdida de vencimiento de una actividad
+    public.utils.defaultCostFunction = function (submitMs, deadlineMs, param) { // Funcion de costo por perdida de vencimiento de una actividad
         // Entradas:
         //		- submitMs: es la fecha de entrega expresada en unix time
         //		- deadlineMs: es la fecha de vencimiento (debe ser menor que submitMs)
@@ -27,7 +29,7 @@
         return Math.ceil((submitMs - deadlineMs) / 86400000) * param; // Desgaste lineal por dia
     };
 
-    core.utils.eval = function (student, node) { // Computar nota de un alumno en puntaje absoluto
+    public.utils.eval = function (student, node) { // Computar nota de un alumno en puntaje absoluto
         // Entradas:
         //		- student: contiene la informacion de entregas y notas asignadas por los profesores
         //		- node: es el nodo del arbol de actividades al que se le quiere calcular el puntaje total 
@@ -35,21 +37,21 @@
         if (node.children) { // Si el nodo tiene hijos, calcular suma ponderada de los hijos
             var sum = 0; // Contador de puntajes
             for (var k in node.children) // Para cada hijo del nodo
-                sum += core.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
+                sum += public.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
             if (node.deadline) // Si la actividad tiene fecha de vencimiento
                 if (student.submits) // Si el alumno tiene alguna entrega
                     if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
                         if (student.submits[node.id].submitted > node.deadline.date) { // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
-                            var cost = core.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
-                            if (cost > node.score) cost = node.score; // Habria que considerar la nota puesta
+                            var cost = public.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
+                            if (cost > node.spublic) cost = node.spublic; // Habria que considerar la nota puesta
                             sum -= cost; // Restar costo
                             if (sum < 0) sum = 0; // La nota no puede ser negativa
                         }
             return sum;
         } else { // Es hoja
-            if(student.scores){ // Puede que no tenga ninguna calificacion aun
-                if (student.scores[node.id]) // Si ya esta evaluado este campo
-                    return student.scores[node.id].score * node.score / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
+            if(student.spublics){ // Puede que no tenga ninguna calificacion aun
+                if (student.spublics[node.id]) // Si ya esta evaluado este campo
+                    return student.spublics[node.id].spublic * node.spublic / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
                 else
                     return 0; // Si no tiene nota, devolver 0
             }else{
@@ -58,7 +60,7 @@
         }
     };
 
-    core.utils.getArray = function (root) { // Convertir el arbol en arreglo referenciado
+    public.utils.getArray = function (root) { // Convertir el arbol en arreglo referenciado
         // Sirve para exportar a formato de highcharts y para listar actividades en vista de alumnos
 
         var getArrRec = function (node, arr, parent) { // Recorrido recursivo
@@ -70,7 +72,7 @@
                     id: node.id,
                     parent: parent, // Referencias hacia atras
                     name: node.name,
-                    score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
+                    spublic: node.spublic, // Higcharts calcula este valor y por eso se llama value en las hojas
                     dl: node.deadline // Vencimiento si existe
                 });
             } else { // Es hoja, agregar hoja y retornar
@@ -78,7 +80,7 @@
                     id: node.id,
                     parent: parent,
                     name: node.name,
-                    value: node.score, // Este dato lo usa highcarts (se calcula para los nodos padres)
+                    value: node.spublic, // Este dato lo usa highcarts (se calcula para los nodos padres)
                     dl: node.deadline // Vencimiento si existe
                 });
             }
@@ -91,13 +93,13 @@
         return arr;
     };
 
-    core.utils.getTree = function(root){ // Obtener arbol como nodos y lazos
+    public.utils.getTree = function(root){ // Obtener arbol como nodos y lazos
         
         var treeRec = function(tree, nodes, edges, color){ // Funcion recursiva para recorrer el arbol
             
             nodes.push({
                 id: tree.id,
-                label: tree.name+"\nPuntaje: "+tree.score,
+                label: tree.name+"\nPuntaje: "+tree.spublic,
                 shape: "box",
                 color: color ? color : "#555555",                
                 font: { 
@@ -149,7 +151,7 @@
         };
     };
 
-    core.utils.sendEmail = function (data) { // Enviar email (requiere script php en hosting)
+    public.utils.sendEmail = function (data) { // Enviar email (requiere script php en hosting)
         return new Promise(function (fulfill, reject) {
             /*
             var uriData = 'nombre=' + data.name + '&email=' + data.email + '&cc=' + data.cc.join() + '&asunto=' + data.subject + '&mensaje=' + data.message;
@@ -175,7 +177,7 @@
         });
     };
 
-    core.utils.sendNotification = function (data) { // Enviar notificaciones por FCM
+    public.utils.sendNotification = function (data) { // Enviar notificaciones por FCM
         var xhr = new XMLHttpRequest();
         var url = "https://fcm.googleapis.com/fcm/send";
         xhr.open("POST", url, true);
@@ -201,7 +203,7 @@
         xhr.send(msg);
     };
 
-    core.utils.generateFileName = function (len) { // Nombres aleatorios para archivos
+    public.utils.generateFileName = function (len) { // Nombres aleatorios para archivos
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         for (var i = 0; i < len; i++)
@@ -209,13 +211,13 @@
         return text;
     };
 
-    core.utils.quillToHTML = function (str) { // Hacer la adaptacion del formato quill al formato html de home
+    public.utils.quillToHTML = function (str) { // Hacer la adaptacion del formato quill al formato html de home
         return str.replace(/ql-align-center/g, "center-align"); // Por ahora solo este, buscar otros
     };
 
-    core.utils.activityCntr = function (userUid, item, param) { // Incrementador de contadores para monitoreo de actividad de usuarios
+    public.utils.activityCntr = function (userUid, item, param) { // Incrementador de contadores para monitoreo de actividad de usuarios
         return new Promise(function (fulfill, reject) {
-            core.db.get("users_public/" + userUid + "/activity/items/" + item)
+            public.db.get("users_public/" + userUid + "/activity/items/" + item)
                 .then(function (activity_data) {
                     var data = {};
                     if (activity_data) // Tiene valores en este item de actividad
@@ -228,7 +230,7 @@
                         updates["users_public/" + userUid + "/lastView"] = item+"?id="+param; // Ultima vista
                     else    
                         updates["users_public/" + userUid + "/lastView"] = item; // Ultima vista
-                    core.db.update(updates)
+                    public.db.update(updates)
                         .then(function (res) {
                             return fulfill(res);
                         })
@@ -242,14 +244,14 @@
         });
     };
 
-    core.utils.logAction = function(actionMsg){ // Registra acciones del usuario localmente. Si ocurre error se guarda el registro en la db
+    public.utils.logAction = function(actionMsg){ // Registra acciones del usuario localmente. Si ocurre error se guarda el registro en la db
         actionStack.push({
             msg: actionMsg,
             timestamp: Date.now()
         });
     };
 
-    core.utils.logError = function(error){ // Registra error en db para llevar estadistica de funcionamiento
+    public.utils.logError = function(error){ // Registra error en db para llevar estadistica de funcionamiento
         /* Formato:
         error = {
             source: [string], // Nombre del controller o libreria donde ocurre el error
@@ -277,7 +279,7 @@
             error.stack = actionStack;
 
         // Logear en firestore
-        core.db.push(error, "errorLog")
+        public.db.push(error, "errorLog")
         .then(function(){
             actionStack = []; // Se reinicia la pila de acciones
             console.log("Error reportado");
@@ -287,7 +289,7 @@
         });
     };
 
-    core.utils.getPrimeImplicants = function (data) { // Obtener implicantes primos a partir de los miniterminos
+    public.utils.getPrimeImplicants = function (data) { // Obtener implicantes primos a partir de los miniterminos
         // Autor del metodo: Janus Troelsen (https://gist.github.com/ysangkok/5707171)
         /*
         var minterms = ['1101', '1100', '1110', '1111', '1010', '0011', '0111', '0110'];

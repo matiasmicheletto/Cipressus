@@ -1,8 +1,14 @@
 <div class="container">
   <!-- Lista de noticias -->
   <div class = "section"> 
-    <h5 class="row" ng-if="news">Comunicados</h5>
-    <table class="highlight" ng-if="news" style="max-width:100%;overflow-x:auto;display:inline-block;">
+    <h4 class="row">Publicaciones</h4>
+    
+    <h5 class="grey-text text-lighten-1" ng-hide="news.length > 0">
+      <br><br>
+      <i>Aún no se realizaron publicaciones.</i>
+    </h5>
+
+    <table class="highlight" ng-if="news.length>0" style="max-width:100%;overflow-x:auto;display:inline-block;">
       <thead>
         <tr>
           <th>Título</th>
@@ -13,7 +19,7 @@
       </thead>
 
       <tbody>
-        <tr ng-repeat="(key,row) in news track by $index">
+        <tr ng-repeat="(key,row) in (news | orderBy: 'order') track by $index">
           <td>{{row.title}}</td>
           <td>
             <div class="chip">
@@ -71,8 +77,8 @@
   </div>
 
   <div class="modal-footer">      
-    <a class="modal-close waves-effect waves-white btn red">Cancelar</a>
-    <a class="waves-effect waves-white btn green" ng-click="saveSelected()">Publicar</a>
+    <a class="modal-close waves-effect waves-white btn red darken-3">Cancelar</a>
+    <a class="waves-effect waves-white btn green darken-3" ng-click="saveSelected()">Publicar</a>
   </div>
 </div>
 
@@ -82,7 +88,7 @@
   <div class="modal-content">
     <h2>Novedades</h2> 
     <div class="card hoverable z-depth-1">
-        <div class="right chip">
+        <div class="right chip" style="margin-top: 10px;">
             <img src="{{users[selected.author].avatar}}">
             Publicado {{getTime(5,selected.timestamp)}} por {{users[selected.author].name}}
         </div>
@@ -104,7 +110,7 @@
   </div>
 
   <div class="modal-footer">      
-    <a class="modal-close waves-effect waves-white btn green">Cancelar</a>
-    <a class="waves-effect waves-white btn red" ng-click="deleteSelected()">Eliminar</a>
+    <a class="modal-close waves-effect waves-white btn green darken-3">Cancelar</a>
+    <a class="waves-effect waves-white btn red darken-3" ng-click="deleteSelected()">Eliminar</a>
   </div>
 </div>

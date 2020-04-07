@@ -1,5 +1,5 @@
-(function (core) { ///// Test Felder-Silverman de estilos de aprendizaje
-    core.test_FS = {
+(function (public) { ///// Test Felder-Silverman de estilos de aprendizaje
+    public.test_FS = {
         questions: [{
                 text: "Entiendo mejor algo",
                 options: ["si lo practico.", "si pienso en ello."]

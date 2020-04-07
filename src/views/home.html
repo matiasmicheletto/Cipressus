@@ -4,7 +4,7 @@
 
     <h5 class="grey-text text-lighten-1" ng-hide="news.length > 0">
         <br><br>
-        <i>Aún no tiene un curso asignado</i>
+        <i>Aún no tiene un curso asignado o no se realizaron publicaciones</i>
     </h5>
 
     <div class="card hoverable z-depth-1" style="margin-bottom:30px" ng-repeat="(idx,entry) in news track by $index" ng-show="entry.timestamp < getTime(0)">
