@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html ng-app="cipressus" lang="es-AR">
+
+<head>
+
+    <title ng-bind="notifCnt > 0 ? '('+notifCnt+') | Cipressus':'Cipressus'"></title>
+
+    <!-- ##################### META ##################### -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="description" content="Webapp Cipressus - LCMS Sistemas Digitales - Universidad Nacional el Sur" />
+    <meta name="keywords" content="Cipressus, educación, diseño, circuitos lógicos, LCMS, learning, education" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Deshabilitar cache -->
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <!-- Web manifest -->
+    <link rel="manifest" href="manifest.json"></link>
+    <!-- PWA Service Worker -->
+    <script>
+        if(navigator.serviceWorker){ // Por si no es localhost
+            if (navigator.serviceWorker.controller)
+                console.log('[PWA Builder] se encontró service worker activo, no hace falta registrar.')
+            else
+                navigator.serviceWorker.register('pwabuilder-sw.js', {scope: './'})
+                .then(function(reg){
+                    console.log('Service worker registrado, scope:'+ reg.scope);
+                });
+        }   
+    </script>
+    <script src="manup.min.js"></script> 
+
+
+    <!-- ##################### CSS ##################### -->
+    <link rel="icon" href="images/favicon.ico" sizes="16x16"/>
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <!--<link type="text/css" rel="stylesheet" href="style/icons.css"/>-->
+    <link type="text/css" rel="stylesheet" href="style/vendor/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="style/vendor/fullcalendar.css"/>
+    <link type="text/css" rel="stylesheet" href="style/vendor/quill.snow.css"/>
+    <link type="text/css" rel="stylesheet" href="style/vendor/timeline.css"/>
+    <link type="text/css" rel="stylesheet" href="style/vendor/simcir.css"/>
+    <link type="text/css" rel="stylesheet" href="style/vendor/simcir-basicset.css"/>
+    <link type="text/css" rel="stylesheet" href="style/vendor/qmc.css"/>
+    <link type="text/css" rel="stylesheet" href="style/custom/custom.css"/>
+</head>
+
+<body class="{{bodyClass}}">
+
+    <!-- ##################### PRELOADER ##################### -->
+    <div class="preloader-wrapper-pre valign-wrapper" ng-if="loading">
+        <h5 id="preloader_progress" class="white-text preloader-progress-text"></h5>
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ##################### NAVBAR ##################### -->
+    <div ng-show="userLogged">
+        <!-- Contenido del dropdown de mensajes -->
+        <ul id="msgs_dropdown" class="dropdown-content">
+            <li ng-repeat="msg in user_messages"><a class="modal-trigger black-text" data-target="msg_modal" ng-click="displayMsg(msg)">{{msg.subject}}</a></li>
+        </ul>
+        <!-- Contenido del dropdown de notificaciones -->
+        <ul id="notifs_dropdown" class="dropdown-content">
+            <li ng-repeat="notif in user_notifications"><a class="black-text">{{notif.text}}<i class="material-icons">{{notif.icono}}</i></a></li>
+        </ul>
+        <!-- Contenido de la barra superior (navbar) -->
+        <div class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper green darken-4">
+                    <a id="menu" data-target="slide-out" class="sidenav-trigger" ng-show="userLogged"
+                        style="cursor: pointer;"><i class="material-icons small">menu</i></a>
+                    <a class="brand-logo"><img width="100px" src="images/navbarlogo.png"></a>
+                    <ul id="nav-mobile" class="right">   
+                        <li><a title="Probador (Desc.)" class="red-text hide-on-med-and-up"><i class="material-icons">bluetooth</i></a></li>
+                        <li><a title="Probador ({{usbStatus}})" class="{{wssIconColor}} hide-on-med-and-down" ng-click="openUSBModal()"><i class="material-icons">usb</i></a></li>
+                        <li class="custom-dropdown">
+                            <a title="Notificaciones">
+                                <span ng-if="notifCnt>0" class="badge-counter">{{notifCnt}}</span>
+                                <i ng-if="notifCnt<=0" class="material-icons">notifications_none</i>
+                                <i ng-if="notifCnt>0" class="material-icons">notifications</i>
+                            </a>
+                            <div class="custom-dropdown-content z-depth-4">
+                                <div class="custom-dropdown-item {{notif.read ? '':'unread-item'}}" 
+                                ng-repeat-start="(idx,notif) in notifications track by $index"
+                                ng-click="openNotification(idx)">
+                                    <p><b>{{notif.title}}</b></p>
+                                    <p style="margin-top: -5px;">{{notif.text}}</p>
+                                    <p style="font-size: 70%; text-align: right; margin-top: -5px;">{{getTime(6,notif.timestamp)}}</p>
+                                </div>
+                                <div ng-repeat-end class="divider" tabindex="-1"></div>
+                            </div>
+                        </li>
+                        <li><a title="Salir" ng-click="signOut()"><i class="material-icons">power_settings_new</i></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ##################### SIDENAV ##################### -->
+    <ul id="slide-out" class="sidenav hoverable" ng-show="userLogged">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="images/background.png">
+                </div>
+                <a href="#profile"><img class="circle" src="{{user.avatar}}"></a>
+                <a href="#profile"><span class="white-text name">{{user.name}}</span></a>
+                <a href="#profile"><span class="white-text email">{{user.email}}</span></a>
+            </div>
+        </li>
+        <li class="no-padding">
+            <a href="#/" class="collapsible-header">Inicio<i class="material-icons">home</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.enrolled && !user.admin">
+            <a href="#/dashboard" class="collapsible-header">Dashboard<i class="material-icons">dashboard</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.enrolled">
+            <a href="#/calendar" class="collapsible-header">Cronograma<i class="material-icons">calendar_today</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.enrolled">
+            <a href="#/sources" class="collapsible-header">Material<i class="material-icons">local_library</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.enrolled">
+            <a href="#/submissions" class="collapsible-header">Entregas<i class="material-icons">open_in_browser</i></a>
+        </li>        
+
+        <li class="no-padding hide-on-med-and-down">
+            <ul class="collapsible_1 collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">Herramientas<i class="material-icons">arrow_drop_down</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li class="no-padding"><a href="#/simulator">Simulador<i class="material-icons">developer_board</i></a></li>
+                            <li class="no-padding"><a href="#/kMaps">Mapas-K<i class="material-icons">grid_on</i></a></li>
+                            <!--<li><a href="#/tables">Tablas de verdad<i class="material-icons">playlist_add_check</i></a></li>-->
+                            <li class="no-padding"><a href="#/hardware">Tester<i class="material-icons">memory</i></a></li>
+                            <li class="no-padding"><a href="#/analizer">Analizador lógico<i class="material-icons">broken_image</i></a></li>                            
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        
+        <li class="no-padding" ng-show="user.admin">
+            <ul class="collapsible_2 collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">Administrar<i class="material-icons">arrow_drop_down</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li class="no-padding"><a href="#/courses">Cursos<i class="material-icons">build</i></a></li>
+                            <li class="no-padding"><a href="#/users">Alumnos<i class="material-icons">group</i></a></li>
+                            <li class="no-padding"><a href="#/attendance">Asistencia<i class="material-icons">how_to_reg</i></a></li>
+                            <li class="no-padding"><a href="#/editor">Publicaciones<i class="material-icons">fiber_new</i></a></li>
+                            <li class="no-padding"><a href="#/stats">Estadísticas<i class="material-icons">insert_chart</i></a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="no-padding">
+            <ul class="collapsible_3 collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">Usuario<i class="material-icons">arrow_drop_down</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li class="no-padding"><a href="#/profile">Ver perfil<i class="material-icons">perm_identity</i></a></li>
+                            <li class="no-padding"><a href="#/" ng-click="signOut()">Salir<i class="material-icons">exit_to_app</i></a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="divider"></li>
+        <li class="no-padding">
+            <a class="collapsible-header modal-trigger" data-target="help_modal">Ayuda<i class="material-icons">help</i></a>
+        </li>
+        <li class="no-padding">
+            <a href="https://github.com/matiasmicheletto/cipressus" class="collapsible-header">Documentación<i class="material-icons">import_contacts</i></a>
+        </li>
+        <li class="no-padding">
+            <a class="collapsible-header modal-trigger" data-target="about_modal">Acerca de<i class="material-icons">info</i></a>
+        </li>
+
+    </ul>
+
+
+    <ng-view></ng-view>
+
+
+    <!-- ##################### MODALS ##################### -->
+    <div id="about_modal" class="modal">
+        <div class="modal-content">
+            <!-- fondo -->
+            <div style="background-image: url('images/mainlogo.png'); 
+                        background-repeat: no-repeat;
+                        background-position: 50% 50%;
+                        background-attachment: fixed;
+                        background-size: 25%;
+                        filter: blur(10px);                        
+                        width: 100%; 
+                        height: 100%; 
+                        position: fixed; 
+                        top:0px; 
+                        left:0px;
+                        z-index: -10;">
+            </div>
+            <div class="row">
+            <h4><b>Acerca de CIPRESSUS</b></h4>
+            <p>Cipressus es un sistema de gestión de contenidos para el aprendizaje (LCMS). Implementa un sistema de cómputo automático de calificaciones y permite la consulta en tiempo real de resultados de evaluaciones, noticias y cronograma de cátedra, descarga de material de estudio y muchas otras utilidades.</p>
+            </div>
+            <div class="row">
+                <h5>Contacto</h5>
+                <p>LSD | Laboratorio de Sistemas Digitales<br>
+                DIEC | Departamento de Ingeniería Eléctrica y Computadoras<br>
+                San Andrés 800, CP8000 Bahía Blanca<br>
+                Buenos Aires, Argentina<br>
+                Teléfono: +54 291 4595153/4<br>
+                Website: <a href="http://www.diec.uns.edu.ar/rts/#/group">http://www.diec.uns.edu.ar/rts/#/group</a></p>
+            </div>
+            <div class="row">  
+                <h5>Diseño e implementación</h5>
+                Ing. Matías J. Micheletto
+                <br>
+                <a href="http://matiasmicheletto.github.io/">http://matiasmicheletto.github.io/</a>
+                <br>
+                Email: <a href="mailto:matias.micheletto@uns.edu.ar?Subject=Ref.%20Cipressus">matias.micheletto@uns.edu.ar</a>
+                <br>
+                Documentación: <a href="https://github.com/matiasmicheletto/cipressus">https://github.com/matiasmicheletto/cipressus</a></p>
+            </div>
+            <div class="row" style="font-size:75%;">
+                <h6>Términos y condiciones</h6>
+                <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License.</p>
+                <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="help_modal" class="modal">
+        <div class="modal-content">         
+            <div class="row">
+                <div class="col s12">
+                    <h4>¿En qué podemos ayudarte?</h4>
+                    <div class="input-field col s12">
+                        <textarea id="textarea" class="materialize-textarea" ng-model="helpMessage"></textarea>
+                        <label for="textarea">Consulta</label>
+                    </div>
+                    <a class="waves-effect waves-white btn green darken-4" ng-disabled = "!helpMessage || helpMessage.length < 1" ng-click="sendHelp()">Enviar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="usb_modal" class="modal">
+        <div class="modal-content">
+            <h3>Probador de circuitos lógicos</h3>
+            <p>Instrucciones de uso:</p>
+            <ol>
+                <li><a href="https://nodejs.org/es/download/" target="_blank">Descargar</a> e instalar NodeJS</li>
+                <li>Conectar el probador al puerto USB.</li>
+                <li>Asegúrese de que el <a href="tester/Firmware/Firmware.ino" target="_blank"><b>firmware</b></a> del probador está actualizado.</li>
+                <li>Descargar <a href="tester/SerialPortServer.js" target="_blank"><b>SerialPortServer.js</b></a> y ejecutar con NodeJS.</li>
+                <li>Presionar el botón "CONECTAR" para establecer conexión con el server. Si el server no se está ejecutando, igualmente puede iniciarlo luego de haber presionado "CONECTAR".</li>
+                <li>Seleccionar el puerto serie correspondiente al probador en la lista que aparece y presionar "INICIAR".</li>
+                <li>En la sección "Hardware" del menú se dispone de las herramientas para controlar el probador de circuitos.</li>
+                <li>Para desconectar el probador, presione "DESCONECTAR". Puede finalizar el server con "Ctrl+C".</li>
+                <li>Finalmente, desconecte el probador del cable USB.</li>
+            </ol>
+
+            <div class="row">
+                <div class="col s4 offset-s2">
+                    <a class="waves-effect waves-white btn blue darken-3 {{usbStatus == 'DISCONNECTED' ? '' : 'disabled'}}" ng-click="connectToServer()">Conectar</a>
+                </div>
+                <div class="col s4">
+                    <a class="waves-effect waves-white btn red darken-3 {{usbStatus == 'CONNECTED' || usbStatus == 'IDLE' || usbStatus == 'CONNECTING' ? '' : 'disabled'}}" ng-click="disconnectFromServer()">Desconectar</a>
+                </div>
+            </div>
+
+            <div class="row" ng-show="usbStatus == 'IDLE'">
+                <div class="col s4 offset-s2">
+                    <select class="browser-default" id="portSelect">
+                        <option value="" selected>Elija una opción</option>
+                        <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
+                    </select>
+                </div>
+                <div class="col s4">
+                    <a class="waves-effect waves-white btn green darken-4 {{usbStatus == 'IDLE' ? '' : 'disabled'}}" ng-click="connectToSerialPort()">Iniciar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ##################### LIBS ##################### -->
+    <script type="text/javascript" src="assets/vendor/materialize.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/angular.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/angular-route.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/angular-local-storage.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/is.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/firebase.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/moment.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/fullcalendar-es-us.js"></script>
+    <script type="text/javascript" src="assets/vendor/highcharts.min.js"></script>    
+    <script type="text/javascript" src="assets/vendor/highcharts-drilldown.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/sunburst.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/variable-pie.js"></script>
+    <script type="text/javascript" src="assets/vendor/vis-network.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/quill.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/image-resize.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/tone.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/simcir.js"></script>
+    <script type="text/javascript" src="assets/vendor/simcir-basicset.js"></script>
+    <script type="text/javascript" src="assets/vendor/simcir-library.js"></script>
+    <script type="text/javascript" src="assets/vendor/simcir-virtual-port.js"></script>
+    <script type="text/javascript" src="assets/custom/simcir-external-port.js"></script>
+    <script type="text/javascript" src="assets/custom/simcir-audio-port.js"></script>
+    <script type="text/javascript" src="assets/vendor/karnaughmap.js"></script>
+    <script type="text/javascript" src="assets/vendor/qmc.js"></script>
+
+    
+    <script type="text/javascript" src="main.js?v=1"></script>
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+</body>
+
+</html>

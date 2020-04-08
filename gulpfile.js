@@ -18,8 +18,9 @@ gulp.task('clean', function(){
 gulp.task('copy', function () {
   var paths = [
     { src: './src/assets/vendor/**/*', dest: './public/assets/vendor' },
+    { src: './src/assets/custom/simcir*', dest: './public/assets/custom' },
     { src: './src/images/**/*', dest: './public/images' },
-    { src: './src/probador/**/*', dest: './public/probador' },
+    { src: './tester/**/*', dest: './public/tester' },
     { src: './src/views/**/*', dest: './public/views' },
     { src: './src/style/**/*', dest: './public/style' },
     { src: './src/firebase-messaging-sw.js', dest: './public/' },
@@ -49,7 +50,6 @@ gulp.task('bundle', function() {
 gulp.task('rename',function(){
   return gulp.src("./public/main-*")
   .pipe(rename("main.js"))
-  //.pipe(del('./public/main-*',{force:true})) // Esto da error, habria que poner el tarea aparte
   .pipe(gulp.dest("./public")); 
 });
 

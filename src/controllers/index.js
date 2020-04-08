@@ -1,5 +1,5 @@
 var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModule'])
-.config(function ($routeProvider) {
+.config(["$routeProvider",function ($routeProvider) {
     $routeProvider
         .when("/", {
             templateUrl: "views/home.html",
@@ -77,7 +77,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             templateUrl: "views/profile.html",
             controller: "profile"
         });
-})
+}])
 .filter('trusted', ['$sce', function ($sce) {
     // Ver: https://stackoverflow.com/questions/39480969/angular-interpolateinterr-error-when-adding-url-from-variable
     return $sce.trustAsResourceUrl;
@@ -86,7 +86,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     // Ver: https://stackoverflow.com/questions/41272314/angular-all-slashes-in-url-changed-to-2f
     $locationProvider.hashPrefix('');
   }])
-.run(function ($rootScope, $location) {
+.run(["$rootScope", "$location", function ($rootScope, $location) {
 
     $rootScope.loading = true; // Preloader
     $rootScope.userLogged = false; // Indicador de usuario logeado para habilitar componentes de ventana
@@ -446,4 +446,4 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             }
         });
     });
-});
+}]);

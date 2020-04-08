@@ -1,0 +1,125 @@
+body {
+  display: flex!important;
+  min-height: 100vh!important;
+  flex-direction: column!important;
+}
+
+/* Notificaciones */
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.custom-dropdown-content {
+  display: none;
+  line-height: 100%;
+  background-color: white;
+  border-radius: 5px;
+  color:black;
+  right: 0px;
+  position: absolute;
+  min-width: 250px;
+  padding:0px;
+  z-index: 1000;
+}
+.custom-dropdown:hover .custom-dropdown-content {
+  display: block;
+}
+.custom-dropdown-item{
+  margin: 0px;
+  top: 0px;
+  padding: 5px 15px 5px 15px;
+}
+.custom-dropdown-item:hover{
+  background-color: rgb(171, 192, 171);
+}
+.unread-item{
+  background-color: rgb(206, 218, 206);
+}
+.badge-counter{
+  position: absolute;
+  right:2px;
+  top:10px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background: #cc0000;
+  border: 1px solid #666;
+  color: white;
+  text-align: center;
+  font: 15px Arial, sans-serif;
+}
+
+/* Comentarios en home */
+.home-comment{
+  border-radius: 20px;
+  background-color: rgb(228, 226, 226);
+  padding:10px!important;
+}
+
+
+/* Fix efecto escalera del sidenav*/
+.no-padding{
+  clear: both;
+}
+
+
+/* Preloader */
+.preloader-wrapper {
+  margin: 0 auto; 
+}
+.preloader-wrapper-pre {
+  background-color: black;
+  opacity: 0.85;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  margin: 0;
+  top: 0!important;
+  z-index: 2000; 
+}
+.preloader-progress-text {
+  position:fixed;
+  text-align: center;
+  width: 100%;
+  z-index: 2001;
+}
+
+
+/* Login */
+.login-box{
+  border-radius: 10px;
+  display: inline-block; 
+  padding: 32px 35px 0px 35px; 
+  background: rgba(210, 210, 210, 0.83)!important;
+}
+
+.body-login{
+  background-image: linear-gradient(to right, rgba(245, 246, 252, 0.4), rgb(9, 61, 25)), url('../../images/forest.jpg');
+  background-size:cover;
+}
+
+
+/* Ocultar boton de drillup de sunburst (override de la libreria) */
+.highcharts-drillup-button {
+  display: none
+}
+
+
+/* Modals de tamanio personalizado */
+.wide-modal {
+  width: 85% !important;
+  min-width: 85% !important;
+  height: 85% !important; 
+  min-height: 85% !important; 
+  top: 7.5% !important;
+  border-radius: 10px;
+}
+
+.full-modal {
+  width: 98% !important;
+  min-width: 98% !important;
+  height: 98% !important; 
+  min-height: 98% !important;  
+  top: 1% !important;
+  border-radius: 10px;
+}

@@ -1,0 +1,61 @@
+<div class="container">
+    <h4>Cursos</h4>    
+
+    <table class="highlight" style="max-width:100%;overflow-x:auto;display:inline-block;">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Periodo</th>
+                <th>Niveles</th>
+                <th>Actividades</th>
+                <th>Alumnos</th>
+                <th>Menu</th>
+            </tr>
+        </thead>
+    
+        <tbody>
+            <tr ng-repeat="(key,row) in courses track by $index">
+                <td>{{row.name}}  <span title="Curso actual" ng-if="user.course == row.key" class="new badge green" data-badge-caption="actual"></span></td>
+                <td>Desde {{getTime(4,row.start)}}<br>Hasta {{getTime(4,row.end)}}</td>
+                <td>{{row.levels}}</td>
+                <td>{{row.activities}}</td>
+                <td>{{row.enrolled}}</td>
+                <td width="1%" style="white-space:nowrap;">
+                    <a title="Editar" href="#/activities?id={{row.key}}" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3"><i class="material-icons">edit</i></a>
+                    <a title="Eliminar" class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger" ng-click="deleteCourse(row.key)"><i class="material-icons">delete</i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="fixed-action-btn">
+    <a href="#/activities" title="Nuevo curso" class="btn-floating btn-large green darken-1 pulse"><i class="large material-icons">add</i></a>
+</div>
+
+<div id="confirm_delete_modal" class="modal">
+    <div class="modal-content">         
+        <div class="row">
+            <div class="row">
+                <h5>Confirme la operación</h5>
+                <p>¿Está seguro que desea eliminar el curso seleccionado?</p>
+            </div>
+            
+            <div class="row" ng-show="courses[selectedCourseIndex].enrolled > 0">
+                <p>Los alumnos del curso actual se asignarán al siguiente curso:</p>
+                <div class="input-field col s12">
+                    <select id="courses_select">
+                        <option value="" disabled selected>Elija una opción</option>
+                        <option ng-repeat="(key,course) in courses track by $index" value="{{course.key}}">{{course.name}}</option>						
+                    </select>
+                </div>
+            </div>
+            
+            
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-white btn red darken-4">Cancelar</a>
+            <a class="waves-effect waves-white btn green darken-4" ng-click="deleteCourse(null)">Confirmar</a>
+        </div>
+    </div>
+</div>

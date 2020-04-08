@@ -1,0 +1,25 @@
+<div class="container valign-wrapper" ng-hide="tester" style="height: 100vh;">
+    <h5 class="center-align grey-text text-lighten-1"><i>Siga las instrucciones para conectarse al probador presionando
+            en <i class="material-icons">usb</i></i></h5>
+</div>
+
+<div ng-show="tester" id="chart_container"></div>
+
+<div class="fixed-action-btn" ng-show="tester">
+    <a title="{{running ? 'Detener':'Iniciar'}}" class="btn-floating btn-large {{running ? 'red':'green'}} darken-3" ng-click="toggleStartStop()"><i class="large material-icons">{{running ? 'stop':'play_arrow'}}</i></a>
+</div>
+
+<center ng-show="tester">
+    <div class="row">
+        <div class="card hoverable z-depth-1 col s12 m6 offset-m3">
+            <div class="card-content col s12 offset-s2">
+                <div class="col s1" ng-repeat="item in tester track by $index">                                        
+                    <label>
+                        <input class="filled-in" type="checkbox" ng-model="item.output" />
+                        <span>{{$index+1}}</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>

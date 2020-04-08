@@ -1,0 +1,70 @@
+<style>
+    .led-box {
+        height: 20px;
+        width: 25%;
+    }
+
+    .led-red {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+    }
+
+    .led-off {
+        background-color: #AAAAAA;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #000000 0 -1px 9px, #FFFFFF 0 2px 12px;
+    }
+
+    .led-on {
+        background-color: #B91717;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #F75B5B 0 2px 12px;
+    }
+</style>
+
+<div class="container valign-wrapper" ng-hide="tester" style="height: 100vh;">
+    <h5 class="center-align grey-text text-lighten-1"><i>Siga las instrucciones para conectarse al probador presionando
+            en <i class="material-icons">usb</i></i></h5>
+</div>
+
+<div ng-show="tester">
+    <div class="container">
+        <h5 class="hide-on-med-and-up">Probador de circuitos lógicos</h5>
+        <h4 class="hide-on-small-only">Probador de circuitos lógicos</h4>
+    </div>
+
+    <center>
+        <div class="row">
+            <div class="card hoverable z-depth-1 col s12 m6 offset-m3">
+                <div class="card-content">
+
+                    <div clas="row">
+                        <div class="col s6">
+                            <h5><b>Salidas</b></h5>
+                        </div>
+                        <div class="col s6">
+                            <h5><b>Entradas</b></h5>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-repeat="item in tester track by $index">
+                        <div class="col s2 m3">
+                            <input type="text" placeholder="{{$index+1}}" style="max-width: 100px; text-align: center;">
+                        </div>
+                        <div class="switch col s5 m3">
+                            <label>Off<input type="checkbox" ng-model="item.output"><span
+                                    class="lever"></span>On</label>
+                        </div>
+                        <div class="led-box col s3 m3">
+                            <label>
+                                <div class="led-red {{item.input  ? 'led-on':'led-off'}}"></div>
+                            </label>
+                        </div>
+                        <div class="col s2 m3">
+                            <input type="text" placeholder="{{$index+1}}" style="max-width: 100px; text-align: center;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+</div>

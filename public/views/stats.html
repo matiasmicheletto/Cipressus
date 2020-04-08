@@ -1,0 +1,133 @@
+<style>
+    /* Barras de resultados test */
+    .progress-area {
+        width: 100%;
+        background-color: #ddd;
+    }
+
+    .progress-bar {
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        color: white;
+    }
+</style>
+
+<div class="container">
+    <h3>Estadísticas</h3>
+</div>
+<div style="width: 90%;margin-left: 5%">
+    <div class="row">
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">
+                <div id="score_barplot_container"></div>
+                <div class="right">
+                    <a class="waves-effect waves-white btn green darken-4" ng-click="drillUp()">Contraer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">
+                <div id="attendance_container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card hoverable z-depth-1 col m12 l6">
+            <div class="card-content">
+                <div id="browser_pie_container"></div>
+            </div>
+        </div>
+
+        <div class="card hoverable z-depth-1 col m12 l6">
+            <div class="card-content">
+                <div id="so_pie_container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card hoverable z-depth-1">
+            <div class="card-content">
+                <div id="items_barplot_container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card hoverable z-depth-1 col s12 m6 l6">
+            <div class="card-content">
+                <div id="scatterplot_container1"></div>
+            </div>
+        </div>
+        <div class="card hoverable z-depth-1 col s12 m6 l6">
+            <div class="card-content">
+                <div id="scatterplot_container2"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card hoverable z-depth-1 col s12">
+            <div class="card-content">
+                <p><b>Test Felder & Silverman (promedios y desviaciones)</b></p>
+                <br>
+                <div class="row">
+                    <div class="col s2">
+                        Activo
+                    </div>
+                    <div class="progress-area col s8">
+                        <div class="progress-bar" id="scale_0" style="background-color: #08088A"></div>
+                    </div>
+                    <div class="col s2">
+                        Reflexivo
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s2">
+                        Sensorial
+                    </div>
+                    <div class="progress-area col s8">
+                        <div class="progress-bar" id="scale_1" style="background-color: #8A0808"></div>
+                    </div>
+                    <div class="col s2">
+                        Intuitivo
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s2">
+                        Visual
+                    </div>
+                    <div class="progress-area col s8">
+                        <div class="progress-bar" id="scale_2" style="background-color: #0B610B"></div>
+                    </div>
+                    <div class="col s2">
+                        Verbal
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s2">
+                        Secuencial
+                    </div>
+                    <div class="progress-area col s8">
+                        <div class="progress-bar" id="scale_3" style="background-color: #886A08"></div>
+                    </div>
+                    <div class="col s2">
+                        Global
+                    </div>
+                </div>
+                <p><b>Los valores promedios corresponden al siguiente perfil:</b></p>
+                <ul>
+                    <li id="prof_0"></li>
+                    <li id="prof_1"></li>
+                    <li id="prof_2"></li>
+                    <li id="prof_3"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
