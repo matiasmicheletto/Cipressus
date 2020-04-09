@@ -14,6 +14,8 @@
         <input id="filter_input" type="text" ng-model="user_filter">
         <label for="filter_input">Búsqueda</label>
       </div>
+
+      <!--
       <div class="col s6 valign-wrapper" style="height: 70px;">
         <div class="switch">
           <label>
@@ -24,6 +26,7 @@
           </label>
         </div>
       </div>
+      -->
     </div>
 
     <table class="highlight" ng-if="users" style="max-width:100%;overflow-x:auto;display:inline-block;">
@@ -39,7 +42,7 @@
       </thead>
 
       <tbody>
-        <tr style="padding: 1px 1px;" ng-repeat="(key,row) in (users | orderBy: orderTag : reverseOrder | filter : user_filter) track by $index" ng-show="showAll || (!row.admin && row.course == user.course)">
+        <tr style="padding: 1px 1px;" ng-repeat="(key,row) in (users | orderBy: orderTag : reverseOrder | filter : user_filter) track by $index" ng-show="row.course == user.course || !row.course">
           <td><img class="circle" src="{{row.avatar}}" height="40px" width="40px"></td>
           <td data-target="view_modal" class="modal-trigger {{row.enrolled ? '':'red-text'}}" style="cursor: pointer" ng-click="viewUser(row.key)">
             {{row.name}} {{row.secondName}} <i class="material-icons" style="vertical-align:middle;"

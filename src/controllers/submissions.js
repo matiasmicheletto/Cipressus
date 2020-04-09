@@ -55,6 +55,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                         name: file.name.split(".")[0], // Extraer nombre de archivo
                         activityId: $scope.selectedActivity.id,
                         activityName: $scope.selectedActivity.name,
+                        created: Date.now(),
                         type: "report", // Tipo de entrega
                         size: res.size, // Tamanio de archivo
                         format: file.name.split(".")[1] ? file.name.split(".")[1] : "indef.", // Extension del archivo
@@ -104,6 +105,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
             name: $scope.selectedSim.name, // Nombre de la simulacion
             activityId: $scope.selectedActivity.id,
             activityName: $scope.selectedActivity.name,
+            created: Date.now(), // Fecha de entrega
             type: "sim", // Tipo de entrega
             size: $scope.selectedSim.size, // Tamanio del modelo
             format: "simcir", // Para respetar el formato
@@ -174,49 +176,100 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
 
     $scope.evaluated = function(key){ // Seleccion de entrega para marcar como evaluada (para confirmar accion)
         $scope.evaluatingKey = key;
+
+        // Obtener los aspectos evaluables de la actividad entregada para mostrar la lista de inputs
+        var evaluatingNode = Cipressus.utils.searchNode($scope.activityTree, $scope.submissions[$scope.evaluatingKey].activityId);
+        $scope.leafActivities = Cipressus.utils.getLeafNodes(evaluatingNode);
+
         confirm_evaluate_modal.open();
     };
 
     $scope.confirmEvaluate = function(){ // Marcar entrega como evaluada
         var action = parseInt(document.getElementById("evaluation_select").value);
-        var obs = document.getElementById("obsTextarea2").value;
+        var obs = document.getElementById("obsTextarea2").value; // Observaciones de quien corrige
+        
+        // Obtener lista de calificaciones propuestas para la comision
+        var scores = {};
+        for(var k in $scope.leafActivities){
+            var sc = document.getElementById("scoreInput_"+$scope.leafActivities[k].id).value; // Nota propuesta
+            if(sc){
+                scores[$scope.leafActivities[k].id] = parseInt(sc);
+            }
+        }
+
         if(obs == "") obs = "Sin observaciones"; // Forzar valor de resultado
-        if(action){
-            if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 1){ // Solo la primera vez
-                $rootScope.loading = true;
-                var newStatus = { // Nuevo estado del envio a registrar
-                    timestamp: Date.now(),
-                    action: action, // 2 -> revisar, 3 -> aprobado
-                    display: action == 2 ? "Revisar" : action == 3 ? "Aprobado" : "?",
-                    user: $rootScope.user.uid, // Usuario que realizo la ultima accion
-                    obs: obs // Mensaje del evaluador
-                };
-                $scope.submissions[$scope.evaluatingKey].status.push(newStatus); // Agrego el estado al objeto local
-                Cipressus.db.update(JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey])),"submissions/"+$rootScope.user.course+"/"+$scope.evaluatingKey) // Registrar accion
-                .then(function (res) {
-                    M.toast({
-                        html: "Movimiento registrado",
-                        classes: 'rounded green',
-                        displayLength: 1000
+        if(action){ // Si eligio el resultado de la evaluacion
+            if(action==3 && Object.getOwnPropertyNames(scores).length == $scope.leafActivities.length || action != 3){ // Debe indicar una calificacion por subactividad
+                if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 1){ // Solo la primera vez
+                    
+                    $rootScope.loading = true;
+                    var newStatus = { // Nuevo estado del envio a registrar
+                        timestamp: Date.now(),
+                        action: action, // 2 -> revisar, 3 -> aprobado
+                        display: action == 2 ? "Revisar" : action == 3 ? "Aprobado" : "?",
+                        user: $rootScope.user.uid, // Usuario que realizo la ultima accion
+                        obs: obs // Mensaje del evaluador
+                    };
+
+                    var job = []; // Updates
+                    
+                    job.push(Cipressus.db.update(JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey])),"submissions/"+$rootScope.user.course+"/"+$scope.evaluatingKey)); // Registrar accion en lista de entregas (submissions)
+                    
+                    for(var k in $scope.submissions[$scope.evaluatingKey].authors){ // Pasarle la nota a cada autor                        
+                        
+                        for(var j in scores){ // Para cada actividad evaluada
+                            var sc = { // Objeto de calificacion
+                                evaluator: $rootScope.user.uid,
+                                score: scores[j],
+                                timestamp: Date.now()
+                            };
+                            job.push(Cipressus.db.update(sc, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/scores/"+j));
+                        }
+
+                        // Fecha de envio para calcular costo en caso de actividad vencida    
+                        var sb = { 
+                            evaluator: $rootScope.user.uid,
+                            submitted: $scope.submissions[$scope.evaluatingKey].created,
+                            timestamp: Date.now()
+                        };
+                        job.push(Cipressus.db.update(sb, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/submits/"+$scope.submissions[$scope.evaluatingKey].activityId));
+                    }
+
+                    Promise.all(job)               
+                    .then(function (res) {
+                        $scope.submissions[$scope.evaluatingKey].status.push(newStatus); // Agrego el estado al objeto local
+                        M.toast({
+                            html: "Movimiento registrado",
+                            classes: 'rounded green',
+                            displayLength: 1000
+                        });
+                        $rootScope.loading = false;
+                        confirm_evaluate_modal.close();
+                        document.getElementById("evaluation_select").value = "";
+                        document.getElementById("obsTextarea2").value = "";
+                        $scope.$apply();                        
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        M.toast({
+                            html: "Ocurrio un error al registrar movimiento",
+                            classes: 'rounded red',
+                            displayLength: 1500
+                        });
                     });
-                    $rootScope.loading = false;
-                    confirm_evaluate_modal.close();
-                    document.getElementById("evaluation_select").value = "";
-                    document.getElementById("obsTextarea2").value = "";
-                    $scope.$apply();
-                })
-                .catch(function (err) {
-                    console.log(err);
+
+                }else{
+                    console.log($scope.submissions[key].status);
                     M.toast({
-                        html: "Ocurrio un error al registrar movimiento",
+                        html: "El archivo ya fue evaluado!",
                         classes: 'rounded red',
                         displayLength: 1500
                     });
-                });
+                }
             }else{
-                console.log($scope.submissions[key].status);
+                console.log("Evaluadas: "+Object.getOwnPropertyNames(scores).length, "Totales: "+$scope.leafActivities.length);
                 M.toast({
-                    html: "El archivo ya fue evaluado!",
+                    html: "Complete las calificaciones!",
                     classes: 'rounded red',
                     displayLength: 1500
                 });
@@ -319,7 +372,8 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                 $scope.users = users_data; // Lista de usuarios
                 Cipressus.db.get('activities/'+$rootScope.user.course) // Descargar datos de la materia para tener info de vencimientos
                 .then(function (activities_data) {
-                    $scope.activities = Cipressus.utils.getArray(activities_data);  
+                    $scope.activityTree = activities_data; // Guardo el arbol completo 
+                    $scope.activities = Cipressus.utils.getArray(activities_data); // Lista de actividades
                     //console.log($scope.activities);        
                     $rootScope.loading = false;
                     $scope.$apply();

@@ -276,7 +276,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
             Cipressus.db.get('users_private') // Descargar lista de usuarios aceptados
                 .then(function (users_private_data) {
                     // Mezclar los atributos
-                    console.log($scope.users);
+                    //console.log($scope.users);
                     for (var k in users_private_data)
                         for (var j in users_private_data[k]){ // Dos niveles de entrada
                             $scope.users[$scope.getUserIndex[k]][j] = users_private_data[k][j];

@@ -21,6 +21,22 @@
         return result;
     };
 
+    public.utils.getLeafNodes = function (node) { // Devuelve la lista de nodos hojas que contiene el arbol "node"
+        // Entradas:
+        //		- node: es el nodo del arbol a partir del cual se inicia la busqueda
+        //      - id: es el identificador de la actividad que se desea buscar    
+        var result = []; // Lista de nodos hojas a retornar
+        if(node.children){ // Si el nodo tiene hijos
+            for(var k in node.children){
+                var childs = public.utils.getLeafNodes(node.children[k]);
+                result = result.concat(childs);
+            }
+            return result;
+        }else{ // Si no tiene hijos, el mismo nodo ya es hoja
+            return [node]; 
+        }
+    };
+
     public.utils.defaultCostFunction = function (submitMs, deadlineMs, param) { // Funcion de costo por perdida de vencimiento de una actividad
         // Entradas:
         //		- submitMs: es la fecha de entrega expresada en unix time
