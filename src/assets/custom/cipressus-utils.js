@@ -59,15 +59,15 @@
                     if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
                         if (student.submits[node.id].submitted > node.deadline.date) { // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
                             var cost = public.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
-                            if (cost > node.spublic) cost = node.spublic; // Habria que considerar la nota puesta
+                            if (cost > node.score) cost = node.score; // Habria que considerar la nota puesta
                             sum -= cost; // Restar costo
                             if (sum < 0) sum = 0; // La nota no puede ser negativa
                         }
             return sum;
         } else { // Es hoja
-            if(student.spublics){ // Puede que no tenga ninguna calificacion aun
-                if (student.spublics[node.id]) // Si ya esta evaluado este campo
-                    return student.spublics[node.id].spublic * node.spublic / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
+            if(student.scores){ // Puede que no tenga ninguna calificacion aun
+                if (student.scores[node.id]) // Si ya esta evaluado este campo
+                    return student.scores[node.id].score * node.score / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
                 else
                     return 0; // Si no tiene nota, devolver 0
             }else{
@@ -88,7 +88,7 @@
                     id: node.id,
                     parent: parent, // Referencias hacia atras
                     name: node.name,
-                    spublic: node.spublic, // Higcharts calcula este valor y por eso se llama value en las hojas
+                    score: node.score, // Higcharts calcula este valor y por eso se llama value en las hojas
                     dl: node.deadline // Vencimiento si existe
                 });
             } else { // Es hoja, agregar hoja y retornar
@@ -96,7 +96,7 @@
                     id: node.id,
                     parent: parent,
                     name: node.name,
-                    value: node.spublic, // Este dato lo usa highcarts (se calcula para los nodos padres)
+                    value: node.score, // Este dato lo usa highcarts (se calcula para los nodos padres)
                     dl: node.deadline // Vencimiento si existe
                 });
             }
@@ -115,7 +115,7 @@
             
             nodes.push({
                 id: tree.id,
-                label: tree.name+"\nPuntaje: "+tree.spublic,
+                label: tree.name+"\nPuntaje: "+tree.score,
                 shape: "box",
                 color: color ? color : "#555555",                
                 font: { 

@@ -9,7 +9,7 @@
   - [ ] Soporte touch para que el simulador pueda usarse en smarphone.  
 
 
-## Flujo de prueba completa:
+## Flujo de prueba completo:
   Registrarse
   Ser aceptado y vinculado a curso
   Probar simulador, mapa kv, dashboard, calendario, etc.

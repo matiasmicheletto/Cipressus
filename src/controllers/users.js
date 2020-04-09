@@ -285,7 +285,7 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                     Cipressus.db.get('activities/'+$rootScope.user.course)
                         .then(function (activities_data) {
                             $scope.activitiesTree = activities_data;
-                            $scope.activities = Cipressus.utils.getArray(activities_data);                            
+                            $scope.activities = Cipressus.utils.getArray(activities_data);
                             Cipressus.db.getSorted('events/'+$rootScope.user.course,'start') // Lista de eventos ordenados por fecha de inicio
                             .then(function(events_data){
                                 events_data.forEach(function(childSnapshot){
