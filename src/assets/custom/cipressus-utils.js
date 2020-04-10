@@ -49,31 +49,38 @@
         // Entradas:
         //		- student: contiene la informacion de entregas y notas asignadas por los profesores
         //		- node: es el nodo del arbol de actividades al que se le quiere calcular el puntaje total 
+        
+        var sum = 0; // Suma ponderada de calificaciones
+        var cost  = 0; // Suma de costos en puntaje acumulados (ponderados por las subactividades)
+
+        if (node.deadline) // Si la actividad tiene fecha de vencimiento
+            if (student.submits) // Si el alumno tiene alguna entrega
+                if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
+                    if (student.submits[node.id].submitted > node.deadline.date) { // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
+                        cost = public.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
+                        if (cost > node.score) 
+                            cost = node.score; // Habria que considerar la nota puesta
+                    }
 
         if (node.children) { // Si el nodo tiene hijos, calcular suma ponderada de los hijos
-            var sum = 0; // Contador de puntajes
-            for (var k in node.children) // Para cada hijo del nodo
-                sum += public.utils.eval(student, node.children[k]); // Sumar nota obtenida de los hijos
-            if (node.deadline) // Si la actividad tiene fecha de vencimiento
-                if (student.submits) // Si el alumno tiene alguna entrega
-                    if (student.submits[node.id]) // Y si esta actividad ya fue entregada por el alumno y recibida por el profesor
-                        if (student.submits[node.id].submitted > node.deadline.date) { // Si se paso el vencimiento, hay que descontar puntos segun funcion de desgaste
-                            var cost = public.utils.defaultCostFunction(student.submits[node.id].submitted, node.deadline.date, node.deadline.param);
-                            if (cost > node.score) cost = node.score; // Habria que considerar la nota puesta
-                            sum -= cost; // Restar costo
-                            if (sum < 0) sum = 0; // La nota no puede ser negativa
-                        }
-            return sum;
+            for (var k in node.children){ // Para cada hijo del nodo
+                var ev = public.utils.eval(student, node.children[k]); // Calificaciones obtenida de los hijos
+                sum += ev.score; // Puntaje total (ya incluye costo)
+                cost += ev.disc; // Costos discriminados (para saber de que son)
+            }            
         } else { // Es hoja
             if(student.scores){ // Puede que no tenga ninguna calificacion aun
-                if (student.scores[node.id]) // Si ya esta evaluado este campo
-                    return student.scores[node.id].score * node.score / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
-                else
-                    return 0; // Si no tiene nota, devolver 0
-            }else{
-                return 0;
+                if (student.scores[node.id]){ // Si ya esta evaluado este campo
+                    var sc = student.scores[node.id].score * node.score / 100; // Retornar el valor de la nota multiplicado por el puntaje de la actividad
+                    sum = sc;
+                }
             }
         }
+
+        sum -= cost; // Restar costo
+        if (sum < 0) sum = 0; // La nota no puede ser negativa
+        
+        return {score: sum, disc: cost};
     };
 
     public.utils.getArray = function (root) { // Convertir el arbol en arreglo referenciado

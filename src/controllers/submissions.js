@@ -211,9 +211,14 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                         obs: obs // Mensaje del evaluador
                     };
 
-                    var job = []; // Updates
+                    // Actualizar el estado en database
+                    var upd_status = $scope.submissions[$scope.evaluatingKey].status;
+                    upd_status.push(newStatus); // Cargarle el nuevo estado
+
+                    var job = []; // Operaciones de update
                     
-                    job.push(Cipressus.db.update(JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey])),"submissions/"+$rootScope.user.course+"/"+$scope.evaluatingKey)); // Registrar accion en lista de entregas (submissions)
+                    // Registrar accion en lista de entregas (submissions)
+                    job.push(Cipressus.db.update(upd_status,"submissions/"+$rootScope.user.course+"/"+$scope.evaluatingKey+"/status"));
                     
                     for(var k in $scope.submissions[$scope.evaluatingKey].authors){ // Pasarle la nota a cada autor                        
                         

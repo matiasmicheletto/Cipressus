@@ -17,7 +17,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
 
         for (var k in $scope.users) { // Para cada usuario
             if (!$scope.users[k].admin && $scope.users[k].scores && !$scope.users[k].excludeStat) { // Si tiene notas y no es admin y no queda excluido
-                var sc = Cipressus.utils.eval($scope.users[k], $scope.activities) / $scope.activities.score * 100;
+                var sc = (Cipressus.utils.eval($scope.users[k], $scope.activities)).score / $scope.activities.score * 100;
                 scatter_data[k] = { // Este dato se emplea luego para el grafico de correlacion de notas vs actividad
                     score: sc,
                     activity: 0,
@@ -33,7 +33,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
                 for (var j in $scope.activities.children) { // Evaluar tambien las principales actividades
                     tempData.push([
                         $scope.activities.children[j].id,
-                        Cipressus.utils.eval($scope.users[k], $scope.activities.children[j]) / $scope.activities.children[j].score * 100
+                        (Cipressus.utils.eval($scope.users[k], $scope.activities.children[j])).score / $scope.activities.children[j].score * 100
                     ]);
                 }
 

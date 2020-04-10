@@ -72,8 +72,9 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
     var updatePolarPlot = function(){ // Actualizar grafico de notas del alumno seleccionado
         var data = []; // Datos para mostrar en el grafico polar
         // Buscar nodo de la actividad seleccionada
-        $scope.currentNode = Cipressus.utils.searchNode($scope.activitiesTree,"final");         
-        var value = Cipressus.utils.eval($scope.users[$scope.selectedIndex],$scope.currentNode)/$scope.currentNode.score*100;        
+        $scope.currentNode = Cipressus.utils.searchNode($scope.activitiesTree,"final");
+        var sc = Cipressus.utils.eval($scope.users[$scope.selectedIndex],$scope.currentNode);
+        var value = sc.score/$scope.currentNode.score*100;        
         $scope.currentActivityScores = { // Para detallar textualmente
             name: $scope.currentNode.name,
             points: ($scope.currentNode.score*value/100).toFixed(2), 
@@ -82,7 +83,8 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         };
         for(k in $scope.currentNode.children){ // Para cada sub actividad
             // Calcular nota de las sub actividades
-            var subValue = Cipressus.utils.eval($scope.users[$scope.selectedIndex],$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
+            var subsc = Cipressus.utils.eval($scope.users[$scope.selectedIndex],$scope.currentNode.children[k]);
+            var subValue = subsc.score/$scope.currentNode.children[k].score*100;
             // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
             $scope.currentActivityScores.children.push({
                 name: $scope.currentNode.children[k].name, // Nombre de la actividad

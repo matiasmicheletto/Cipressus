@@ -43,7 +43,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             var data = []; // Datos para mostrar en el grafico polar
             // Buscar nodo de la actividad seleccionada
             $scope.currentNode = Cipressus.utils.searchNode($scope.activities,id); 
-            var value = Cipressus.utils.eval($scope.user,$scope.currentNode)/$scope.currentNode.score*100;
+            var sc = Cipressus.utils.eval($scope.user, $scope.currentNode);
+            var value = sc.score / $scope.currentNode.score * 100;
             $scope.currentActivityScores = { // Para detallar textualmente
                 name: $scope.currentNode.name,
                 points: ($scope.currentNode.score*value/100).toFixed(2), 
@@ -52,7 +53,8 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             };
             for(k in $scope.currentNode.children){ // Para cada sub actividad
                 // Calcular nota de las sub actividades
-                var subValue = Cipressus.utils.eval($scope.user,$scope.currentNode.children[k])/$scope.currentNode.children[k].score*100;
+                var subsc = Cipressus.utils.eval($scope.user,$scope.currentNode.children[k]);
+                var subValue = subsc.score/$scope.currentNode.children[k].score*100;
                 // Poner las notas en un arreglo para mostrar en detalles (leyenda) del grafico
                 $scope.currentActivityScores.children.push({
                     name: $scope.currentNode.children[k].name, // Nombre de la actividad
@@ -155,7 +157,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
             if(!$scope.users[k].admin && $scope.users[k].scores && $scope.users[k].course == $rootScope.user.course){ // Si tiene notas, no es admin y coincide con el curso
                 seriesData.push({ // Evaluar e insertar resultado en array
                     name: k,
-                    y: Cipressus.utils.eval($scope.users[k],$scope.activities),
+                    y: (Cipressus.utils.eval($scope.users[k],$scope.activities)).score,
                     color: k==$rootScope.user.uid ? "#FF0000":"#AAAAAA",                    
                     drilldown: k
                 });
@@ -164,7 +166,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                 for(var j in $scope.activities.children){ // Evaluar tambien las principales actividades
                     tempData.push([
                         $scope.activities.children[j].id,
-                        Cipressus.utils.eval($scope.users[k],$scope.activities.children[j])/$scope.activities.children[j].score*100
+                        (Cipressus.utils.eval($scope.users[k],$scope.activities.children[j])).score/$scope.activities.children[j].score*100
                     ]);
                 }
 
