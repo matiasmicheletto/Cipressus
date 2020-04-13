@@ -96,8 +96,8 @@
                             </a>
                             <div class="custom-dropdown-content z-depth-4">
                                 <div class="custom-dropdown-item {{notif.read ? '':'unread-item'}}" 
-                                ng-repeat-start="(idx,notif) in notifications track by $index"
-                                ng-click="openNotification(idx)">
+                                    ng-repeat-start="(idx,notif) in notifications | orderBy:'timestamp':true track by $index" 
+                                    ng-click="openNotification(notif.key)" style="cursor: pointer;">
                                     <p><b>{{notif.title}}</b></p>
                                     <p style="margin-top: -5px;">{{notif.text}}</p>
                                     <p style="font-size: 70%; text-align: right; margin-top: -5px;">{{getTime(6,notif.timestamp)}}</p>
@@ -135,6 +135,9 @@
         </li>
         <li class="no-padding" ng-show="user.enrolled">
             <a href="#/sources" class="collapsible-header">Material<i class="material-icons">local_library</i></a>
+        </li>
+        <li class="no-padding" ng-show="user.enrolled">
+            <a href="#/videos" class="collapsible-header">Videos<i class="material-icons">video_library</i></a>
         </li>
         <li class="no-padding" ng-show="user.enrolled">
             <a href="#/submissions" class="collapsible-header">Entregas<i class="material-icons">open_in_browser</i></a>
@@ -324,6 +327,8 @@
     <script type="text/javascript" src="assets/vendor/vis-network.min.js"></script>
     <script type="text/javascript" src="assets/vendor/quill.min.js"></script>
     <script type="text/javascript" src="assets/vendor/image-resize.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/file-saver.min.js"></script>
+    <script type="text/javascript" src="assets/vendor/jszip.min.js"></script>
     <script type="text/javascript" src="assets/vendor/tone.min.js"></script>
     <script type="text/javascript" src="assets/vendor/simcir.js"></script>
     <script type="text/javascript" src="assets/vendor/simcir-basicset.js"></script>
@@ -340,6 +345,7 @@
     
     
 
+    
     
     
     
