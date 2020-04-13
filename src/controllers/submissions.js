@@ -23,6 +23,26 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     classes: 'rounded green',
                     displayLength: 1500
                 });
+
+                // Notificar admins sobre la nueva entrega
+                Cipressus.db.query("users_private", "admin", true)
+                .then(function(snapshot){
+                    var notif = { // Detalles de la notificacion
+                        icon: "info",
+                        link: "submissions",
+                        title: "Nueva entrega",
+                        text: "Nueva actividad presentada: "+reference.activityName
+                    };
+                    var admins = snapshot.val();
+                    for(var k in admins){
+                        if(admins[k].course == $rootScope.user.course) // Si pertenece al mismo curso
+                            Cipressus.utils.sendNotification(k, notif);
+                    }
+                })
+                .catch(function (err2) {
+                    console.log(err2);
+                });
+
                 $rootScope.loading = false;
                 files_modal.close();
                 $scope.$apply();
@@ -132,7 +152,8 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                 obs: $scope.submissions[key].status[$scope.submissions[key].status.length-1].obs // Copiar original
             };
             $scope.submissions[key].status.push(newStatus); // Agrego el estado al objeto local
-            Cipressus.db.update($scope.submissions[key],"submissions/"+$rootScope.user.course+"/"+key) // Registrar accion
+            var upd = JSON.parse(angular.toJson($scope.submissions[key]));
+            Cipressus.db.update(upd,"submissions/"+$rootScope.user.course+"/"+key) // Registrar accion
             .then(function (res) {
                 M.toast({
                     html: "Movimiento registrado",
@@ -212,7 +233,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     };
 
                     // Actualizar el estado en database
-                    var upd_status = $scope.submissions[$scope.evaluatingKey].status;
+                    var upd_status = JSON.parse(angular.toJson($scope.submissions[$scope.evaluatingKey].status));
                     upd_status.push(newStatus); // Cargarle el nuevo estado
 
                     var job = []; // Operaciones de update
@@ -238,6 +259,15 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                             timestamp: Date.now()
                         };
                         job.push(Cipressus.db.update(sb, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/submits/"+$scope.submissions[$scope.evaluatingKey].activityId));
+
+                        // Notificar autores
+                        var notif = { 
+                            icon: "info",
+                            link: "submissions",
+                            title: "Presentación evaluada",
+                            text: "La actividad "+$scope.submissions[$scope.evaluatingKey].activityName+" que presentaste ya fue calificada."
+                        };
+                        Cipressus.utils.sendNotification($scope.submissions[$scope.evaluatingKey].authors[k], notif);
                     }
 
                     Promise.all(job)               

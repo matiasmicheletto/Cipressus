@@ -129,7 +129,16 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
                         displayLength: 2000
                     });
                     confirmEnrollModal.close();
-                    // #NOTIFICAR USUARIO
+                    
+                    // Notificar al usuario sobre su aceptacion al curso
+                    var notif = { 
+                        icon: "info",
+                        link: "home",
+                        title: "Inscripción aceptada",
+                        text: "Has sido incorporado al curso: "+$scope.activitiesTree.course.name
+                    };
+                    Cipressus.utils.sendNotification($scope.selectedKey, notif);
+
                     $scope.selectedKey = null; // Deseleccionar user
                     $scope.selectedIndex = null;
                     $rootScope.loading = false;
@@ -216,7 +225,14 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         Cipressus.db.update(obj, "users_private/" + $scope.selectedKey)
             .then(function (snapshot) {
 
-                // #NOTIFICAR USUARIO
+                // Notificar al usuario
+                var notif = { 
+                    icon: "info",
+                    link: "dashboard",
+                    title: "Cambios en calificaciones",
+                    text: "Tus calificaciones fueron actualizadas"
+                };
+                Cipressus.utils.sendNotification($scope.selectedKey, notif);
 
                 $scope.users[$scope.selectedIndex].scores = $scope.auxiliaryScores;
                 $scope.users[$scope.selectedIndex].submits = $scope.auxiliarySubmits;

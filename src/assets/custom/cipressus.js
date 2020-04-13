@@ -317,7 +317,22 @@ window.Cipressus = (function () {
 
                     public.db.set(users_public, 'users_public/' + result.user.uid)
                         .then(function (res) {
-                            // #NOTIFICAR ADMINS
+                            // Notificar a los usuarios administradores sobre el nuevo registro
+                            public.db.query("users_private", "admin", true)
+                            .then(function(snapshot){
+                                var notif = { // Detalles de la notificacion
+                                    icon: "info",
+                                    link: "users",
+                                    title: "Nuevo registro",
+                                    text: "Nuevo usuario registrado: "+form.email
+                                };
+                                var admins = snapshot.val();
+                                for(var k in admins)
+                                    public.utils.sendNotification(k, notif);
+                            })
+                            .catch(function (err2) {
+                                console.log(err2);
+                            });
                             return fulfill("Datos de nuevo usuario registrados.");
                         })
                         .catch(function (err) {

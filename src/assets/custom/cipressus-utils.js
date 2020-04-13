@@ -200,7 +200,7 @@
         });
     };
 
-    public.utils.sendNotification = function (data) { // Enviar notificaciones por FCM
+    public.utils.sendFCMNotification = function (data) { // Enviar notificaciones por FCM
         var xhr = new XMLHttpRequest();
         var url = "https://fcm.googleapis.com/fcm/send";
         xhr.open("POST", url, true);
@@ -224,6 +224,29 @@
 
         var msg = JSON.stringify(data);
         xhr.send(msg);
+    };
+
+    public.utils.sendNotification = function(uid, data){
+        /* 
+        data = { // Formato de objeto
+            icon:
+            link:
+            title:
+            text:
+        }
+        */
+
+        var notif = data;
+        notif.uid = uid;
+        notif.timestamp = Date.now();
+        notif.read = false;
+        public.db.push(notif, "notifications")
+        .then(function(){
+            console.log("Notificacion enviada");
+        })
+        .catch(function(err){
+            console.log(err);
+        });
     };
 
     public.utils.generateFileName = function (len) { // Nombres aleatorios para archivos
