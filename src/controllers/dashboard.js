@@ -246,7 +246,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
 
         var first = true; // En la primera pasada por la lista de eventos, genero el arreglo categories
 
-        if($scope.user.attendance){
+        //if($scope.user.attendance){
             var data = []; // Asistencia acumulada por clase
             var evCnt = 0; // Contador de eventos
             var evAtt = 0; // Contador de eventos asistidos
@@ -264,6 +264,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                 }
             }
             first = false;
+            console.log(data);
 
             Highcharts.chart('attendance_container', {
                 chart: {
@@ -283,7 +284,7 @@ app.controller("dashboard", ['$scope','$rootScope','$location', function ($scope
                     data: data
                 }]
             });
-        }
+        //}
     };
 
     // Inicializacion 

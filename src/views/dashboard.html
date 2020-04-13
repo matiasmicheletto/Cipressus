@@ -1,10 +1,10 @@
 <div class="container">
-    <h3 class="center">Dashboard</h3>
+    <h3>Tablero de desempeño</h3>
     <h5 class="grey-text text-lighten-1" ng-hide="user"><i>Aguarde a ser habilitado por los administradores para poder consultar sus calificaciones</i></h5>
 </div>
 
 
-<div class="row {{user?'':'container'}}">
+<div class="row dashboard-container">
     <!-- Arbol de actividades -->
     <div class="col {{user ? 's12 m6 l6':'s12'}}">
         <div class="card hoverable z-depth-1">
@@ -34,7 +34,7 @@
 </div>
 
 <!-- Posicion dentro del curso -->
-<div class="row">
+<div class="row dashboard-container">
     <div class="card hoverable z-depth-1">
         <div class="card-content">
             <div id="barplot_container"></div>
@@ -46,7 +46,7 @@
 </div>
 
 <!-- Historial de asistencia a clase -->
-<div class="row">
+<div class="row dashboard-container">
     <div class="card hoverable z-depth-1">
         <div class="card-content">
             <div id="attendance_container"></div>            
@@ -54,7 +54,7 @@
     </div>    
 </div>
 
-<div class="row">    
+<div class="row dashboard-container">    
     <!-- Proximos eventos -->
     <div class="col {{user ? 's12 m6 l6':'s12'}}">    
         <div class="card hoverable z-depth-1" ng-show="events">
