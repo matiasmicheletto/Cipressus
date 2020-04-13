@@ -9,99 +9,134 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         $scope.selectedActivity = null;
     };
 
-    var pushSubmission = function(reference){ // Cargar la entrega a la db
-        $rootScope.loading = true; // Puede que ya este en true desde antes
-        Cipressus.db.push(reference,"submissions/"+$rootScope.user.course)
-            .then(function (res2) {
-                //console.log(res2);
-                $scope.submissions[res2.key] = reference;
-                $scope.submCnt++;
-                document.getElementById("fileInput").files[0] = null;
-                document.getElementById("fileInputText").value = "";
-                M.toast({
-                    html: "Entrega realizada correctamente",
-                    classes: 'rounded green',
-                    displayLength: 1500
-                });
-
-                // Notificar admins sobre la nueva entrega
-                Cipressus.db.query("users_private", "admin", true)
-                .then(function(snapshot){
-                    var notif = { // Detalles de la notificacion
-                        icon: "info",
-                        link: "submissions",
-                        title: "Nueva entrega",
-                        text: "Nueva actividad presentada: "+reference.activityName
-                    };
-                    var admins = snapshot.val();
-                    for(var k in admins){
-                        if(admins[k].course == $rootScope.user.course) // Si pertenece al mismo curso
-                            Cipressus.utils.sendNotification(k, notif);
-                    }
-                })
-                .catch(function (err2) {
-                    console.log(err2);
-                });
-
-                $rootScope.loading = false;
-                files_modal.close();
-                $scope.$apply();
-            })
-            .catch(function (err2) {
-                console.log(err2);
-                M.toast({
-                    html: "Ocurrió un error al subir el archivo",
-                    classes: 'rounded red',
-                    displayLength: 1500
-                });
-                $rootScope.loading = false;
-                $scope.$apply();
-            });
-    };
-
     $scope.pushFile = function () { // Agregar archivos de entrega
         
         if($scope.selectedActivity){ // Si eligio el nombre de la actividad correctamente, continuar
-            var file = document.getElementById("fileInput").files[0];
-            if(file){ // Si el input tiene archivos
+            
+            var observs = document.getElementById("obsTextarea").value; // Observaciones
+            if(!observs) observs = ""; // Evitar que la variable sea undefined o null
+
+            var submission_data = { // Objeto a subir a db
+                activityId: $scope.selectedActivity.id,
+                activityName: $scope.selectedActivity.name,
+                created: Date.now(),
+                authors: [$rootScope.user.uid].concat($rootScope.user.partners ? $rootScope.user.partners:[]), // Comision
+                status: [{ // Estados de la evaluacion (se concatenan)
+                    timestamp: Date.now(),
+                    action: 0, // 0 -> subido, 1 -> evaluando, 2 -> revisar, 3 -> evaluado
+                    display: "Archivo subido",
+                    user: $rootScope.user.uid, // Usuario que realizo la ultima accion
+                    obs: observs // Cada status lleva un mensaje opcional
+                }]
+            };
+
+            if($scope.selectedSim) // Si hay simulacion
+                submission_data.simulation = angular.copy($scope.selectedSim);
+
+            var files = document.getElementById("fileInput").files;
+            if(files.length > 0){ // Si el input tiene archivos
                 $rootScope.loading = true;
-                var filename = Cipressus.utils.generateFileName(25) + "." + file.name.split(".")[1];
-                var observs = document.getElementById("obsTextarea").value; // Observaciones
-                if(!observs) observs = ""; // Evitar que la variable sea undefined o null
-                Cipressus.storage.put(file,"Submissions",filename)
-                .then(function (res) {
-                    //console.log(res);
-                    var reference = {
-                        name: file.name.split(".")[0], // Extraer nombre de archivo
-                        activityId: $scope.selectedActivity.id,
-                        activityName: $scope.selectedActivity.name,
-                        created: Date.now(),
-                        type: "report", // Tipo de entrega
-                        size: res.size, // Tamanio de archivo
-                        format: file.name.split(".")[1] ? file.name.split(".")[1] : "indef.", // Extension del archivo
-                        link: res.url, // Url 
-                        filename: filename, // Nombre de archivo en el storage
-                        authors: [$rootScope.user.uid].concat($rootScope.user.partners ? $rootScope.user.partners:[]), // Comision
-                        status: [{ // Estados de la evaluacion (se concatenan)
-                            timestamp: Date.now(),
-                            action: 0, // 0 -> subido, 1 -> evaluando, 2 -> revisar, 3 -> evaluado
-                            display: "Archivo subido",
-                            user: $rootScope.user.uid, // Usuario que realizo la ultima accion
-                            obs: observs // Cada status lleva un mensaje opcional
-                        }]
-                    };
-                    pushSubmission(reference);
-                })
-                .catch(function (err) {
-                    console.log(err);
-                    M.toast({
-                        html: "Ocurrió un error al subir el archivo",
-                        classes: 'rounded red',
-                        displayLength: 1500
-                    });
-                    $rootScope.loading = false;
-                    $scope.$apply();
+
+                var fr = new FileReader();
+                var k = 0; // Indice de archivos
+                var attached = [];
+                
+                fr.addEventListener("load", function (e) {
+                    attached.push({data: e.target.result,name: files[k].name});
+                    k++; // Pasar al siguiente
+                    if (k == files.length) { // Fin
+                        //console.log(data);
+                        //console.log(attached);
+                        try{ // Comprimir todo lo que subio
+                            var zip = new JSZip();
+                            for(var j in attached)
+                                zip.file(attached[j].name, attached[j].data.split(',')[1], {base64:true});
+                            zip.generateAsync({type:"blob"})
+                            .then(function(content) {
+
+                                // Completar el resto de los datos del objeto a subir a db
+                                submission_data.filename = Cipressus.utils.generateFileName(25) + ".zip"; // Nombre del archivo autogenerado
+                                Cipressus.storage.put(content,"Submissions", submission_data.filename)
+                                    .then(function (res) {
+                                        //console.log(res);
+                                        // Completar el resto de los datos del objeto a subir a db
+                                        submission_data.size = res.size;
+                                        submission_data.link = res.url;
+
+                                        // Subir datos de la entrega a db
+                                        Cipressus.db.push(submission_data,"submissions/"+$rootScope.user.course)
+                                        .then(function (res2) {
+                                            //console.log(res2);
+                                            $scope.submissions[res2.key] = submission_data;
+                                            $scope.submCnt++;
+                                            document.getElementById("fileInput").files = null;
+                                            document.getElementById("fileInputText").value = "";
+                                            M.toast({
+                                                html: "Entrega realizada correctamente",
+                                                classes: 'rounded green',
+                                                displayLength: 1500
+                                            });
+                                            // Notificar admins sobre la nueva entrega
+                                            Cipressus.db.query("users_private", "admin", true)
+                                            .then(function(snapshot){
+                                                var notif = { // Detalles de la notificacion
+                                                    icon: "info",
+                                                    link: "submissions",
+                                                    title: "Nueva entrega",
+                                                    text: "Nueva actividad presentada: "+submission_data.activityName
+                                                };
+                                                var admins = snapshot.val();
+                                                for(var k in admins){
+                                                    if(admins[k].course == $rootScope.user.course) // Si pertenece al mismo curso
+                                                        Cipressus.utils.sendNotification(k, notif);
+                                                }
+                                            })
+                                            .catch(function (err2) {
+                                                console.log(err2);
+                                            });
+                                            $rootScope.loading = false;
+                                            files_modal.close();
+                                            $scope.$apply();
+                                        })
+                                        .catch(function (err2) {
+                                            console.log(err2);
+                                            M.toast({
+                                                html: "Ocurrió un error al subir el archivo",
+                                                classes: 'rounded red',
+                                                displayLength: 1500
+                                            });
+                                            $rootScope.loading = false;
+                                            $scope.$apply();
+                                        });
+                                    })
+                                    .catch(function (err) {
+                                        console.log(err);
+                                        M.toast({
+                                            html: "Ocurrió un error al subir el archivo",
+                                            classes: 'rounded red',
+                                            displayLength: 1500
+                                        });
+                                        $rootScope.loading = false;
+                                        $scope.$apply();
+                                    });
+
+
+                            });
+                        }catch(err){
+                            console.log(err);
+                            M.toast({
+                                html: "Ocurrió un error al comprimir adjuntos.",
+                                classes: 'rounded red',
+                                displayLength: 1500
+                            });
+                            $rootScope.loading = false;
+                            $scope.$apply();
+                        }
+                    }else{ // Leer siguiente
+                        fr.readAsDataURL(files[k]);
+                    }
                 });
+                fr.readAsDataURL(files[k]);
             }else{ // Si no ingreso ningun archivo
                 console.log("Problema con el archivo");
                 M.toast({
@@ -120,29 +155,16 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         }
     };
 
-    $scope.submitSim = function(){ // Presentacion de simulacion
-        var reference = {
-            name: $scope.selectedSim.name, // Nombre de la simulacion
-            activityId: $scope.selectedActivity.id,
-            activityName: $scope.selectedActivity.name,
-            created: Date.now(), // Fecha de entrega
-            type: "sim", // Tipo de entrega
-            size: $scope.selectedSim.size, // Tamanio del modelo
-            format: "simcir", // Para respetar el formato
-            data: $scope.selectedSim.data, // Va el modelo del circuito guardado
-            authors: [$rootScope.user.uid].concat($rootScope.user.partners ? $rootScope.user.partners:[]), // Comision
-            status: [{ // Estados de la evaluacion (se concatenan)
-                timestamp: Date.now(),
-                action: 0, // 0 -> subido, 1 -> evaluando, 2 -> revisar, 3 -> evaluado
-                display: "Archivo subido",
-                user: $rootScope.user.uid, // Usuario que realizo la ultima accion
-                obs: document.getElementById("obsTextarea").value || "" // Mensaje opcional
-            }]
-        };
-        pushSubmission(reference);
-    };
-
     $scope.downloaded = function(key, subm){ // Agregar registro de movimiento sobre este archivo
+        
+        var openSubmission = function(){ // Abrir adjunto o simulacion
+            window.open(subm.link);    
+            if(subm.simulation){
+                $rootScope.openSimulation = subm.simulation.data; // Pasar modelo como string al controller del simulador
+                $location.path("/simulator");
+            }
+        }
+        
         if($scope.submissions[key].status[$scope.submissions[key].status.length-1].action == 0){ // Solo la primera vez
             var newStatus = { // Nuevo estado del envio a registrar
                 timestamp: Date.now(),
@@ -160,6 +182,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     classes: 'rounded green',
                     displayLength: 1000
                 });
+                openSubmission();
             })
             .catch(function (err) {
                 console.log(err);
@@ -175,18 +198,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                 classes: 'rounded cyan',
                 displayLength: 1500
             });
-        }
-        // Abrir el enlace
-        switch(subm.type){
-            case "report": // Abrir archivo cargado
-                window.open(subm.link,'_blank','noopener');    
-                break;
-            case "sim":
-                $rootScope.openSimulation = subm.data; // Pasar modelo como string al controller del simulador
-                $location.path("/simulator");
-                break;
-            default:
-                break;
+            openSubmission();
         }
     };
 
@@ -351,25 +363,21 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         }
 
         $rootScope.loading = true;
-        if($scope.submissions[$scope.fileKeyToDelete].type == "report"){
-            Cipressus.storage.delete($scope.submissions[$scope.fileKeyToDelete].filename, "Submissions")
-                .then(function (res) {
-                    // Borrar la referencia de la db
-                    deleteDBRef();
-                })
-                .catch(function (err) {
-                    console.log(err);
-                    M.toast({
-                        html: "Ocurrio un error al eliminar archivos",
-                        classes: 'rounded red',
-                        displayLength: 1500
-                    });
-                    $rootScope.loading = false;
-                    $scope.$apply();
+        Cipressus.storage.delete($scope.submissions[$scope.fileKeyToDelete].filename, "Submissions")
+            .then(function (res) {
+                // Borrar la referencia de la db
+                deleteDBRef();
+            })
+            .catch(function (err) {
+                console.log(err);
+                M.toast({
+                    html: "Ocurrió un error al eliminar archivos. Intente más tarde",
+                    classes: 'rounded red',
+                    displayLength: 1500
                 });
-        }else{ // Si no es con entrega almacenada en storage, solo eliminar la referencia
-            deleteDBRef();
-        }   
+                $rootScope.loading = false;
+                $scope.$apply();
+            });
     };
 
 
@@ -439,33 +447,33 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                             type: $scope.activities[actIdx].dl.submit // Tipo de actividad (informe, simulacion, test)
                         };
 
-                        if($scope.activities[actIdx].dl.submit == "sim"){ // Si la actividad es tipo simulacion, hay que descargar las guardadas
-                            $rootScope.loading = true;
-                            $scope.$apply();
-                            $scope.simulations = []; // Lista de simulaciones
-                            Cipressus.db.query("simulations", "uid", $rootScope.user.uid)
-                            .then(function(snapshot){
-                                snapshot.forEach(function(sim){
-                                    var simObj = sim.val();
-                                    simObj.id = sim.key; // Id en el arbol de simulaciones
-                                    simObj.index = $scope.simulations.length; // Para ubicarlo en el objeto
-                                    $scope.simulations.push(simObj);
-                                });
-                                $rootScope.loading = false;
-                                $scope.$apply();
-                                M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
-                                document.getElementById("simulation_select").addEventListener("change",function(){ // Callback al elegir actividad para entregar informe
-                                    var sim_sel = document.getElementById("simulation_select");
-                                    var simIdx = $scope.simulations.findIndex(function(x){ return x.id == sim_sel.options[sim_sel.selectedIndex].value}); // Buscar la simulacion seleccionada
-                                    $scope.selectedSim = $scope.simulations[simIdx];
-                                });
-                            })
-                            .catch(function(err){
-                                console.log(err);
+                        // Descargar simulaciones guardadas
+                        $rootScope.loading = true;
+                        $scope.$apply();
+                        $scope.simulations = []; // Lista de simulaciones
+                        Cipressus.db.query("simulations", "uid", $rootScope.user.uid)
+                        .then(function(snapshot){
+                            snapshot.forEach(function(sim){
+                                var simObj = sim.val();
+                                simObj.id = sim.key; // Id en el arbol de simulaciones
+                                simObj.index = $scope.simulations.length; // Para ubicarlo en el objeto
+                                $scope.simulations.push(simObj);
                             });
-                        }else{
+                            $rootScope.loading = false;
                             $scope.$apply();
-                        }
+                            M.FormSelect.init(document.querySelectorAll('select'), {}); // Inicializar select
+                            document.getElementById("simulation_select").addEventListener("change",function(){ // Callback al elegir actividad para entregar informe
+                                var sim_sel = document.getElementById("simulation_select");
+                                var simIdx = $scope.simulations.findIndex(function(x){ return x.id == sim_sel.options[sim_sel.selectedIndex].value}); // Buscar la simulacion seleccionada
+                                if(simIdx >= 0) // Si se encuentra el indice
+                                    $scope.selectedSim = $scope.simulations[simIdx];
+                                else
+                                    $scope.selectedSim = null;
+                            });
+                        })
+                        .catch(function(err){
+                            console.log(err);
+                        });
                     });
                 })
                 .catch(function (err) {

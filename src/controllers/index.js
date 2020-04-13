@@ -171,7 +171,8 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
         return bytes.toFixed(1)+' '+units[u];
     };
 
-    $rootScope.openNotification = function(idx){ // Abrir enlace de notificacion y marcar leida
+    $rootScope.openNotification = function(key){ // Abrir enlace de notificacion y marcar leida
+        var idx = $rootScope.notifications.findIndex(function(el){return el.key == key});
         if(!$rootScope.notifications[idx].read){ // Si no estaba leida, cambiar estado
             $rootScope.notifications[idx].read = true;
             $rootScope.notifCnt--; // Descontar contador
@@ -203,8 +204,9 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {});
 
     $rootScope.signOut = function(){ // Callback para el boton de salir
-        $location.path("/login"); // #TODO: navigation no debe forzar ir a login
+        $location.path("/login");
         $rootScope.userLogged = false;
+        Cipressus.db.stopListener("notifications"); // Detener escuchador de notificaciones para que no de error
         Cipressus.users.signOut()
         .then(function(res){
             console.log(res);
@@ -212,7 +214,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
             M.toast({html: "Hasta pronto!",classes: 'rounded green darken-3',displayLength: 1500});
         })
         .catch(function(err){
-            console.log(err[0]);
+            console.log(err);
             M.toast({html: err[1],classes: 'rounded green darken-3',displayLength: 1500});
         });
     };

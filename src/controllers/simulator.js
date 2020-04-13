@@ -446,13 +446,16 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
 
     window.onresize = function(ev){ // Simulador responsive
         // Dimensiones del card (que es responsive)
-        var w = document.getElementById('simcir').clientWidth;
-        var h = document.getElementById('simcir').clientHeight;
-        //console.log(h,w);
-        var el = document.getElementsByClassName("simcir-workspace")[0]; // Div contenedor (generado por simcir)
-        el.setAttribute("viewBox", "0 0 "+w+" "+h); // Dimensiones del svg
-        el.setAttribute("width", w); // Escala
-        el.setAttribute("height", h); 
+        var container = document.getElementById('simcir');
+        if(container){ // Al salir del simulador, se borra el contenedor
+            var w = container.clientWidth;
+            var h = container.clientHeight;
+            //console.log(h,w);
+            var el = document.getElementsByClassName("simcir-workspace")[0]; // Div contenedor (generado por simcir)
+            el.setAttribute("viewBox", "0 0 "+w+" "+h); // Dimensiones del svg
+            el.setAttribute("width", w); // Escala
+            el.setAttribute("height", h); 
+        }
     };
 
     Cipressus.utils.activityCntr($rootScope.user.uid, "simulator").catch(function (err) {console.log(err)});

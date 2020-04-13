@@ -42,15 +42,7 @@ window.Cipressus = (function () {
     };
 
     public.db.stopListener = function(path){ // Detener escuchador
-        return new Promise(function (fulfill, reject) {
-            firebase.database().ref(path).off()
-                .then(function () {
-                    return fulfill();
-                })
-                .catch(function (error) {
-                    return reject(error);
-                });
-        });
+        firebase.database().ref(path).off();
     };
 
     public.db.get = function (path) { // Descargar informacion de la db
