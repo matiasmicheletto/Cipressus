@@ -73,6 +73,7 @@ gulp.task('replace', function(){
     .pipe(replace('<script type="text/javascript" src="controllers/simulator.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/kMaps.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/tables.js"></script>', ''))
+    .pipe(replace('<script type="text/javascript" src="controllers/videos.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/users.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/stats.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="controllers/attendance.js"></script>', ''))

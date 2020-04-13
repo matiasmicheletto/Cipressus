@@ -1,0 +1,77 @@
+<div class="container">
+    <h4>Videos</h4>    
+
+    <h5 class="grey-text text-lighten-1" ng-hide="videos">
+        <br><br>
+        <i>Aún no hay contenido en esta sección</i>
+    </h5>
+
+    <div ng-if="videos" class="row" style="margin-bottom: 110px;">
+        <div class="col s12 m4 l4 videoGallery" ng-repeat="(key,video) in videos track by $index">
+            <div class="right">
+                <a title="Eliminar" ng-show="user.admin" class="btn-flat modal-trigger waves-effect waves-grey"
+                data-target="confirm_delete_modal" ng-click="selectVideo(key)"><i class="small material-icons">delete</i></a>
+                <br>
+                <a title="Editar titulo" ng-show="user.admin" class="btn-flat modal-trigger waves-effect waves-grey"
+                data-target="video_edit_modal" ng-click="selectVideo(key)"><i class="small material-icons">edit</i></a>
+            </div>
+            <p>{{video.title}}</p>
+            <div class="video-container">
+                <iframe ng-if="video.source=='youtube'" width="640" height="480" ng-src="{{'//www.youtube.com/embed/'+video.link+'?rel=0' | trusted}}" frameborder="0" allowfullscreen></iframe>
+                <iframe ng-if="video.source=='drive'" width="640" height="480" ng-src="{{'https://drive.google.com/file/d/'+video.link+'/preview' | trusted}}" frameborder="0" allowfullscreen></iframe>
+            </div>    
+        </div>
+    </div>
+    
+    <div class="fixed-action-btn" ng-show="user.admin">
+        <a title="Agregar" class="btn-floating btn-large green darken-1 pulse modal-trigger" data-target="video_edit_modal" ng-click="selectVideo()"><i class="large material-icons">add</i></a>
+    </div>
+    
+</div>
+
+
+
+<div id="video_edit_modal" class="modal modal-fixed-footer" ng-show="user.admin">
+    <div class="modal-content">
+        <h4>Configuración de video</h4>
+        <div class="row">            
+            <div class="input-field col s12">
+                <input id="video_name_input" type="text" ng-model="selectedVideo.title">
+                <label for="video_name_input">Titulo</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="video_link_input" type="text" ng-model="selectedVideo.link">
+                <label for="video_link_input">Link</label>
+            </div>
+            <div class="input-field col s12">
+                <select id="video_source">
+                    <option value="" disabled selected>Elija una opción</option>
+                    <option value="youtube">Youtube</option>
+                    <option value="drive">Drive</option>
+                </select>
+                <label for="video_source">Origen del enlace</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
+        <a class="waves-effect waves-white btn green darken-3" ng-click="saveVideo()">Guardar</a>
+    </div>
+</div>
+
+<div id="confirm_delete_modal" class="modal modal-fixed-footer" ng-show="user.admin">
+    <div class="modal-content">
+        <h5>Confirme la operación</h5>
+        <p>¿Está seguro que desea eliminar el video seleccionado?</p>
+        <p><b>Nombre: </b>{{selectedVideo.title}}</p>        
+        <p><b>Subido: </b>{{readableTime(selectedVideo.uploaded)}}</p>
+        <br>
+        <p>Esta operación no se puede deshacer.</p>
+    </div>
+    
+    <div class="modal-footer">      
+        <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
+        <a class="waves-effect waves-white btn green darken-3" ng-click="confirmDelete()">Eliminar</a>
+    </div>
+</div>
+

@@ -20,6 +20,7 @@ module.exports = {
           'src/controllers/simulator.js',
           'src/controllers/kMaps.js',
           'src/controllers/tables.js',
+          'src/controllers/videos.js',
           'src/controllers/users.js',
           'src/controllers/stats.js',
           'src/controllers/attendance.js',

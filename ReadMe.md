@@ -214,7 +214,15 @@ Cipressus es un LCMS que pone a disposición de los practicantes de sistemas dig
       ".read" : "auth != null",
       ".write" : "root.child('users_private/'+auth.uid+'/admin').val() === true"  
     },
+    "videos":{
+      ".read" : "auth != null",
+      ".write" : "root.child('users_private/'+auth.uid+'/admin').val() === true"  
+    },
     "submissions":{
+      ".read":"auth != null",
+      ".write":"auth != null"
+    },
+    "simulations":{
       ".read":"auth != null",
       ".write":"auth != null"
     },
