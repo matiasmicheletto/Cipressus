@@ -298,7 +298,7 @@
                 <div class="col s4 offset-s2">
                     <select class="browser-default" id="portSelect">
                         <option value="" selected>Elija una opción</option>
-                        <option value="{{key}}" ng-repeat="(key,port) in serialPorts">{{port.comName}}</option>
+                        <option value="{{key}}" ng-repeat="(key,port) in serialPorts track by $index">{{port.name}} ({{port.man}})</option>
                     </select>
                 </div>
                 <div class="col s4">

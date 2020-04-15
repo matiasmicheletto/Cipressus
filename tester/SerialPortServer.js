@@ -6,7 +6,7 @@
     *  Copyright   : GPLv3
     *  Description : Server para probador de circuitos digitales - Cipressus    
     *
-    *  Copyright (c) 2019
+    *  Copyright (c) 2020
     *  Matias Micheletto <matias.micheletto@uns.edu.ar>
     *  Departamento de Ingeniería Eléctrica - Universidad Nacional del Sur
     *  Cátedra de Diseño de Circuitos Logicos (2559)
@@ -33,14 +33,19 @@ const baudrate = 57600; // Velocidad de puerto serie
 var client; // Cliente conectado (solo se usa el ultimo en conectarse)
 var tester; // Puerto serie que se crea cuando el cliente manda el nombre del puerto
 
-// Generar lista de puertos serie disponibles (se hace al principio por lo tanto hay que rein)
+// Generar lista de puertos serie disponibles (se hace al principio por lo tanto hay que reiniciar el script al reconectar probador)
 var serialPorts = []; // Lista de puertos serie
 console.log("Lista de puertos: ");
-SerialPort.list(function (err, ports) {
+SerialPort.list()
+.then(function (ports) {
     ports.forEach(function (port) {
-        console.log(port.comName+'\t'+port.pnpId+'\t'+port.manufacturer);
+    	//console.log(port); // Imprimir el objeto completo
+        console.log((port.comName||port.path)+'\t'+port.pnpId+'\t'+port.manufacturer);
         serialPorts.push(port);
     });
+})
+.catch(function(err){
+    console.log(err);
 });
 
 var openSerialPort = function(portName){ // Cuando el cliente selecciona puerto, conectar
@@ -89,7 +94,7 @@ wss.on('connection', function (cl) { // Callback de conexion con nuevo cliente
             //console.log(data);
             // El primer mensaje que envia el cliente es el puerto al que quiere conectarse
             if (typeof(data) != null && serialPorts[data]) // Si el objeto se parseo bien, conectar con puerto serie
-                openSerialPort(serialPorts[data].comName);
+                openSerialPort(serialPorts[data].comName || serialPorts[data].path);
             else
                 console.log("Error de comando recibido. Puerto serie desconectado");
         }
@@ -104,5 +109,11 @@ wss.on('connection', function (cl) { // Callback de conexion con nuevo cliente
     });
 
     // Enviar al cliente conectado, la lista de puertos serie disponibles
-    client.send(JSON.stringify(serialPorts));
+    var sPorts = []; // Utilizar una lista paralela para evitar dependencia con serialport.js
+    for(var k in serialPorts)
+    	sPorts.push({
+    		name: serialPorts[k].comName || serialPorts[k].path, // Nombre del puerto
+    		man: serialPorts[k].manufacturer // Fabricante (si arduino original debe mostrarse bien)
+    	});
+    client.send(JSON.stringify(sPorts)); // Enviar lista
 });
