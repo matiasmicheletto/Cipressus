@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link type="text/css" rel="stylesheet" href="css/style.css" />
+  <meta charset=utf-8>
+  <title>Cliente IPCam</title>
+</head>
+
+<body>
+  <!-- Fondo con captura de video y audio -->
+  <div class="media-container">
+    <img id="video" class="video"/>
+    <object id="audio" class="audio" type="text/html"></object>
+  </div>
+
+  <!-- Inputs -->
+  <div class="config">
+    <form id="form" name="form" action="" method="GET">
+      <div class="config-input">
+        <label for="camera-ip-input">Webcam IP:</label>
+        <input type="text" name="camera-ip-input" id="camera-ip-input">
+      </div>
+      
+      <div class="config-input">
+        <label for="port-input">Puerto:</label>
+        <input type="text" name="port-input" id="port-input">
+      </div>
+
+      <div class="config-input">
+        <input type="checkbox" id="audio-enabled-input" name="audio-enabled-input" onchange="toggleAudio()">
+        <label for="audio-enabled-input">Audio</label>
+      </div>
+
+      <div class="config-input">
+        <button type="button" name="connetct-button" value="Load" onclick="readConfig(this.form)">Recargar</button>
+      </div>
+    </form>
+  </div>
+
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+</body>
+
+</html>
