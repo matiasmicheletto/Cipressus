@@ -17,10 +17,11 @@ gulp.task('clean', function(){
 // Copiar librerias, vistas, manifest, configuraciones e index.html a la carpeta de produccion
 gulp.task('copy', function () {
   var paths = [
+    { src: './tester/**/*', dest: './public/tester' }, // Sources para el probador
+    { src: './ip-cam/**/*', dest: './public/ip-cam' }, // Camara ip para clases virtuales
     { src: './src/assets/vendor/**/*', dest: './public/assets/vendor' },
     { src: './src/assets/custom/simcir*', dest: './public/assets/custom' },
     { src: './src/images/**/*', dest: './public/images' },
-    { src: './tester/**/*', dest: './public/tester' },
     { src: './src/views/**/*', dest: './public/views' },
     { src: './src/style/**/*', dest: './public/style' },
     { src: './src/firebase-messaging-sw.js', dest: './public/' },
