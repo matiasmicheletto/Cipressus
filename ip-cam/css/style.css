@@ -10,8 +10,8 @@
 
 .video {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: 1;
     overflow: hidden;
 }
@@ -26,4 +26,12 @@
 .config-input{
     white-space:nowrap;
     padding-bottom: 10px;
+}
+
+.rotate90{
+    -moz-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
 }

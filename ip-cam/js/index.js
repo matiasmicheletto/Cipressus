@@ -13,7 +13,6 @@ window.onkeydown = function(){
 };
 
 
-
 // Configuracion del cliente (IP y puerto)
 var config = JSON.parse(localStorage.getItem("config"));
 if(config){ // Si habia configuracion cargada, presetear
@@ -24,7 +23,8 @@ if(config){ // Si habia configuracion cargada, presetear
     config = {
         cameraIp: "192.168.0.143",
         port: "4747",
-        audio: false
+        audio: false,
+        rotate: false
     };
     localStorage.setItem("config", JSON.stringify(config));
 }
@@ -53,6 +53,17 @@ const toggleAudio = function(){ // Alternar audio
         document.getElementById("audio").setAttribute('data', audioSrc);
     }else{
         document.getElementById("audio").setAttribute('data', "");
+    }
+    localStorage.setItem("config", JSON.stringify(config));
+};
+
+const rotateVideo = function(){ // Alternar landscape/portrait
+    config.rotate = document.getElementById("rotate-enabled-input").checked;
+    var video = document.getElementById("video");
+    if(config.rotate){
+        video.classList.add("rotate90");
+    }else{
+        video.classList.remove("rotate90");
     }
     localStorage.setItem("config", JSON.stringify(config));
 };

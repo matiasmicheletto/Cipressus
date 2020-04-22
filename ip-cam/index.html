@@ -10,7 +10,7 @@
 <body>
   <!-- Fondo con captura de video y audio -->
   <div class="media-container">
-    <img id="video" class="video"/>
+    <img id="video" class="video rotate90"/>
     <object id="audio" class="audio" type="text/html"></object>
   </div>
 
@@ -30,6 +30,8 @@
       <div class="config-input">
         <input type="checkbox" id="audio-enabled-input" name="audio-enabled-input" onchange="toggleAudio()">
         <label for="audio-enabled-input">Audio</label>
+        <input type="checkbox" id="rotate-enabled-input" name="rotate-enabled-input" onchange="rotateVideo()">
+        <label for="rotate-enabled-input">Rotar</label>
       </div>
 
       <div class="config-input">
