@@ -551,6 +551,7 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
 
         // Calcular desvio estandar
         var stdScales = [0,0,0,0];
+        dataCnt = 0;
         for(var k in $scope.users){ // Calcular desvio de resultados
             if($scope.users[k].test_fs && !$scope.users[k].excludeStat)
                 if($scope.users[k].test_fs.answers){
