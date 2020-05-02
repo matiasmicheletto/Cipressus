@@ -172,7 +172,8 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                 action: 1, // 0 -> subido, 1 -> evaluando (descargado), 2 -> revisar, 3 -> evaluado
                 display: "Archivo en revisión",
                 user: $rootScope.user.uid, // Usuario que realizo la ultima accion
-                obs: $scope.submissions[key].status[$scope.submissions[key].status.length-1].obs // Copiar original
+                //obs: $scope.submissions[key].status[$scope.submissions[key].status.length-1].obs // Copiar original --> Por?
+                obs: ""
             };
             $scope.submissions[key].status.push(newStatus); // Agrego el estado al objeto local
             var upd = JSON.parse(angular.toJson($scope.submissions[key]));
