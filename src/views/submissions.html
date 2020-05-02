@@ -35,7 +35,8 @@
           <a title="Historial" class="waves-effect waves-light blue darken-3 btn-small btn-floating z-depth-3"
             ng-click="viewSubm(key)"><i class="material-icons">history</i></a>
           <a title="Eliminar"
-            class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger {{!user.admin && (row.status[row.status.length-1].action > 0) ? 'disabled':''}}"
+            class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger 
+              {{!user.admin && (row.status[row.status.length-1].action == 1 || row.status[row.status.length-1].action == 3) ? 'disabled':''}}"
             data-target="confirm_delete_modal" ng-click="deleteFile(key)"><i class="material-icons">delete</i></a>
           <a title="Evaluar" ng-show="user.admin && row.status[row.status.length-1].action == 1" title="Corregido"
             class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3"
@@ -113,7 +114,7 @@
 
   <div class="modal-footer">
     <a class="modal-close waves-effect waves-white btn grey">Cancelar</a>
-    <a class="waves-effect waves-white btn green darken-3" ng-click="confirmDelete()">Eliminar</a>
+    <a ng-show="user.admin || submissions[fileKeyToDelete].status[ submissions[fileKeyToDelete].status.length-1 ].action == 0 || submissions[fileKeyToDelete].status[ submissions[fileKeyToDelete].status.length-1 ].action == 2" class="waves-effect waves-white btn green darken-3" ng-click="confirmDelete()">Eliminar</a>
   </div>
 </div>
 

@@ -162,6 +162,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
             if(subm.simulation){
                 $rootScope.openSimulation = subm.simulation.data; // Pasar modelo como string al controller del simulador
                 $location.path("/simulator");
+                $scope.$apply();
             }
         }
         

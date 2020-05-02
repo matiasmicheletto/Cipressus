@@ -35,8 +35,8 @@ Cipressus.db.get('users_public') // Descargar lista de usuarios
             stdScales[j] = Math.round(Math.sqrt(stdScales[j] / dataCnt) * 100) / 100; // Formula std (redondeo 2 decimales)
 
         console.log("Resultados");
-        console.log("Usuarios: "+Object.getOwnPropertyNames(users).length);
-        console.log("Cantidad: "+dataCnt);
+        console.log("Total usuarios: "+Object.getOwnPropertyNames(users).length);
+        console.log("Tests realizados: "+dataCnt);
         console.log(avgScales);
         console.log(stdScales);
     })
