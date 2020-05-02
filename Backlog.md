@@ -1,8 +1,6 @@
 # Backlog
 
-  - [ ] Ocultar tablero de asistencia a clase (por unica vez).
   - [ ] Que no puedan elegir compañeros fuera del curso o admins
-  - [ ] Comentario duplicado cuando se cambia el estado por "en revision"
   - [ ] Reparar seccion estadistica
 
 
