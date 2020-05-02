@@ -5,6 +5,8 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
         return;
     }
 
+    $scope.editingReady = false; // Para habilitar edicion hay que descargar informacion extra de otros usuarios
+
     document.getElementById("imgInput").addEventListener('change', // Callback al subir foto de perfil
         function () { // Cuando sube una nueva foto, agregar a la vista como base64
             $rootScope.loading = true;
@@ -176,6 +178,44 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
         }
     };
 
+    $scope.enableEditing = function(){ // Habilitar edicion
+        if($scope.editingReady){ // Si ya entro al modo de edicion una vez, solo habilitar
+            $scope.edit = true;
+        }else{ // La primera vez que entra al modo de edicion, descargar datos adicionales
+            $rootScope.loading = true;
+            Cipressus.db.get("users_private")
+            .then(function (users_private_data) {
+                
+                // Lista de usuarios para autocompletador (solo compañeros de curso y no pueden ser admins)
+                var userList = {};
+                for (var k in $scope.users){
+                    // Copiar otros atributos aca si hacen falta
+                    if(users_private_data[k].course == $rootScope.user.course && !users_private_data[k].admin && k != $rootScope.user.uid)
+                        userList[$scope.users[k].name + " " + $scope.users[k].secondName] = $scope.users[k].avatar; // Lista de nombres y fotos
+                }
+
+                M.Autocomplete.init(document.querySelectorAll('.autocomplete'), {
+                    data: userList
+                }); 
+                
+                $rootScope.loading = false;
+                $scope.edit = true;
+                $scope.$apply();
+            })
+            .catch(function (err) {
+                console.log(err);
+                M.toast({
+                    html: "Ocurrió un error al acceder a la base de datos",
+                    classes: 'rounded red',
+                    displayLength: 2000
+                });
+                $rootScope.loading = false;
+                $scope.$apply();
+            });
+
+        }
+
+    };
 
     ///// Inicialización controller
     $rootScope.loading = true;
@@ -189,19 +229,12 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
     M.Tooltip.init(document.querySelectorAll('.tooltipped'), {}); // Inicializar tooltips      
 
     Cipressus.utils.activityCntr($rootScope.user.uid, "profile").catch(function (err) {
-        console.log(err)
+        console.log(err);
     });
 
     Cipressus.db.get("users_public") // Descargar datos de usuarios
         .then(function (users_public_data) {
             $scope.users = users_public_data;
-            // Lista de usuarios para autocompletador
-            var userList = {};
-            for (var k in $scope.users) // Para excluir admins o usuarios de otros cursos hay que bajar users_private
-                userList[$scope.users[k].name + " " + $scope.users[k].secondName] = $scope.users[k].avatar; // Lista de nombres y fotos
-            M.Autocomplete.init(document.querySelectorAll('.autocomplete'), {
-                data: userList
-            });
 
             // Inicializar inputs
             document.getElementById("inputName").value = $rootScope.user.name;
@@ -227,5 +260,7 @@ app.controller("profile", ['$scope', '$rootScope', '$location', function ($scope
                 classes: 'rounded red',
                 displayLength: 2000
             });
+            $rootScope.loading = false;
+            $scope.$apply();
         });
 }]);

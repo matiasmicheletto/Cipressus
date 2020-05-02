@@ -1,6 +1,5 @@
 # Backlog
 
-  - [ ] Que no puedan elegir compañeros fuera del curso o admins
   - [ ] Reparar seccion estadistica
 
 
