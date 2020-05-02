@@ -57,7 +57,7 @@ gulp.task('rename',function(){
 // Reemplazar dependencias que se importan en el index.html y alternar version de test por produccion
 gulp.task('replace', function(){
   gulp.src(['./public/index.html'])
-    .pipe(replace('<script type="text/javascript" src="assets/custom/cipressus.js"></script>', '<script type="text/javascript" src="main.js?v=1"></script>'))
+    .pipe(replace('<script type="text/javascript" src="assets/custom/cipressus.js"></script>', '<script type="text/javascript" src="main.js?v=3"></script>'))
     .pipe(replace('<script type="text/javascript" src="assets/custom/cipressus-utils.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="assets/custom/cipressus-hardware.js"></script>', ''))
     .pipe(replace('<script type="text/javascript" src="assets/custom/cipressus-test-fs.js"></script>', ''))
