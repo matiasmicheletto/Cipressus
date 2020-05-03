@@ -7,12 +7,15 @@
     </div>
 
     <div class="row">
-      <div class="col s2">
-          <a class="right waves-effect waves-grey btn-flat" ng-click="user_filter=''" style="margin-top:15px;"><i class="material-icons tiny">close</i></a>
-      </div>
       <div class="input-field col s4" style="height: 50px; margin:0px;">
         <input id="filter_input" type="text" ng-model="user_filter">
         <label for="filter_input">Búsqueda</label>
+      </div>
+      <div class="col s2 left">
+        <a title="Borrar búsqueda" class="waves-effect waves-grey btn-flat" ng-click="user_filter=''" style="margin-top:15px;"><i class="material-icons tiny">close</i></a>
+      </div>
+      <div class="col s4 right">
+        <a class="btn right waves-effect waves-grey green darken-3" ng-click="exportExcel()">Exportar</a>
       </div>
 
       <!--
