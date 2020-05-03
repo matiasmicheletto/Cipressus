@@ -91,11 +91,13 @@ app.controller("simulator", ['$scope', '$rootScope', '$location', function ($sco
           {"type":"2to4BinaryDecoder"},
           {"type":"3to8BinaryDecoder"},
           {"type":"4to16BinaryDecoder"},
-          {"type":"Virtual-In"},
-          {"type":"Virtual-Out"},
+          //{"type":"Virtual-In"},
+          //{"type":"Virtual-Out"},
           {"type":"Test-In"},
           {"type":"Test-Out"},
-          {"type":"Audio-Out"}
+          {"type":"Audio-Out"},
+          {"type":"DSO"},
+          {"type":"Transmitter"}
         ];
         simcir.setupSimcir($('#simcir'), data);
 

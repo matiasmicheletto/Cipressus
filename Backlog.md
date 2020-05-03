@@ -1,6 +1,6 @@
 # Backlog
 
-  - [ ] Reparar seccion estadistica
+  - [ ] Exportar datos del curso completo a excel
 
 
   - [ ] En cronograma, explorar arbol de actividades para mostrar vencimientos de actividades.

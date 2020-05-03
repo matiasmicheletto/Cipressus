@@ -18,10 +18,14 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
         for (var k in $scope.users) { // Para cada usuario
             if (!$scope.users[k].admin && $scope.users[k].scores && !$scope.users[k].excludeStat) { // Si tiene notas y no es admin y no queda excluido
                 var sc = (Cipressus.utils.eval($scope.users[k], $scope.activities)).score / $scope.activities.score * 100;
+                var at = 0;
+                if($scope.users[k].scores)
+                    if($scope.users[k].scores.asistencia)
+                        at = $scope.users[k].scores.asistencia.score;
                 scatter_data[k] = { // Este dato se emplea luego para el grafico de correlacion de notas vs actividad
                     score: sc,
                     activity: 0,
-                    attendance: $scope.users[k].scores.asistencia.score
+                    attendance: at
                 };
                 seriesData.push({ // Evaluar e insertar resultado en array
                     name: $scope.users[k].secondName,
@@ -580,16 +584,21 @@ app.controller("stats", ['$scope', '$rootScope', '$location', function ($scope, 
         }
     };
 
+    Cipressus.utils.activityCntr($rootScope.user.uid, "stats").catch(function (err) {console.log(err)});
+
     Cipressus.db.get('users_public') // Descargar lista de usuarios
         .then(function (users_public_data) {
-            $scope.users = users_public_data;
-            Cipressus.db.get('users_private') // Descargar lista de usuarios aceptados
-                .then(function (users_private_data) {
+            $scope.users = {};
+            Cipressus.db.query('users_private', 'course', $rootScope.user.course) // Descargar lista de usuarios del curso actual
+                .then(function (snapshot) {
+                    var users_private_data = snapshot.val();
+                    //console.log(users_private_data);
                     // Mezclar los atributos
-                    // #TODO listar solo usuarios del curso actual
-                    for (var k in users_private_data) // Para cada usuario
-                        for (var j in users_private_data[k]) // Para cada atributo del usuario actual
+                    for (var k in users_private_data){ // Para cada usuario
+                        $scope.users[k] = users_public_data[k]; 
+                        for (var j in users_private_data[k]) // Para cada atributo privado del usuario actual
                             $scope.users[k][j] = users_private_data[k][j];
+                    }
                     // Descargar lista de actividades
                     Cipressus.db.get('activities/'+$rootScope.user.course)
                         .then(function (activities_data) {

@@ -216,6 +216,10 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         var evaluatingNode = Cipressus.utils.searchNode($scope.activityTree, $scope.submissions[$scope.evaluatingKey].activityId);
         $scope.leafActivities = Cipressus.utils.getLeafNodes(evaluatingNode);
 
+        // Borrar campos
+        for(var k in $scope.leafActivities)
+            document.getElementById("scoreInput_"+$scope.leafActivities[k].id).value = 0;
+
         confirm_evaluate_modal.open();
     };
 
@@ -225,10 +229,12 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         
         // Obtener lista de calificaciones propuestas para la comision
         var scores = {};
-        for(var k in $scope.leafActivities){
-            var sc = document.getElementById("scoreInput_"+$scope.leafActivities[k].id).value; // Nota propuesta
-            if(sc){
-                scores[$scope.leafActivities[k].id] = parseInt(sc);
+        if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 3){
+            for(var k in $scope.leafActivities){
+                var sc = document.getElementById("scoreInput_"+$scope.leafActivities[k].id).value; // Nota propuesta
+                if(sc){
+                    scores[$scope.leafActivities[k].id] = parseInt(sc);
+                }
             }
         }
 
@@ -256,24 +262,25 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     job.push(Cipressus.db.update(upd_status,"submissions/"+$rootScope.user.course+"/"+$scope.evaluatingKey+"/status"));
                     
                     for(var k in $scope.submissions[$scope.evaluatingKey].authors){ // Pasarle la nota a cada autor                        
-                        
-                        for(var j in scores){ // Para cada actividad evaluada
-                            var sc = { // Objeto de calificacion
+                        // Solo si la presentacion esta aprobada
+                        if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 3){
+                            for(var j in scores){ // Para cada actividad evaluada
+                                var sc = { // Objeto de calificacion
+                                    evaluator: $rootScope.user.uid,
+                                    score: scores[j],
+                                    timestamp: Date.now()
+                                };
+                                job.push(Cipressus.db.update(sc, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/scores/"+j));
+                            }
+
+                            // Fecha de envio para calcular costo en caso de actividad vencida    
+                            var sb = { 
                                 evaluator: $rootScope.user.uid,
-                                score: scores[j],
+                                submitted: $scope.submissions[$scope.evaluatingKey].created,
                                 timestamp: Date.now()
                             };
-                            job.push(Cipressus.db.update(sc, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/scores/"+j));
+                            job.push(Cipressus.db.update(sb, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/submits/"+$scope.submissions[$scope.evaluatingKey].activityId));
                         }
-
-                        // Fecha de envio para calcular costo en caso de actividad vencida    
-                        var sb = { 
-                            evaluator: $rootScope.user.uid,
-                            submitted: $scope.submissions[$scope.evaluatingKey].created,
-                            timestamp: Date.now()
-                        };
-                        job.push(Cipressus.db.update(sb, "users_private/"+$scope.submissions[$scope.evaluatingKey].authors[k]+"/submits/"+$scope.submissions[$scope.evaluatingKey].activityId));
-
                         // Notificar autores
                         var notif = { 
                             icon: "info",
@@ -283,7 +290,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                         };
                         Cipressus.utils.sendNotification($scope.submissions[$scope.evaluatingKey].authors[k], notif);
                     }
-
+                    
                     Promise.all(job)               
                     .then(function (res) {
                         $scope.submissions[$scope.evaluatingKey].status.push(newStatus); // Agrego el estado al objeto local
@@ -389,6 +396,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
     var confirm_delete_modal = M.Modal.init(document.getElementById("confirm_delete_modal"), {preventScrolling: false}); // Dialogo para confirmar borrado
     var confirm_evaluate_modal = M.Modal.init(document.getElementById("confirm_evaluate_modal"), {preventScrolling: false}); // Dialogo para confirmar borrado
     var submission_modal = M.Modal.init(document.getElementById("submission_modal"), {preventScrolling: false}); // Dialogo para confirmar borrado
+    M.Modal.init(document.getElementById("tutorial_modal"), {preventScrolling: false}); // Dialogo para confirmar borrado
 
     $scope.fileKeyToDelete = ""; // Identificador del archivo seleccionado para elliminar previo confirmacion
     $scope.selectedActivity = null; // Actividad seleccionada en el input del formulario antes de elegir archivo

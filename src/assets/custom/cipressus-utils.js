@@ -265,17 +265,16 @@
         return new Promise(function (fulfill, reject) {
             public.db.get("users_public/" + userUid + "/activity/items/" + item)
                 .then(function (activity_data) {
-                    var data = {};
+                    var cntr = 1;
                     if (activity_data) // Tiene valores en este item de actividad
-                        data[item] = activity_data + 1;
-                    else // Aun no registra actividad en este item
-                        data[item] = 1;
+                        cntr = activity_data + 1;
                     var updates = {};
-                    updates["users_public/" + userUid + "/activity/items"] = data; // Contadores
+                    updates["users_public/" + userUid + "/activity/items/"+item] = cntr; // Contador de visita
                     if(param)
                         updates["users_public/" + userUid + "/lastView"] = item+"?id="+param; // Ultima vista
                     else    
                         updates["users_public/" + userUid + "/lastView"] = item; // Ultima vista
+                    //console.log(updates);
                     public.db.update(updates)
                         .then(function (res) {
                             return fulfill(res);
