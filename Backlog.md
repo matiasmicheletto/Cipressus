@@ -1,8 +1,5 @@
 # Backlog
 
-  - [ ] Exportar datos del curso completo a excel
-
-
   - [ ] En cronograma, explorar arbol de actividades para mostrar vencimientos de actividades.
   - [ ] Entrega de validación de circuitos con probador.
   - [ ] Gestion de cursos. Configuración de árbol de actividades. Fechas de vencimientos.  

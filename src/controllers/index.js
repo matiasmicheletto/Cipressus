@@ -151,6 +151,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     };
 
     $rootScope.getUserNames = function (users, userUids) { // Devuelve los apellidos de los usuarios cuyos uid se pasa como arreglo
+        console.log(userUids);
         if (users) { // Se puede llamar a esta funcion cuando aun no hay datos porque se ejecuta en view
             var names = [];
             for (var k in userUids)

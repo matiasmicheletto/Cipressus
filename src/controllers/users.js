@@ -215,7 +215,47 @@ app.controller("users", ['$scope', '$rootScope', '$location', function ($scope, 
         document.getElementById(key).value = ''; // Limpiar input date
         $scope.auxiliarySubmits[key] = null; // Borrar timestamp, evaluator y submitted
         document.getElementById(key).addEventListener("change", onInputDateChange); // Vuelvo a habilitar
-    }
+    };
+
+    $scope.exportExcel = function(){ // Guardar excel de la lista completa de usuarios del curso actual con sus calificaciones
+        
+        var ws_data = []; // Datos de la planilla
+        
+        // Encabezado
+        var header = ['UID', 'Nombre y apellido', 'Email', 'Carrera', 'LU', 'Comp com.', ' ']; 
+        for(var j in $scope.activities)
+            header.push($scope.activities[j].name+" ("+($scope.activities[j].score||$scope.activities[j].value)+")");
+        ws_data.push(header);
+        
+        // Filas
+        for(var k in $scope.users){ // Para cada usuario
+            if($scope.users[k].course == $rootScope.user.course && !$scope.users[k].admin){
+                var row = [
+                    $scope.users[k].key,
+                    $scope.users[k].secondName+", "+$scope.users[k].name,
+                    $scope.users[k].email,
+                    $scope.users[k].degree,
+                    $scope.users[k].lu, 
+                    $scope.users[k].partners ? $scope.users[k].partners.map(function(el){return $scope.users[$scope.getUserIndex[el]].secondName}) : "",
+                    " " // Espaciador
+                ];
+                // Agregar calificacion de actividades
+                for(var j in $scope.activities){
+                    var node = Cipressus.utils.searchNode($scope.activitiesTree, $scope.activities[j].id);
+                    var sc = Cipressus.utils.eval($scope.users[k], node);
+                    row.push(sc.score.toFixed(2)+" ("+(sc.score/($scope.activities[j].score||$scope.activities[j].value)*100).toFixed(2)+"%)");
+                }
+                ws_data.push(row);
+            }
+        }
+
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
+        var wopts = { bookType:'xlsx', bookSST:false, type:'array' };
+        var wbout = XLSX.write(wb, wopts);
+        saveAs(new Blob([wbout],{type:"application/octet-stream"}), 'UsuariosCipressus_'+moment().format("DD_MM_YYYY")+'.xlsx');
+    };
 
     $scope.saveScores = function () { // Guardar el formulario de notas
         $rootScope.loading = true;
