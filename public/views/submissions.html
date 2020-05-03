@@ -1,6 +1,10 @@
 <div class="container">
 
-  <h3>Entrega de actividades</h3>
+  <h3>Entrega de actividades
+    <sup class="modal-trigger" style="cursor: pointer" data-target="tutorial_modal">
+      <i class="small material-icons">help</i>
+    </sup>
+  </h3>
 
   <h4 ng-if="submCnt == 0 && !user.admin" class="center grey-text"><i>Aún no has realizado presentaciones!</i></h4>
   <h4 ng-if="submCnt == 0 && user.admin" class="center grey-text"><i>Aún no hay entregas realizadas</i></h4>
@@ -199,5 +203,32 @@
 
   <div class="modal-footer">
     <a class="modal-close waves-effect waves-white btn green darken-3">Aceptar</a>
+  </div>
+</div>
+
+<div id="tutorial_modal" class="modal">
+
+  <div class="modal-content">
+      <h3>Presentación de actividades</h3>
+
+      <h5>Carga de archivos:</h5>
+
+      <ol>
+          <li>Para realizar la entrega de una actividad, presione en el botón <a class="btn-floating btn-small green darken-1 pulse"><i class="material-icons">add</i></a></li>
+          <li>Sólo puede realizar una sola entrega por actividad, con lo cual deberá eliminar la entrega anterior para modificarla, excepto que el archivo esté en evaluación.</li>
+          <li>En el menú desplegable, elija la actividad sobre la cual se realizará la entrega.</li>
+          <li>Presione en ADJUNTAR ARCHIVO para cargar todos los archivos que desee presentar desde su dispositivo.</li>
+          <li>Si lo desea, puede adjuntar un modelo de simulación de su librería de simulaciones.</li>
+          <li>Finalmente, presione en ENTREGAR para subir los archivos e iniciar el trámite de presentación.</li>
+      </ol>
+
+      <h5>Resultados de la evaluación</h5>
+      <p>Las presentaciones realizadas pueden tener cuatro estados:</p>
+      <ol>
+        <li><b>Archivo subido:</b> Es la primer instancia de la entrega. Permanecerá en este estado hasta que sea evaluado por el docente. Mientras la presentación se encuentre en este estado, puede eliminarla y subir otro archivo en su reemplazo.</li>
+        <li><b>Archivo en revisión: Cuando un docente descarga el archivo subido, se actualiza el estado de la entrega y ya no puede eliminar la presentación realizada.</b></li>
+        <li><b>Revisar:</b> Si el resultado de la evaluación es negativa, deberá eliminar el archivo subido y repetir la entrega. La fila correspondiente a la entrega aparecerá en color rojo.</li>
+        <li><b>Aprobado:</b> Si el resultado de la evaluación es positiva, el estado de la entrega pasa a "APROBADO" y obtendrá una calificación.</li>
+      </ol>
   </div>
 </div>
