@@ -229,7 +229,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
         
         // Obtener lista de calificaciones propuestas para la comision
         var scores = {};
-        if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 3){
+        if(action == 3){
             for(var k in $scope.leafActivities){
                 var sc = document.getElementById("scoreInput_"+$scope.leafActivities[k].id).value; // Nota propuesta
                 if(sc){
@@ -240,7 +240,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
 
         if(obs == "") obs = "Sin observaciones"; // Forzar valor de resultado
         if(action){ // Si eligio el resultado de la evaluacion
-            if(action==3 && Object.getOwnPropertyNames(scores).length == $scope.leafActivities.length || action != 3){ // Debe indicar una calificacion por subactividad
+            if( (action==3 && Object.getOwnPropertyNames(scores).length == $scope.leafActivities.length) || action != 3){ // Debe indicar una calificacion por subactividad
                 if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 1){ // Solo la primera vez
                     
                     $rootScope.loading = true;
@@ -263,7 +263,7 @@ app.controller("submissions", ['$scope', '$rootScope', '$location', function ($s
                     
                     for(var k in $scope.submissions[$scope.evaluatingKey].authors){ // Pasarle la nota a cada autor                        
                         // Solo si la presentacion esta aprobada
-                        if($scope.submissions[$scope.evaluatingKey].status[$scope.submissions[$scope.evaluatingKey].status.length-1].action == 3){
+                        if(action == 3){
                             for(var j in scores){ // Para cada actividad evaluada
                                 var sc = { // Objeto de calificacion
                                     evaluator: $rootScope.user.uid,
