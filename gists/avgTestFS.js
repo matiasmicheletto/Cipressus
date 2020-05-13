@@ -1,3 +1,24 @@
+// Obtener resultados de tests FS
+Cipressus.db.get('users_public') // Descargar lista de usuarios
+    .then(function (users_public_data) {
+        var users = users_public_data;
+        var data = [];
+        for (var k in users) { // Calcular promedio de resultados
+            if (users[k].test_fs && !users[k].excludeStat)
+                if (users[k].test_fs.answers) {
+                    var scales = Cipressus.test_FS.eval(users[k].test_fs.answers); // Toma la funcion de la libreria
+                    data.push(scales);
+                }
+        }
+        
+        console.log("Resultados");
+        console.log(data);
+    })
+    .catch(function (err) { // users_public
+        console.log(err);
+    });
+
+
 // Calcular promedios y desvios de test FS
 
 Cipressus.db.get('users_public') // Descargar lista de usuarios

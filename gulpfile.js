@@ -17,7 +17,7 @@ gulp.task('clean', function(){
 // Copiar librerias, vistas, manifest, configuraciones e index.html a la carpeta de produccion
 gulp.task('copy', function () {
   var paths = [
-    { src: './tester/**/*', dest: './public/tester' }, // Sources para el probador
+    { src: './tester/SerialPortServer.js', dest: './public/tester/SerialPortServer' },
     { src: './ip-cam/**/*', dest: './public/ip-cam' }, // Camara ip para clases virtuales
     { src: './src/assets/vendor/**/*', dest: './public/assets/vendor' },
     { src: './src/assets/custom/simcir*', dest: './public/assets/custom' },
