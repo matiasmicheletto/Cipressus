@@ -68,6 +68,8 @@ const rotateVideo = function(){ // Alternar landscape/portrait
     localStorage.setItem("config", JSON.stringify(config));
 };
 
+/*
 setInterval(function(){ // Solicitud de autofoco para app DroidCam
     $.get("http://" + config.cameraIp + ":" + config.port + "/cam/1/af");    
 },3000);
+*/
