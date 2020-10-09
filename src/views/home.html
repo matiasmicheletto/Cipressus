@@ -1,5 +1,9 @@
 <div class="container">
 
+    <div class="card" ng-if="discordSRC">
+        <iframe ng-src="{{discordSRC}}" height="500px" width="100%" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+    </div>
+
     <h4>Novedades</h4>
 
     <h5 class="grey-text text-lighten-1" ng-hide="news.length > 0">

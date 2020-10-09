@@ -90,7 +90,7 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
     // Ver: https://stackoverflow.com/questions/41272314/angular-all-slashes-in-url-changed-to-2f
     $locationProvider.hashPrefix('');
   }])
-.run(["$rootScope", "$location", function ($rootScope, $location) {
+.run(["$rootScope", "$location", "$sce", function ($rootScope, $location, $sce) {
 
     $rootScope.loading = true; // Preloader
     $rootScope.userLogged = false; // Indicador de usuario logeado para habilitar componentes de ventana
@@ -295,6 +295,21 @@ var app = angular.module('cipressus', ['ngRoute', 'ngSanitize','LocalStorageModu
                 },
                 function(err){
                     console.log(err);
+                });
+
+                // Descargar ID canal discord (se muestra en home)
+                Cipressus.db.get("metadata/discord") // Descargar estampa de tiempo de ultima actualizacion de esta seccion
+                .then(function (discord_data) {                    
+                    if(discord_data){
+                        url = "https://discord.com/widget?id="+discord_data.id+"&theme="+discord_data.theme;
+                        console.log(url);
+                        $rootScope.discordSRC = $sce.trustAsResourceUrl(url);   
+                        $rootScope.$apply();
+                    }
+                })
+                .catch(function (err) {
+                    console.log(err);   
+                    M.toast({html: "No se pudo conectar al servidor de Discord",classes: 'rounded red',displayLength: 2000});        
                 });
 
                 if($location.path() == "/login"){ // Si se acaba de logear en la vista de login
