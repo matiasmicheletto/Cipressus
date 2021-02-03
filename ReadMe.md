@@ -16,7 +16,7 @@ Cipressus es un LCMS que pone a disposición de los practicantes de sistemas dig
 
 
 ### Presentación del proyecto en las 49 JAIIO - SAEI 2020
-![Video](https://img.youtube.com/vi/niTA3AXdEoI/0.jpg)](https://www.youtube.com/watch?v=niTA3AXdEoI)
+![Video](https://img.youtube.com/vi/niTA3AXdEoI/0.jpg)(https://www.youtube.com/watch?v=niTA3AXdEoI)
 
 
 ## Implementado con
