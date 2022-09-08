@@ -21,6 +21,7 @@
                 <td>{{row.activities}}</td>
                 <td>{{row.enrolled}}</td>
                 <td width="1%" style="white-space:nowrap;">
+                    <a ng-if="user.course != row.key" title="Seleccionar" class="waves-effect waves-light blue darken-3 btn-small btn-floating z-depth-3 modal-trigger" ng-click="selectCourse(row.key)"><i class="material-icons">loop</i></a>
                     <a title="Editar" href="#/activities?id={{row.key}}" class="waves-effect waves-light brown darken-3 btn-small btn-floating z-depth-3"><i class="material-icons">edit</i></a>
                     <a title="Eliminar" class="waves-effect waves-light red darken-3 btn-small btn-floating z-depth-3 modal-trigger" ng-click="deleteCourse(row.key)"><i class="material-icons">delete</i></a>
                 </td>

@@ -31,6 +31,20 @@ app.controller("courses", ['$scope', '$rootScope', '$location', function ($scope
         }
     }
 
+    $scope.selectCourse = function(key){
+        Cipressus.db.update({course: key},'users_private/'+$rootScope.user.uid)   
+        .then(function(res){
+            M.toast({html: "Se actualizó el curso actual",classes: 'rounded green',displayLength: 2000});
+            setTimeout(function(){
+                location.reload();
+            }, 1000);
+        })
+        .catch(function(err){
+            console.log(err);
+            M.toast({html: "Ocurrió un error al acceder a la base de datos",classes: 'rounded red',displayLength: 2000});
+        });
+    }
+
     // Descargar informacion sobre los cursos
     Cipressus.db.get("metadata/courses") // Descargar datos de los cursos disponibles
     .then(function(courses){
